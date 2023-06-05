@@ -4,22 +4,21 @@ name: CI Tests
 run-name: ${{ github.actor }} is running Pull Request pre-merge tests
 
 on:
-  push:
-  schedule:
-    - cron: '0 */6 * * *'
   pull_request:
     types: [opened, reopened, edited]
 
 jobs:
   build-gem5:
-    runs-on: [self-hosted, Linux, X64, build]
+    runs-on: [self-hosted, linux, x64, build]
     container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
     outputs:
       artifactname: ${{ steps.name.outputs.test }}
     steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+    - uses: actions/checkout@v3
+      with:
+        # Scheduled workflows run on the default branch by default. We
+        # therefore need to explicitly checkout the develop branch.
+        ref: develop
       - id: name
         run: echo "test=$(date +"%Y-%m-%d_%H.%M.%S")-artifact" >> $GITHUB_OUTPUT
 
@@ -33,35 +32,40 @@ jobs:
       - run: echo "This job's status is ${{ job.status }}."
 
   unittests-all-opt:
-    runs-on: [self-hosted, Linux, X64, run]
+    runs-on: [self-hosted, linux, x64, run]
     container:
       image: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
     timeout-minutes: 60
     steps:
     - uses: actions/checkout@v3
+      with:
+        # Scheduled workflows run on the default branch by default. We
+        # therefore need to explicitly checkout the develop branch.
+        ref: develop
     - name: CI Unittests
       working-directory: ${{ github.workspace }}
       run: scons build/ALL/unittests.opt -j $(nproc)
     - run: echo "This job's status is ${{ job.status }}."
 
   testlib-quick:
-    runs-on: [self-hosted, Linux, X64, run]
+    runs-on: [self-hosted, linux, x64, run]
     container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
     needs: build-gem5
     timeout-minutes: 360     # 6 hours
     steps:
     - uses: actions/checkout@v3
+      with:
+        # Scheduled workflows run on the default branch by default. We
+        # therefore need to explicitly checkout the develop branch.
+        ref: develop
     - uses: actions/download-artifact@v3
       with:
         name: ${{needs.build-gem5.outputs.artifactname}}
         path: build/ALL
     - run: chmod u+x build/ALL/gem5.opt
     - name: The TestLib CI Tests
-      if: success() || failure()
       working-directory: ${{ github.workspace }}/tests
-      run: |
-        pip install PySocks
-        ./main.py run --skip-build -vv
+      run: ./main.py run --skip-build -vv
     - name: create zip of results
       if: success() || failure()
       run: |
