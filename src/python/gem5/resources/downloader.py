@@ -109,7 +109,6 @@ def _get_resources_json_at_path(path: str, use_caching: bool = True) -> Dict:
     # its Truncated Exponential Backoff algorithm
     # (maximum of roughly 1 minute). Typically this code will run quickly.
     with FileLock(f"{download_path}.lock", timeout=120):
-
         # The resources.json file can change at any time, but to avoid
         # excessive retrieval we cache a version locally and use it for up to
         # an hour before obtaining a fresh copy.
@@ -430,11 +429,9 @@ def get_resource(
     # minutes.Most resources should be downloaded and decompressed in this
     # timeframe, even on the most constrained of systems.
     with FileLock(f"{to_path}.lock", timeout=900):
-
         resource_json = get_resources_json_obj(resource_name)
 
         if os.path.exists(to_path):
-
             if os.path.isfile(to_path):
                 md5 = md5_file(Path(to_path))
             else:
@@ -523,7 +520,6 @@ def get_resource(
             with tarfile.open(download_dest) as f:
 
                 def is_within_directory(directory, target):
-
                     abs_directory = os.path.abspath(directory)
                     abs_target = os.path.abspath(target)
 
@@ -534,7 +530,6 @@ def get_resource(
                 def safe_extract(
                     tar, path=".", members=None, *, numeric_owner=False
                 ):
-
                     for member in tar.getmembers():
                         member_path = os.path.join(path, member.name)
                         if not is_within_directory(path, member_path):

@@ -71,7 +71,7 @@ jobs:
       - name: create docker images
         run: |
           docker pull gcr.io/gem5-test/gcn-gpu:latest
-          docker build -t hacc-test-weekly gem5-resources/src/gpu/halo-finder  
+          docker build -t hacc-test-weekly gem5-resources/src/gpu/halo-finder
 
       - name: start running tests
         run: |
@@ -82,7 +82,7 @@ jobs:
             --ignore-style"
           docker run --rm -u $UID:$GID --volume "${GEM5ROOT_PATH}":"${GEM5ROOT_PATH}" -w \
             ${GEM5ROOT_PATH}/util/m5 --memory="${docker_mem_limit}" hacc-test-weekly bash -c \
-            "export TERM=xterm-256color ; scons build/x86/out/m5" 
+            "export TERM=xterm-256color ; scons build/x86/out/m5"
 
       - name: lulesh tests
         run: | # build LULESH
@@ -95,7 +95,7 @@ jobs:
             hacc-test-weekly build/${gpu_isa}/gem5.opt configs/example/apu_se.py -n3 \
             --mem-size=8GB --reg-alloc-policy=dynamic \
             --benchmark-root=${GEM5ROOT_PATH}/gem5-resources/src/gpu/lulesh/bin -c lulesh
-      
+
       - name: test DNNMark
         run: | # setup cmake for DNNMark
           docker run --rm -u $UID:$GID --volume "${GEM5ROOT_PATH}":"${GEM5ROOT_PATH}" -w \
@@ -177,7 +177,7 @@ jobs:
             --options="1k_128k.gr"
 
       - name: build Color Max
-        run: | 
+        run: |
           docker run --rm -v "${GEM5ROOT_PATH}":"${GEM5ROOT_PATH}" -w \
             ${GEM5ROOT_PATH}/gem5-resources/src/gpu/pannotia/color -u $UID:$GID \
             --memory="${docker_mem_limit}" hacc-test-weekly bash -c \
@@ -202,7 +202,7 @@ jobs:
             -c color_maxmin.gem5 --options="1k_128k.gr 0"
 
       - name: build FW
-        run: | 
+        run: |
           docker run --rm -v "${GEM5ROOT_PATH}":"${GEM5ROOT_PATH}" -w \
             ${GEM5ROOT_PATH}/gem5-resources/src/gpu/pannotia/fw -u $UID:$GID \
             --memory="${docker_mem_limit}" hacc-test-weekly bash -c \
@@ -216,7 +216,7 @@ jobs:
             -c fw_hip.gem5 --options="1k_128k.gr"
 
       - name: build MIS
-        run: | 
+        run: |
           docker run --rm -v "${GEM5ROOT_PATH}":"${GEM5ROOT_PATH}" -w \
             ${GEM5ROOT_PATH}/gem5-resources/src/gpu/pannotia/mis -u $UID:$GID \
             --memory="${docker_mem_limit}" hacc-test-weekly bash -c \
@@ -230,7 +230,7 @@ jobs:
             -c mis_hip.gem5 --options="1k_128k.gr 0"
 
       - name: build Pagerank Default variant
-        run: | 
+        run: |
           docker run --rm -v "${GEM5ROOT_PATH}":"${GEM5ROOT_PATH}" -w \
             ${GEM5ROOT_PATH}/gem5-resources/src/gpu/pannotia/pagerank -u $UID:$GID \
             --memory="${docker_mem_limit}" hacc-test-weekly bash -c \
@@ -256,7 +256,7 @@ jobs:
             -c pagerank_spmv.gem5 --options="coAuthorsDBLP.graph 1"
 
       - name: build SSSP CSR variant
-        run: | 
+        run: |
           docker run --rm -v ${GEM5ROOT_PATH}:${GEM5ROOT_PATH} -w \
             ${GEM5ROOT_PATH}/gem5-resources/src/gpu/pannotia/sssp -u $UID:$GID \
             --memory="${docker_mem_limit}" hacc-test-weekly bash -c \
@@ -281,7 +281,7 @@ jobs:
             -c sssp_ell.gem5 --options="1k_128k.gr 0"
 
       - name: Delete the gem5 resources repo we created
-        run: | 
+        run: |
           docker run --rm --volume "${GEM5ROOT_PATH}":"${GEM5ROOT_PATH}" -w \
             "${GEM5ROOT_PATH}" --memory="${docker_mem_limit}" hacc-test-weekly bash -c \
             "rm -rf ${GEM5ROOT_PATH}/gem5-resources"
