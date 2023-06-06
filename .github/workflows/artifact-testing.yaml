@@ -5,7 +5,7 @@ run-name: testing artifact naming
 # run-name: Testing artifact usage
 #  https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#schedule
 on:
-  # push:
+  push:
   schedule:
     - cron:  '0 * * 1 *' # this only runs once a year, for files that aren't being tested
 env:
@@ -50,78 +50,111 @@ jobs:
   #       python3 -m unittest
   #       mypy -p gem5art.tasks
   #   - run: echo "This job's status is ${{ job.status }}."
-  job1:
-    runs-on: [self-hosted, linux, x64, run, test]
-    # running container with only a single arguement passes the image being used
-    container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
-    outputs:
-      build-name: ${{ steps.test.outputs.name }}
+  # This runs the gem5 within SystemC ingration and runs a simple hello-world
+  # simulation with it.
+  systemc-test:
+    runs-on: [self-hosted, linux, x64, build]
+    container: gcr.io/gem5-test/systemc-env:latest
+    timeout-minutes: 180
+
     steps:
-      # - id: step1
-      #   run: echo "test=$(date +"%Y-%m-%d_%H.%M.%S")-artifact" >> $GITHUB_OUTPUT
-      # - run: echo ${{ steps.step1.outputs.test }}
+    - uses: actions/checkout@v3
+      with:
+        # Scheduled workflows run on the default branch by default. We
+        # therefore need to explicitly checkout the develop branch.
+        ref: develop
+    - name: Build ARM/gem5.opt
+      uses: docker://gcr.io/gem5-test/ubuntu-22.04_min-dependencies:latest
+      # This is a bit of a hack so we can run a different docker container.
+      with:
+        args: scons build/ARM/gem5.opt --ignore-style --duplicate-sources -j4
+    - name: Build ARM/libgem5_opt.so
+      uses: docker://gcr.io/gem5-test/ubuntu-22.04_min-dependencies:latest
+      # This is a bit of a hack so we can run a different docker container.
+      with:
+        args: scons build/ARM/libgem5_opt.so --with-cxx-config --without-python --without-tcmalloc USE_SYSTEMC=0 -j4 --duplicate-sources
+    - name: Compile gem5 withing SystemC
+      working-directory: ${{ github.workspace }}/util/systemc/gem5_within_systemc
+      run: |
+        ls ${{ github.workspace }}
+        make
+    - name: Run gem5 within SystemC test
+      run: ./build/ARM/gem5.opt configs/deprecated/example/se.py -c tests/test-progs/hello/bin/arm/linux/hello
+    - name: bla
+      run: LD_LIBRARY_PATH=build/ARM/:/opt/systemc/lib-linux64/ ./gem5.opt.sc m5out/config.ini
 
-    # steps:
-    # # checks out repository, should be more useful when
-    # # running checks on changed files
-      # - uses: actions/checkout@v3
-      #   with:
-      #     fetch-depth: 0
-      #     outputs:
+  # job1:
+  #   runs-on: [self-hosted, linux, x64, run, test]
+  #   # running container with only a single arguement passes the image being used
+  #   container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
+  #   outputs:
+  #     build-name: ${{ steps.test.outputs.name }}
+  #   steps:
+  #     # - id: step1
+  #     #   run: echo "test=$(date +"%Y-%m-%d_%H.%M.%S")-artifact" >> $GITHUB_OUTPUT
+  #     # - run: echo ${{ steps.step1.outputs.test }}
 
-      - name: Show default environment variables
-        id: test
-        env:
-          MY_STEP_VAR: ${{github.job}}_COMMIT.${{github.sha}}_RUN.${{github.run_id}}_ATTEMPT.${{github.run_attempt}}
-        run: |
-          # echo "The job_id is: $GITHUB_JOB"   # reference the default environment variables
-          # echo "The id of this action is: $GITHUB_ACTION"   # reference the default environment variables
-          # echo "The run id is: $GITHUB_RUN_ID"
-          # echo "The GitHub Actor's username is: $GITHUB_ACTOR"
-          # echo "GitHub SHA: $GITHUB_SHA"
-          # format('Hello {0} {1} {2}', 'Mona', 'the', 'Octocat')
-          # echo "name=${GITHUB_JOB}.commit-${GITHUB_SHA}.run-${GITHUB_RUN_ID}.attempt-${GITHUB_RUN_ATTEMPT}" >> $GITHUB_OUTPUT
-          # echo $NOW
-          # echo ${{ steps.test.outputs.name }}
-      - name: test
-        run: |
-          # apt-get -y install zip
-          zip -help
-          touch test.txt
-          zip -r test.zip test.txt
-          echo ${{ env.MY_STEP_VAR }}
-      # - name: Generate artifact name
-      #   # id: generate-name
-      #   run: |
-      #     echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
-      #     echo $NOW
+  #   # steps:
+  #   # # checks out repository, should be more useful when
+  #   # # running checks on changed files
+  #     # - uses: actions/checkout@v3
+  #     #   with:
+  #     #     fetch-depth: 0
+  #     #     outputs:
 
-      #     echo NOW=hello >> $GITHUB_ENV
-      #     echo $NOW
-      - name: Build and run gem5
-        run: |
-          touch test.py
-          # scons build/ALL/gem5.fast -j $(nproc)
-      # - id: artifact-name
-      #   run: echo "name=$(date +"%Y-%m-%d_%H.%M.%S")-ALL" >> $GITHUB_OUTPUT
-      - uses: actions/upload-artifact@v3
-        env:
-          MY_STEP_VAR: ${{github.job}}_COMMIT.${{github.sha}}_RUN.${{github.run_id}}_ATTEMPT.${{github.run_attempt}}
-        with:
-          name: ${{ env.MY_STEP_VAR }}
-          path: test.py
-          retention-days: 7
-      # - name: Set current date as env variable
-      #   run: echo ${{ env.GITHUB_JOB }}
-      # - name: Echo current date
-      #   run: echo $artifact-name # Gives "2022-12-11T01:42:20"
+  #     - name: Show default environment variables
+  #       id: test
+  #       env:
+  #         MY_STEP_VAR: ${{github.job}}_COMMIT.${{github.sha}}_RUN.${{github.run_id}}_ATTEMPT.${{github.run_attempt}}
+  #       run: |
+  #         # echo "The job_id is: $GITHUB_JOB"   # reference the default environment variables
+  #         # echo "The id of this action is: $GITHUB_ACTION"   # reference the default environment variables
+  #         # echo "The run id is: $GITHUB_RUN_ID"
+  #         # echo "The GitHub Actor's username is: $GITHUB_ACTOR"
+  #         # echo "GitHub SHA: $GITHUB_SHA"
+  #         # format('Hello {0} {1} {2}', 'Mona', 'the', 'Octocat')
+  #         # echo "name=${GITHUB_JOB}.commit-${GITHUB_SHA}.run-${GITHUB_RUN_ID}.attempt-${GITHUB_RUN_ATTEMPT}" >> $GITHUB_OUTPUT
+  #         # echo $NOW
+  #         # echo ${{ steps.test.outputs.name }}
+  #     - name: test
+  #       run: |
+  #         # apt-get -y install zip
+  #         zip -help
+  #         touch test.txt
+  #         zip -r test.zip test.txt
+  #         echo ${{ env.MY_STEP_VAR }}
+  #     # - name: Generate artifact name
+  #     #   # id: generate-name
+  #     #   run: |
+  #     #     echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
+  #     #     echo $NOW
 
-      # - uses: actions/upload-artifact@v3
-      #   with:
-      #     name: $artifact-name
-      #     path: build/ALL/gem5.fast
+  #     #     echo NOW=hello >> $GITHUB_ENV
+  #     #     echo $NOW
+  #     - name: Build and run gem5
+  #       run: |
+  #         touch test.py
+  #         # scons build/ALL/gem5.fast -j $(nproc)
+  #     # - id: artifact-name
+  #     #   run: echo "name=$(date +"%Y-%m-%d_%H.%M.%S")-ALL" >> $GITHUB_OUTPUT
+  #     - uses: actions/upload-artifact@v3
+  #       env:
+  #         MY_STEP_VAR: ${{github.job}}_COMMIT.${{github.sha}}_RUN.${{github.run_id}}_ATTEMPT.${{github.run_attempt}}
+  #       with:
+  #         name: ${{ env.MY_STEP_VAR }}
+  #         path: test.py
+  #         retention-days: 7
+  #     # - name: Set current date as env variable
+  #     #   run: echo ${{ env.GITHUB_JOB }}
+  #     # - name: Echo current date
+  #     #   run: echo $artifact-name # Gives "2022-12-11T01:42:20"
 
-      - run: echo "🍏 This job's status is ${{ job.status }}."
+  #     # - uses: actions/upload-artifact@v3
+  #     #   with:
+  #     #     name: $artifact-name
+  #     #     path: build/ALL/gem5.fast
+
+  #     - run: echo "🍏 This job's status is ${{ job.status }}."
 
   Test-Download:
     runs-on: [self-hosted, linux, x64, run]
@@ -143,10 +176,10 @@ jobs:
       #   run: |
 
 
-      - uses: actions/download-artifact@v3
-        with:
-          name: $GITHUB_SHA $GITHUB_RUN_ID $GITHUB_RUN_ATTEMPT
-          path: build/ALL/gem5.fast
+      # - uses: actions/download-artifact@v3
+      #   with:
+      #     name: $GITHUB_SHA $GITHUB_RUN_ID $GITHUB_RUN_ATTEMPT
+      #     path: build/ALL/gem5.fast
 
       # - name: Display structure of downloaded files
       #   run: ls -R
