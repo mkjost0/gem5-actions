@@ -74,9 +74,10 @@ jobs:
       with:
         args: scons build/ARM/libgem5_opt.so --with-cxx-config --without-python --without-tcmalloc USE_SYSTEMC=0 -j4 --duplicate-sources
     - name: Compile gem5 withing SystemC
-      working-directory: ${{ github.workspace }}/util/systemc/gem5_within_systemc
+      # working-directory: ${{ github.workspace }}/util/systemc/gem5_within_systemc
       run: |
-        ls ${{ github.workspace }}
+        ls
+        cd util/systemc/gem5_within_systemc
         make
     - name: Run gem5 within SystemC test
       run: ./build/ARM/gem5.opt configs/deprecated/example/se.py -c tests/test-progs/hello/bin/arm/linux/hello

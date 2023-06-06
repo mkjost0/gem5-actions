@@ -4,7 +4,7 @@ name: CI Tests
 run-name: ${{ github.actor }} is running Pull Request pre-merge tests
 
 on:
-  # push:
+  push:
   pull_request:
     types: [opened, reopened, edited]
 

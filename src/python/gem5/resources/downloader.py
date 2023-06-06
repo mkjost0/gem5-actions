@@ -322,17 +322,18 @@ def _download(url: str, download_to: str, max_attempts: int = 6) -> None:
             else:
                 raise e
         except ValueError as e:
+            print('Handling error:', e)
             raise Exception(
                 "Environment variable GEM5_USE_PROXY is set to "
                 f"'{use_proxy}'. The expected form is "
                 "<host>:<port>'."
             )
         except ImportError as e:
+            print('Handling error:', e)
             raise Exception(
-                "An import error has occurred. This is likely due "
-                "the Python SOCKS client module not being "
-                "installed. It can be installed with "
-                "`pip install PySocks`."
+                "Environment variable GEM5_USE_PROXY is set to "
+                f"'{use_proxy}'. The expected form is "
+                "<host>:<port>'."
             )
 
 
