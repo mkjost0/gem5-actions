@@ -160,7 +160,7 @@ jobs:
     runs-on: [self-hosted, linux, x64, run]
     # running container with only a single arguement passes the image being used
     container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
-    needs: job1
+    # needs: job1
 
     steps:
       - run: echo ${{needs.job1.outputs.output1}}
