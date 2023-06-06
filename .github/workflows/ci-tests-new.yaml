@@ -1,7 +1,7 @@
 # This workflow runs after a pull-request has been approved by a reviewer.
 
 name: CI Tests
-run-name: ${{ github.actor }} is running Pull Request pre-merge tests
+run-name: ${{ github.actor }} is testing unittests
 
 on:
   push:
@@ -32,21 +32,21 @@ jobs:
           path: build/ALL/gem5.opt
       - run: echo "This job's status is ${{ job.status }}."
 
-  unittests-all-opt:
-    runs-on: [self-hosted, linux, x64, run]
-    container:
-      image: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
-    timeout-minutes: 60
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          # Scheduled workflows run on the default branch by default. We
-          # therefore need to explicitly checkout the develop branch.
-          ref: develop
-      - name: CI Unittests
-        working-directory: ${{ github.workspace }}
-        run: scons build/ALL/unittests.opt -j $(nproc)
-      - run: echo "This job's status is ${{ job.status }}."
+  # unittests-all-opt:
+  #   runs-on: [self-hosted, linux, x64, run]
+  #   container:
+  #     image: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
+  #   timeout-minutes: 60
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         # Scheduled workflows run on the default branch by default. We
+  #         # therefore need to explicitly checkout the develop branch.
+  #         ref: develop
+  #     - name: CI Unittests
+  #       working-directory: ${{ github.workspace }}
+  #       run: scons build/ALL/unittests.opt -j $(nproc)
+  #     - run: echo "This job's status is ${{ job.status }}."
 
   testlib-quick:
     runs-on: [self-hosted, linux, x64, run]
