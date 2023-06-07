@@ -240,7 +240,7 @@ jobs:
     runs-on: [self-hosted, linux, x64, kvm]
     # container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
     needs: build-gem5
-    timeout-minutes: 1440 # 24 hours
+    timeout-minutes: 1440 # 24 hourss
     steps:
     - uses: actions/checkout@v3
       with:
