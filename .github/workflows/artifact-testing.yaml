@@ -219,7 +219,7 @@ jobs:
     #     sudo usermod -a -G kvm,libvirt $USER
     - uses: actions/download-artifact@v3
       with:
-        name: 2023-06-07_13.24.04-ALL
+        name: "2023-06-07_13.24.04-ALL"
         path: build/ALL/gem5.opt
     - run: chmod u+x build/ALL/gem5.opt
     - name: long kvm-fork-tests
@@ -257,7 +257,7 @@ jobs:
     #     sudo usermod -a -G kvm,libvirt $USER
     - uses: actions/download-artifact@v3
       with:
-        name: 2023-06-07_13.24.04-ALL
+        name: "2023-06-07_13.24.04-ALL"
         path: build/ALL/gem5.opt
     - run: chmod u+x build/ALL/gem5.opt
     - name: long kvm-switch-tests
