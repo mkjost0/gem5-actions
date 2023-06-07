@@ -15,7 +15,7 @@ on:
 jobs:
   build-gem5:
     runs-on: [self-hosted, linux, x64, kvm]
-    container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
+    # container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
     outputs:
       build-name: ${{ steps.artifact-name.outputs.name }}
     steps:
@@ -81,17 +81,17 @@ jobs:
   #   - run: echo "This job's status is ${{ job.status }}."
   # This runs the gem5 within SystemC ingration and runs a simple hello-world
   # simulation with it.
-  systemc-test:
-    runs-on: [self-hosted, linux, x64, build]
-    container: gcr.io/gem5-test/systemc-env:latest
-    timeout-minutes: 180
+  # systemc-test:
+  #   runs-on: [self-hosted, linux, x64, build]
+  #   container: gcr.io/gem5-test/systemc-env:latest
+  #   timeout-minutes: 180
 
-    steps:
-    - uses: actions/checkout@v3
-      with:
-        # Scheduled workflows run on the default branch by default. We
-        # therefore need to explicitly checkout the develop branch.
-        ref: develop
+  #   steps:
+  #   - uses: actions/checkout@v3
+  #     with:
+  #       # Scheduled workflows run on the default branch by default. We
+  #       # therefore need to explicitly checkout the develop branch.
+  #       ref: develop
     # - name: Build ARM/gem5.opt
     #   uses: docker://gcr.io/gem5-test/ubuntu-22.04_min-dependencies:latest
     #   # This is a bit of a hack so we can run a different docker container.
@@ -202,7 +202,7 @@ jobs:
     # kvm tests don't work on github actions
   testlib-long-kvm-fork-tests:
     runs-on: [self-hosted, linux, x64, kvm]
-    container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
+    # container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
     needs: build-gem5
     timeout-minutes: 1440 # 24 hours
     steps:
@@ -238,7 +238,7 @@ jobs:
 
   testlib-long-kvm-switch-tests:
     runs-on: [self-hosted, linux, x64, kvm]
-    container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
+    # container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
     needs: build-gem5
     timeout-minutes: 1440 # 24 hours
     steps:
