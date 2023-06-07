@@ -225,6 +225,11 @@ jobs:
     - name: long kvm-fork-tests
       working-directory: ${{ github.workspace }}/tests
       run: ./main.py run gem5/kvm-fork-tests --length=long --skip-build -vv -t $(nproc)
+    - name: create zip of results
+      if: success() || failure()
+      run: |
+        apt-get -y install zip
+        zip -r output.zip tests/testing-results
     - name: upload zip
       if: success() || failure()
       uses: actions/upload-artifact@v3
@@ -263,6 +268,11 @@ jobs:
     - name: long kvm-switch-tests
       working-directory: ${{ github.workspace }}/tests
       run: ./main.py run gem5/kvm-switch-tests --length=long --skip-build -vv -t $(nproc)
+    - name: create zip of results
+      if: success() || failure()
+      run: |
+        apt-get -y install zip
+        zip -r output.zip tests/testing-results
     - name: create zip of results
       if: success() || failure()
       run: |
