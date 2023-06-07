@@ -4,7 +4,7 @@ name: CI Tests
 run-name: ${{ github.actor }} is testing unittests
 
 on:
-  push:
+  # push:
   pull_request:
     types: [opened, reopened, edited]
 
