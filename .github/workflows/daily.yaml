@@ -7,6 +7,7 @@ run-name: ${{ github.actor }} is running the gpu tests
 on:
   # Runs every day from 7AM UTC
   # push:
+  workflow_dispatch:
   schedule:
     - cron:  '0 7 * * *'
 
