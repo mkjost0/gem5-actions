@@ -189,7 +189,7 @@ jobs:
 
     # kvm tests don't work on github actions
   testlib-long-kvm-fork-tests:
-    runs-on: [self-hosted, linux, x64, run]
+    runs-on: [self-hosted, linux, x64, build]
     container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
     needs: build-gem5
     timeout-minutes: 1440 # 24 hours
@@ -217,7 +217,7 @@ jobs:
     - run: echo "This job's status is ${{ job.status }}."
 
   testlib-long-kvm-switch-tests:
-    runs-on: [self-hosted, linux, x64, run]
+    runs-on: [self-hosted, linux, x64, build]
     container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
     needs: build-gem5
     timeout-minutes: 1440 # 24 hours
