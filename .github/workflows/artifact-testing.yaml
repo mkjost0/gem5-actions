@@ -8,8 +8,8 @@ on:
   push:
   schedule:
     - cron:  '0 * * 1 *' # this only runs once a year, for files that aren't being tested
-env:
-  artifact-name: "$(date +'%Y-%m-%d_%H.%M.%S')"
+# env:
+#   artifact-name: "$(date +'%Y-%m-%d_%H.%M.%S')"
 # This file is an example of using artifacts in different runs, for us to utilize in
 # separating jobs amongst different runners
 jobs:
@@ -201,7 +201,7 @@ jobs:
         ref: develop
     - uses: actions/download-artifact@v3
       with:
-        name: ${{ env.artifact-name }}
+        name: ${{needs.build-gem5.outputs.build-name}}
         path: build/ALL/gem5.opt
     - run: chmod u+x build/ALL/gem5.opt
     - name: long kvm-fork-tests
@@ -229,7 +229,7 @@ jobs:
         ref: develop
     - uses: actions/download-artifact@v3
       with:
-        name: ${{ env.artifact-name }}
+        name: ${{needs.build-gem5.outputs.build-name}}
         path: build/ALL/gem5.opt
     - run: chmod u+x build/ALL/gem5.opt
     - name: long kvm-switch-tests
