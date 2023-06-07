@@ -36,7 +36,7 @@ jobs:
         run: echo "name=$(date +"%Y-%m-%d_%H.%M.%S")-ALL" >> $GITHUB_OUTPUT
       - name: Build gem5
         run: |
-          scons build/X86/gem5.opt
+          scons build/X86/gem5.opt -j20
           ./build/X86/gem5.opt configs/example/gem5_library/x86-ubuntu-run-with-kvm.py
       # - uses: actions/upload-artifact@v3
       #   with:
