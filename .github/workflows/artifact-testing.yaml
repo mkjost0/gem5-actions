@@ -8,7 +8,7 @@ on:
   push:
   workflow_dispatch:
   schedule:
-    - cron:  '0 * * 1 *' # this only runs once a year, for files that aren't being tested
+    - cron:  '0 * * 1 *' # this only runs once a year, for files that aren't being tested yet
 # env:
 #   artifact-name: "$(date +'%Y-%m-%d_%H.%M.%S')"
 # This file is an example of using artifacts in different runs, for us to utilize in
