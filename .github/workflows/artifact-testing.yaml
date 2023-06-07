@@ -1,5 +1,5 @@
 name: artifact naming
-run-name: testing systemc
+run-name: testing kvm
 # name: Github Artifacting Tests
 # run-name: Testing artifact usage
 #  https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#schedule
@@ -36,12 +36,13 @@ jobs:
         run: echo "name=$(date +"%Y-%m-%d_%H.%M.%S")-ALL" >> $GITHUB_OUTPUT
       - name: Build gem5
         run: |
-          scons build/ALL/gem5.opt -j $(nproc)
-      - uses: actions/upload-artifact@v3
-        with:
-          name: ${{ steps.artifact-name.outputs.name }}
-          path: build/ALL/gem5.opt
-          retention-days: 5
+          scons build/X86/gem5.opt
+          ./build/X86/gem5.opt configs/example/gem5_library/x86-ubuntu-run-with-kvm.py
+      # - uses: actions/upload-artifact@v3
+      #   with:
+      #     name: ${{ steps.artifact-name.outputs.name }}
+      #     path: build/ALL/gem5.opt
+      #     retention-days: 5
       - run: echo "This job's status is ${{ job.status }}."
   # gem5art-unittests:
   #   runs-on: [self-hosted, Linux, X64, run]
@@ -198,89 +199,89 @@ jobs:
   #     - run: echo ${{needs.job1.outputs.output1}}
 
     # kvm tests don't work on github actions
-  testlib-long-kvm-fork-tests:
-    runs-on: [self-hosted, linux, x64, kvm]
-    # container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
-    needs: build-gem5
-    timeout-minutes: 1440 # 24 hours
-    steps:
-    - uses: actions/checkout@v3
-      with:
-        # Scheduled workflows run on the default branch by default. We
-        # therefore need to explicitly checkout the develop branch.
-        ref: develop
-    # - name: Enable KVM group perms
-    #   run: |
-    #     echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
-    #     sudo udevadm control --reload-rules
-    #     sudo udevadm trigger --name-match=kvm
-    #     sudo apt-get update
-    #     sudo apt-get install -y libvirt-clients libvirt-daemon-system libvirt-daemon virtinst bridge-utils qemu qemu-system-x86
-    #     sudo usermod -a -G kvm,libvirt $USER
-    - uses: actions/download-artifact@v3
-      with:
-        name: ${{needs.build-gem5.outputs.build-name}}
-        path: build/ALL/gem5.opt
-    - run: chmod u+x build/ALL/gem5.opt
-    - name: long kvm-fork-tests
-      working-directory: ${{ github.workspace }}/tests
-      run: ./main.py run gem5/kvm-fork-tests --length=long --skip-build -vv -t $(nproc)
-    - name: create zip of results
-      if: success() || failure()
-      run: |
-        zip -r output.zip tests/testing-results
-    - name: upload zip
-      if: success() || failure()
-      uses: actions/upload-artifact@v3
-      env:
-        MY_STEP_VAR: ${{github.job}}_COMMIT.${{github.sha}}_RUN.${{github.run_id}}_ATTEMPT.${{github.run_attempt}}
-      with:
-        name: ${{ env.MY_STEP_VAR }}
-        path: output.zip
-        retention-days: 7
-    - run: echo "This job's status is ${{ job.status }}."
+  # testlib-long-kvm-fork-tests:
+  #   runs-on: [self-hosted, linux, x64, kvm]
+  #   # container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
+  #   needs: build-gem5
+  #   timeout-minutes: 1440 # 24 hours
+  #   steps:
+  #   - uses: actions/checkout@v3
+  #     with:
+  #       # Scheduled workflows run on the default branch by default. We
+  #       # therefore need to explicitly checkout the develop branch.
+  #       ref: develop
+  #   # - name: Enable KVM group perms
+  #   #   run: |
+  #   #     echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+  #   #     sudo udevadm control --reload-rules
+  #   #     sudo udevadm trigger --name-match=kvm
+  #   #     sudo apt-get update
+  #   #     sudo apt-get install -y libvirt-clients libvirt-daemon-system libvirt-daemon virtinst bridge-utils qemu qemu-system-x86
+  #   #     sudo usermod -a -G kvm,libvirt $USER
+  #   - uses: actions/download-artifact@v3
+  #     with:
+  #       name: ${{needs.build-gem5.outputs.build-name}}
+  #       path: build/ALL/gem5.opt
+  #   - run: chmod u+x build/ALL/gem5.opt
+  #   - name: long kvm-fork-tests
+  #     working-directory: ${{ github.workspace }}/tests
+  #     run: ./main.py run gem5/kvm-fork-tests --length=long --skip-build -vv -t $(nproc)
+  #   - name: create zip of results
+  #     if: success() || failure()
+  #     run: |
+  #       zip -r output.zip tests/testing-results
+  #   - name: upload zip
+  #     if: success() || failure()
+  #     uses: actions/upload-artifact@v3
+  #     env:
+  #       MY_STEP_VAR: ${{github.job}}_COMMIT.${{github.sha}}_RUN.${{github.run_id}}_ATTEMPT.${{github.run_attempt}}
+  #     with:
+  #       name: ${{ env.MY_STEP_VAR }}
+  #       path: output.zip
+  #       retention-days: 7
+  #   - run: echo "This job's status is ${{ job.status }}."
 
-  testlib-long-kvm-switch-tests:
-    runs-on: [self-hosted, linux, x64, kvm]
-    # container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
-    needs: build-gem5
-    timeout-minutes: 1440 # 24 hourss
-    steps:
-    - uses: actions/checkout@v3
-      with:
-        # Scheduled workflows run on the default branch by default. We
-        # therefore need to explicitly checkout the develop branch.
-        ref: develop
-    # - name: Enable KVM group perms
-    #   run: |
-    #     echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
-    #     sudo udevadm control --reload-rules
-    #     sudo udevadm trigger --name-match=kvm
-    #     sudo apt-get update
-    #     sudo apt-get install -y libvirt-clients libvirt-daemon-system libvirt-daemon virtinst bridge-utils qemu qemu-system-x86
-    #     sudo usermod -a -G kvm,libvirt $USER
-    - uses: actions/download-artifact@v3
-      with:
-        name: ${{needs.build-gem5.outputs.build-name}}
-        path: build/ALL/gem5.opt
-    - run: chmod u+x build/ALL/gem5.opt
-    - name: long kvm-switch-tests
-      working-directory: ${{ github.workspace }}/tests
-      run: ./main.py run gem5/kvm-switch-tests --length=long --skip-build -vv -t $(nproc)
-    - name: create zip of results
-      if: success() || failure()
-      run: |
-        zip -r output.zip tests/testing-results
-    - name: upload zip
-      if: success() || failure()
-      uses: actions/upload-artifact@v3
-      env:
-        MY_STEP_VAR: ${{github.job}}_COMMIT.${{github.sha}}_RUN.${{github.run_id}}_ATTEMPT.${{github.run_attempt}}
-      with:
-        name: ${{ env.MY_STEP_VAR }}
-        path: output.zip
-        retention-days: 7
-    - run: echo "This job's status is ${{ job.status }}."
+  # testlib-long-kvm-switch-tests:
+  #   runs-on: [self-hosted, linux, x64, kvm]
+  #   # container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
+  #   needs: build-gem5
+  #   timeout-minutes: 1440 # 24 hourss
+  #   steps:
+  #   - uses: actions/checkout@v3
+  #     with:
+  #       # Scheduled workflows run on the default branch by default. We
+  #       # therefore need to explicitly checkout the develop branch.
+  #       ref: develop
+  #   # - name: Enable KVM group perms
+  #   #   run: |
+  #   #     echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+  #   #     sudo udevadm control --reload-rules
+  #   #     sudo udevadm trigger --name-match=kvm
+  #   #     sudo apt-get update
+  #   #     sudo apt-get install -y libvirt-clients libvirt-daemon-system libvirt-daemon virtinst bridge-utils qemu qemu-system-x86
+  #   #     sudo usermod -a -G kvm,libvirt $USER
+  #   - uses: actions/download-artifact@v3
+  #     with:
+  #       name: ${{needs.build-gem5.outputs.build-name}}
+  #       path: build/ALL/gem5.opt
+  #   - run: chmod u+x build/ALL/gem5.opt
+  #   - name: long kvm-switch-tests
+  #     working-directory: ${{ github.workspace }}/tests
+  #     run: ./main.py run gem5/kvm-switch-tests --length=long --skip-build -vv -t $(nproc)
+  #   - name: create zip of results
+  #     if: success() || failure()
+  #     run: |
+  #       zip -r output.zip tests/testing-results
+  #   - name: upload zip
+  #     if: success() || failure()
+  #     uses: actions/upload-artifact@v3
+  #     env:
+  #       MY_STEP_VAR: ${{github.job}}_COMMIT.${{github.sha}}_RUN.${{github.run_id}}_ATTEMPT.${{github.run_attempt}}
+  #     with:
+  #       name: ${{ env.MY_STEP_VAR }}
+  #       path: output.zip
+  #       retention-days: 7
+  #   - run: echo "This job's status is ${{ job.status }}."
     # steps:
     # # checks out repository, should be more useful when
     # # running checks on changed files
