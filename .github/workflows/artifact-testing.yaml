@@ -13,36 +13,36 @@ on:
 # This file is an example of using artifacts in different runs, for us to utilize in
 # separating jobs amongst different runners
 jobs:
-  # build-gem5:
-  #   runs-on: [self-hosted, linux, x64, kvm]
-  #   # container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
-  #   outputs:
-  #     build-name: ${{ steps.artifact-name.outputs.name }}
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #       with:
-  #         # Scheduled workflows run on the default branch by default. We
-  #         # therefore need to explicitly checkout the develop branch.
-  #         ref: develop
-  #     # - name: Enable KVM group perms
-  #     #   run: |
-  #     #     echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
-  #     #     sudo udevadm control --reload-rules
-  #     #     sudo udevadm trigger --name-match=kvm
-  #     #     sudo apt-get update
-  #     #     sudo apt-get install -y libvirt-clients libvirt-daemon-system libvirt-daemon virtinst bridge-utils qemu qemu-system-x86
-  #     #     sudo usermod -a -G kvm,libvirt $USER
-  #     - id: artifact-name
-  #       run: echo "name=$(date +"%Y-%m-%d_%H.%M.%S")-ALL" >> $GITHUB_OUTPUT
-  #     - name: Build gem5
-  #       run: |
-  #         scons build/ALL/gem5.opt -j $(nproc)
-  #     - uses: actions/upload-artifact@v3
-  #       with:
-  #         name: ${{ steps.artifact-name.outputs.name }}
-  #         path: build/ALL/gem5.opt
-  #         retention-days: 5
-  #     - run: echo "This job's status is ${{ job.status }}."
+  build-gem5:
+    runs-on: [self-hosted, linux, x64, kvm]
+    # container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
+    outputs:
+      build-name: ${{ steps.artifact-name.outputs.name }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          # Scheduled workflows run on the default branch by default. We
+          # therefore need to explicitly checkout the develop branch.
+          ref: develop
+      # - name: Enable KVM group perms
+      #   run: |
+      #     echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+      #     sudo udevadm control --reload-rules
+      #     sudo udevadm trigger --name-match=kvm
+      #     sudo apt-get update
+      #     sudo apt-get install -y libvirt-clients libvirt-daemon-system libvirt-daemon virtinst bridge-utils qemu qemu-system-x86
+      #     sudo usermod -a -G kvm,libvirt $USER
+      - id: artifact-name
+        run: echo "name=$(date +"%Y-%m-%d_%H.%M.%S")-ALL" >> $GITHUB_OUTPUT
+      - name: Build gem5
+        run: |
+          scons build/ALL/gem5.opt -j $(nproc)
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ${{ steps.artifact-name.outputs.name }}
+          path: build/ALL/gem5.opt
+          retention-days: 5
+      - run: echo "This job's status is ${{ job.status }}."
   # gem5art-unittests:
   #   runs-on: [self-hosted, Linux, X64, run]
   #   container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
@@ -201,7 +201,7 @@ jobs:
   testlib-long-kvm-fork-tests:
     runs-on: [self-hosted, linux, x64, kvm]
     # container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
-    # needs: build-gem5
+    needs: build-gem5
     timeout-minutes: 1440 # 24 hours
     steps:
     - uses: actions/checkout@v3
@@ -219,7 +219,7 @@ jobs:
     #     sudo usermod -a -G kvm,libvirt $USER
     - uses: actions/download-artifact@v3
       with:
-        name: "2023-06-07_13.24.04-ALL"
+        name: ${{needs.build-gem5.outputs.build-name}}
         path: build/ALL/gem5.opt
     - run: chmod u+x build/ALL/gem5.opt
     - name: long kvm-fork-tests
@@ -239,7 +239,7 @@ jobs:
   testlib-long-kvm-switch-tests:
     runs-on: [self-hosted, linux, x64, kvm]
     # container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
-    # needs: build-gem5
+    needs: build-gem5
     timeout-minutes: 1440 # 24 hourss
     steps:
     - uses: actions/checkout@v3
@@ -257,7 +257,7 @@ jobs:
     #     sudo usermod -a -G kvm,libvirt $USER
     - uses: actions/download-artifact@v3
       with:
-        name: "2023-06-07_13.24.04-ALL"
+        name: ${{needs.build-gem5.outputs.build-name}}
         path: build/ALL/gem5.opt
     - run: chmod u+x build/ALL/gem5.opt
     - name: long kvm-switch-tests
