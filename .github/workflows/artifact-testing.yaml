@@ -6,6 +6,7 @@ run-name: testing artifact naming
 #  https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#schedule
 on:
   push:
+  workflow-dispatch:
   schedule:
     - cron:  '0 * * 1 *' # this only runs once a year, for files that aren't being tested
 # env:
