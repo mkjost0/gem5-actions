@@ -11,7 +11,7 @@ on:
     - cron:  '0 7 * * *'
 
 jobs:
-building all necessary versions of gem5
+# building all necessary versions of gem5
   build-gem5:
     runs-on: [self-hosted, linux, x64, build]
     container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest

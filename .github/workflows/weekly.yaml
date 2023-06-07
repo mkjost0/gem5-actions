@@ -6,7 +6,7 @@ run-name: ${{ github.actor }} is running the weekly tests
 
 on:
   # Runs every Sunday from 7AM UTC
-  push:
+  # push:
   schedule:
     - cron:  '00 7 * * 6'
 
