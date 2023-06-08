@@ -10,9 +10,17 @@ on:
     types: [opened, reopened, edited]
 
 jobs:
+  pre-commit:
+    runs-on: [self-hosted, linux, x64, build]
+    container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: pre-commit/action@v3.0.0
+
   build-gem5:
     runs-on: [self-hosted, linux, x64, build]
     container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
+    needs: pre-commit
     outputs:
       artifactname: ${{ steps.name.outputs.test }}
     steps:
@@ -52,7 +60,7 @@ jobs:
   testlib-quick:
     runs-on: [self-hosted, linux, x64, build]
     container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
-    needs: build-gem5
+    needs: [pre-commit, build-gem5]
     timeout-minutes: 360     # 6 hours
     steps:
       - uses: actions/checkout@v3
