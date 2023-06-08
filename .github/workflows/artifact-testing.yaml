@@ -36,8 +36,10 @@ jobs:
         run: echo "name=$(date +"%Y-%m-%d_%H.%M.%S")-ALL" >> $GITHUB_OUTPUT
       - name: Build gem5
         run: |
-          scons build/X86/gem5.opt -j20
-          ./build/X86/gem5.opt configs/example/gem5_library/x86-ubuntu-run-with-kvm.py
+          scons build/ALL/gem5.opt -j20
+          build/ALL/gem5.opt configs/example/gem5_library/riscvmatched-hello.py
+          ./main.py run gem5/kvm-fork-tests --length=long --skip-build -vv -t 4
+          # ./build/X86/gem5.opt configs/example/gem5_library/x86-ubuntu-run-with-kvm.py
       # - uses: actions/upload-artifact@v3
       #   with:
       #     name: ${{ steps.artifact-name.outputs.name }}
