@@ -15,7 +15,7 @@ on:
 jobs:
   build-gem5:
     runs-on: [self-hosted, linux, x64, build]
-    # container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
+    container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
     outputs:
       build-name: ${{ steps.artifact-name.outputs.name }}
     steps:
@@ -208,11 +208,11 @@ jobs:
     needs: build-gem5
     timeout-minutes: 1440 # 24 hours
     steps:
-    - uses: actions/checkout@v3
-      with:
-        # Scheduled workflows run on the default branch by default. We
-        # therefore need to explicitly checkout the develop branch.
-        ref: develop
+    # - uses: actions/checkout@v3
+    #   with:
+    #     # Scheduled workflows run on the default branch by default. We
+    #     # therefore need to explicitly checkout the develop branch.
+    #     ref: develop
     # - name: Enable KVM group perms
     #   run: |
     #     echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
@@ -250,11 +250,11 @@ jobs:
     needs: build-gem5
     timeout-minutes: 1440 # 24 hourss
     steps:
-    - uses: actions/checkout@v3
-      with:
-        # Scheduled workflows run on the default branch by default. We
-        # therefore need to explicitly checkout the develop branch.
-        ref: develop
+    # - uses: actions/checkout@v3
+    #   with:
+    #     # Scheduled workflows run on the default branch by default. We
+    #     # therefore need to explicitly checkout the develop branch.
+    #     ref: develop
     # - name: Enable KVM group perms
     #   run: |
     #     echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
