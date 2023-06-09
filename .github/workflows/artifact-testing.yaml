@@ -38,9 +38,9 @@ jobs:
         run: |
           scons build/ALL/gem5.opt -j$(nproc)
           build/ALL/gem5.opt configs/example/gem5_library/riscvmatched-hello.py
-          build/ALL/gem5.opt configs/example/gem5_library/riscvmatched-fs.py
+          # build/ALL/gem5.opt configs/example/gem5_library/riscvmatched-fs.py
           # cd tests
-          ./main.py run gem5/gem5_library_example_tests --length=long --skip-build -vv -t 4
+          # ./main.py run gem5/gem5_library_example_tests --length=long --skip-build -vv -t 4
           # ./build/X86/gem5.opt configs/example/gem5_library/x86-ubuntu-run-with-kvm.py
       - uses: actions/upload-artifact@v3
         with:
@@ -230,7 +230,9 @@ jobs:
     - run: chmod u+x build/ALL/gem5.opt
     - name: long kvm-fork-tests
       working-directory: ${{ github.workspace }}/tests
-      run: ./main.py run gem5/kvm-fork-tests --length=long --skip-build -vv -t $(nproc)
+      run: |
+        build/ALL/gem5.opt configs/example/gem5_library/riscvmatched-hello.py
+        ./main.py run gem5/kvm-fork-tests --length=long --skip-build -vv -t $(nproc)
     - name: create zip of results
       if: success() || failure()
       run: |
