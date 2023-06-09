@@ -63,7 +63,7 @@ jobs:
   testlib-quick:
     runs-on: [self-hosted, linux, x64, run]
     container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
-    needs: [pbuild-gem5]
+    needs: [build-gem5]
     timeout-minutes: 360     # 6 hours
     steps:
       - uses: actions/checkout@v3
