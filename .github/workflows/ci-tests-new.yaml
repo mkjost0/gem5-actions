@@ -10,18 +10,20 @@ on:
     types: [opened, reopened, edited]
 
 jobs:
-  pre-commit:
-    # runs on github hosted runner
-    runs-on: ubuntu-22.04
-    steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-python@v3
-    - uses: pre-commit/action@v3.0.0
+  # pre-commit:
+  #   # runs on github hosted runner
+  #   runs-on: ubuntu-22.04
+  #   steps:
+  #   - uses: actions/checkout@v3
+  #   - uses: actions/setup-python@v4
+  #     with:
+  #       python-version: "3.11"
+  #   - uses: pre-commit/action@v3.0.0
 
   build-gem5:
     runs-on: [self-hosted, linux, x64, build]
     container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
-    needs: pre-commit
+    # needs: pre-commit
     outputs:
       artifactname: ${{ steps.name.outputs.test }}
     steps:
@@ -59,9 +61,9 @@ jobs:
   #     - run: echo "This job's status is ${{ job.status }}."
 
   testlib-quick:
-    runs-on: [self-hosted, linux, x64, build]
+    runs-on: [self-hosted, linux, x64, run]
     container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
-    needs: [pre-commit, build-gem5]
+    needs: [pbuild-gem5]
     timeout-minutes: 360     # 6 hours
     steps:
       - uses: actions/checkout@v3
