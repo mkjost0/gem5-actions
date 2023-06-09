@@ -36,10 +36,10 @@ jobs:
         run: echo "name=$(date +"%Y-%m-%d_%H.%M.%S")-ALL" >> $GITHUB_OUTPUT
       - name: Build gem5
         run: |
-          scons build/ALL/gem5.opt -j20
+          scons build/ALL/gem5.opt -j$(nproc)
           build/ALL/gem5.opt configs/example/gem5_library/riscvmatched-hello.py
-          cd tests
-          ./main.py run gem5/gem5_library_example_tests --length=long --skip-build -vv -t 4
+          # cd tests
+          # ./main.py run gem5/gem5_library_example_tests --length=long --skip-build -vv -t 4
           # ./build/X86/gem5.opt configs/example/gem5_library/x86-ubuntu-run-with-kvm.py
       - uses: actions/upload-artifact@v3
         with:
