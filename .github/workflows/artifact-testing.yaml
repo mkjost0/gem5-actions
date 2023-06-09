@@ -4,7 +4,7 @@ run-name: testing kvm
 # run-name: Testing artifact usage
 #  https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#schedule
 on:
-  # push:
+  push:
   workflow_dispatch:
   schedule:
     - cron:  '0 * * 1 *' # this only runs once a year, for files that aren't being tested yet
@@ -39,7 +39,7 @@ jobs:
           scons build/ALL/gem5.opt -j20
           build/ALL/gem5.opt configs/example/gem5_library/riscvmatched-hello.py
           cd tests
-          ./main.py run gem5/kvm-fork-tests --length=long --skip-build -vv -t 4
+          ./main.py run gem5/gem5_library_example_tests --length=long --skip-build -vv -t 4
           # ./build/X86/gem5.opt configs/example/gem5_library/x86-ubuntu-run-with-kvm.py
       - uses: actions/upload-artifact@v3
         with:
