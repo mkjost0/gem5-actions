@@ -34,6 +34,10 @@ jobs:
           ref: develop
       - id: name
         run: echo "test=$(date +"%Y-%m-%d_%H.%M.%S")-artifact" >> $GITHUB_OUTPUT
+        timeout-minutes: 300 # 6 hours
+      - name: test
+        run: ls
+        timeout-minutes: 300 # 6 hours
 
       - name: Build gem5
         run: |
