@@ -38,8 +38,9 @@ jobs:
         run: |
           scons build/ALL/gem5.opt -j$(nproc)
           build/ALL/gem5.opt configs/example/gem5_library/riscvmatched-hello.py
+          build/ALL/gem5.opt configs/example/gem5_library/riscvmatched-fs.py
           # cd tests
-          # ./main.py run gem5/gem5_library_example_tests --length=long --skip-build -vv -t 4
+          ./main.py run gem5/gem5_library_example_tests --length=long --skip-build -vv -t 4
           # ./build/X86/gem5.opt configs/example/gem5_library/x86-ubuntu-run-with-kvm.py
       - uses: actions/upload-artifact@v3
         with:
@@ -208,11 +209,11 @@ jobs:
     needs: build-gem5
     timeout-minutes: 1440 # 24 hours
     steps:
-    # - uses: actions/checkout@v3
-    #   with:
-    #     # Scheduled workflows run on the default branch by default. We
-    #     # therefore need to explicitly checkout the develop branch.
-    #     ref: develop
+    - uses: actions/checkout@v3
+      with:
+        # Scheduled workflows run on the default branch by default. We
+        # therefore need to explicitly checkout the develop branch.
+        ref: develop
     # - name: Enable KVM group perms
     #   run: |
     #     echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
@@ -221,6 +222,7 @@ jobs:
     #     sudo apt-get update
     #     sudo apt-get install -y libvirt-clients libvirt-daemon-system libvirt-daemon virtinst bridge-utils qemu qemu-system-x86
     #     sudo usermod -a -G kvm,libvirt $USER
+    - run: ls
     - uses: actions/download-artifact@v3
       with:
         name: ${{needs.build-gem5.outputs.build-name}}
@@ -250,11 +252,11 @@ jobs:
     needs: build-gem5
     timeout-minutes: 1440 # 24 hourss
     steps:
-    # - uses: actions/checkout@v3
-    #   with:
-    #     # Scheduled workflows run on the default branch by default. We
-    #     # therefore need to explicitly checkout the develop branch.
-    #     ref: develop
+    - uses: actions/checkout@v3
+      with:
+        # Scheduled workflows run on the default branch by default. We
+        # therefore need to explicitly checkout the develop branch.
+        ref: develop
     # - name: Enable KVM group perms
     #   run: |
     #     echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
