@@ -229,9 +229,10 @@ jobs:
         path: build/ALL/gem5.opt
     - run: chmod u+x build/ALL/gem5.opt
     - name: long kvm-fork-tests
-      working-directory: ${{ github.workspace }}/tests
+      # working-directory: ${{ github.workspace }}/tests
       run: |
         build/ALL/gem5.opt configs/example/gem5_library/riscvmatched-hello.py
+        cd tests
         ./main.py run gem5/kvm-fork-tests --length=long --skip-build -vv -t $(nproc)
     - name: create zip of results
       if: success() || failure()
