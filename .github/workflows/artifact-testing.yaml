@@ -1,5 +1,5 @@
 name: artifact naming
-run-name: testing kvm
+run-name: testing riscvmatched test
 # name: Github Artifacting Tests
 # run-name: Testing artifact usage
 #  https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#schedule
@@ -8,8 +8,7 @@ on:
   workflow_dispatch:
   schedule:
     - cron:  '0 * * 1 *' # this only runs once a year, for files that aren't being tested yet
-# env:
-#   artifact-name: "$(date +'%Y-%m-%d_%H.%M.%S')"
+
 # This file is an example of using artifacts in different runs, for us to utilize in
 # separating jobs amongst different runners
 jobs:
@@ -24,189 +23,45 @@ jobs:
           # Scheduled workflows run on the default branch by default. We
           # therefore need to explicitly checkout the develop branch.
           ref: develop
-      # - name: Enable KVM group perms
-      #   run: |
-      #     echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
-      #     sudo udevadm control --reload-rules
-      #     sudo udevadm trigger --name-match=kvm
-      #     sudo apt-get update
-      #     sudo apt-get install -y libvirt-clients libvirt-daemon-system libvirt-daemon virtinst bridge-utils qemu qemu-system-x86
-      #     sudo usermod -a -G kvm,libvirt $USER
       - id: artifact-name
         run: echo "name=$(date +"%Y-%m-%d_%H.%M.%S")-ALL" >> $GITHUB_OUTPUT
       - name: Build gem5
         run: |
           scons build/ALL/gem5.opt -j$(nproc)
-          build/ALL/gem5.opt configs/example/gem5_library/riscvmatched-hello.py
-          # build/ALL/gem5.opt configs/example/gem5_library/riscvmatched-fs.py
-          # cd tests
-          # ./main.py run gem5/gem5_library_example_tests --length=long --skip-build -vv -t 4
-          # ./build/X86/gem5.opt configs/example/gem5_library/x86-ubuntu-run-with-kvm.py
       - uses: actions/upload-artifact@v3
         with:
           name: ${{ steps.artifact-name.outputs.name }}
           path: build/ALL/gem5.opt
           retention-days: 5
       - run: echo "This job's status is ${{ job.status }}."
-  # gem5art-unittests:
-  #   runs-on: [self-hosted, Linux, X64, run]
-  #   container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
-  #   timeout-minutes: 15
-  #   steps:
-  #   - uses: actions/checkout@v3
-  #   # - name: Setup the virtual environment
-  #   #   working-directory: ${{ github.workspace }}
-  #   #   run: |
-  #   #     mkdir -p .pyenv
-  #   #     python3 -m venv .pyenv
-  #   #     source .pyenv/bin/activate
-  #   - name: Install the packages
-  #     working-directory: ${{ github.workspace }}
-  #     run: |
-  #       # git config --global --add safe.directory /__w/gem5-actions/gem5-actions
-  #       pip install -e util/gem5art/artifact
-  #       pip install -e util/gem5art/run
-  #       pip install -e util/gem5art/tasks
-  #   - run: echo "This job's status is ${{ job.status }}."
-  #   - name: The gem5art.artifact Unittests
-  #     working-directory: ${{ github.workspace }}/util/gem5art/artifact
-  #     run: |
-  #       python3 -m unittest
-  #       mypy -p gem5art.artifact
-  #   - name: The gem5art.run Unittests
-  #     working-directory: ${{ github.workspace }}/util/gem5art/run
-  #     run: |
-  #       python3 -m unittest
-  #       mypy -p gem5art.run
-  #   - name: The gem5art.tasks Unittests
-  #     working-directory: ${{ github.workspace }}/util/gem5art/tasks
-  #     run: |
-  #       python3 -m unittest
-  #       mypy -p gem5art.tasks
-  #   - run: echo "This job's status is ${{ job.status }}."
-  # This runs the gem5 within SystemC ingration and runs a simple hello-world
-  # simulation with it.
-  # systemc-test:
-  #   runs-on: [self-hosted, linux, x64, build]
-  #   container: gcr.io/gem5-test/systemc-env:latest
-  #   timeout-minutes: 180
 
-  #   steps:
-  #   - uses: actions/checkout@v3
-  #     with:
-  #       # Scheduled workflows run on the default branch by default. We
-  #       # therefore need to explicitly checkout the develop branch.
-  #       ref: develop
-  #   # - name: Build ARM/gem5.opt
-  #   #   uses: docker://gcr.io/gem5-test/ubuntu-22.04_min-dependencies:latest
-  #   #   # This is a bit of a hack so we can run a different docker container.
-  #   #   with:
-  #   #     args: scons build/ARM/gem5.opt --ignore-style --duplicate-sources -j4
-  #   # - name: Build ARM/libgem5_opt.so
-  #   #   uses: docker://gcr.io/gem5-test/ubuntu-22.04_min-dependencies:latest
-  #   #   # This is a bit of a hack so we can run a different docker container.
-  #   #   with:
-  #   #     args: scons build/ARM/libgem5_opt.so --with-cxx-config --without-python --without-tcmalloc USE_SYSTEMC=0 -j4 --duplicate-sources
-  #   - name: Build ARM
-  #     run: |
-  #       scons build/ARM/gem5.opt --ignore-style --duplicate-sources -j$(nproc)
-  #       scons build/ARM/libgem5_opt.so --with-cxx-config --without-python --without-tcmalloc USE_SYSTEMC=0 -j$(nproc) --duplicate-sources
-  #   - name: Compile gem5 withing SystemC
-  #     working-directory: ${{ github.workspace }}/util/systemc/gem5_within_systemc
-  #     run: |
-  #       make
-  #   - name: Run gem5 within SystemC test
-  #     run: ./build/ARM/gem5.opt configs/deprecated/example/se.py -c tests/test-progs/hello/bin/arm/linux/hello
-  #   - name: bla
-  #     run: LD_LIBRARY_PATH=build/ARM/:/opt/systemc/lib-linux64/ ./util/systemc/gem5_within_systemc/gem5.opt.sc m5out/config.ini
+  build-gem5-ALL_MESI_Two_Level:
+    runs-on: [self-hosted, linux, x64, build,]
+    container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
+    outputs:
+      build-name: ${{ steps.artifact-name.outputs.name }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          # Scheduled workflows run on the default branch by default. We
+          # therefore need to explicitly checkout the develop branch.
+          ref: develop
+      - id: artifact-name
+        run: echo "name=$(date +"%Y-%m-%d_%H.%M.%S")-ALL_MESI_Two_Level" >> $GITHUB_OUTPUT
+      - name: Build gem5
+        run: |
+          scons build/ALL_MESI_Two_Level/gem5.opt --default=ALL PROTOCOL=MESI_Two_Level -j $(nproc)
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ${{ steps.artifact-name.outputs.name }}
+          path: build/ALL_MESI_Two_Level/gem5.opt
+          retention-days: 5
+      - run: echo "This job's status is ${{ job.status }}."
 
-  # job1:
-  #   runs-on: [self-hosted, linux, x64, run, test]
-  #   # running container with only a single arguement passes the image being used
-  #   container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
-  #   outputs:
-  #     build-name: ${{ steps.test.outputs.name }}
-  #   steps:
-  #     # - id: step1
-  #     #   run: echo "test=$(date +"%Y-%m-%d_%H.%M.%S")-artifact" >> $GITHUB_OUTPUT
-  #     # - run: echo ${{ steps.step1.outputs.test }}
-
-  #   # steps:
-  #   # # checks out repository, should be more useful when
-  #   # # running checks on changed files
-  #     # - uses: actions/checkout@v3
-  #     #   with:
-  #     #     fetch-depth: 0
-  #     #     outputs:
-
-  #     - name: Show default environment variables
-  #       id: test
-  #       env:
-  #         MY_STEP_VAR: ${{github.job}}_COMMIT.${{github.sha}}_RUN.${{github.run_id}}_ATTEMPT.${{github.run_attempt}}
-  #       run: |
-  #         # echo "The job_id is: $GITHUB_JOB"   # reference the default environment variables
-  #         # echo "The id of this action is: $GITHUB_ACTION"   # reference the default environment variables
-  #         # echo "The run id is: $GITHUB_RUN_ID"
-  #         # echo "The GitHub Actor's username is: $GITHUB_ACTOR"
-  #         # echo "GitHub SHA: $GITHUB_SHA"
-  #         # format('Hello {0} {1} {2}', 'Mona', 'the', 'Octocat')
-  #         # echo "name=${GITHUB_JOB}.commit-${GITHUB_SHA}.run-${GITHUB_RUN_ID}.attempt-${GITHUB_RUN_ATTEMPT}" >> $GITHUB_OUTPUT
-  #         # echo $NOW
-  #         # echo ${{ steps.test.outputs.name }}
-  #     - name: test
-  #       run: |
-  #         # apt-get -y install zip
-  #         zip -help
-  #         touch test.txt
-  #         zip -r test.zip test.txt
-  #         echo ${{ env.MY_STEP_VAR }}
-  #     # - name: Generate artifact name
-  #     #   # id: generate-name
-  #     #   run: |
-  #     #     echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
-  #     #     echo $NOW
-
-  #     #     echo NOW=hello >> $GITHUB_ENV
-  #     #     echo $NOW
-  #     - name: Build and run gem5
-  #       run: |
-  #         touch test.py
-  #         # scons build/ALL/gem5.fast -j $(nproc)
-  #     # - id: artifact-name
-  #     #   run: echo "name=$(date +"%Y-%m-%d_%H.%M.%S")-ALL" >> $GITHUB_OUTPUT
-  #     - uses: actions/upload-artifact@v3
-  #       env:
-  #         MY_STEP_VAR: ${{github.job}}_COMMIT.${{github.sha}}_RUN.${{github.run_id}}_ATTEMPT.${{github.run_attempt}}
-  #       with:
-  #         name: ${{ env.MY_STEP_VAR }}
-  #         path: test.py
-  #         retention-days: 7
-  #     # - name: Set current date as env variable
-  #     #   run: echo ${{ env.GITHUB_JOB }}
-  #     # - name: Echo current date
-  #     #   run: echo $artifact-name # Gives "2022-12-11T01:42:20"
-
-  #     # - uses: actions/upload-artifact@v3
-  #     #   with:
-  #     #     name: $artifact-name
-  #     #     path: build/ALL/gem5.fast
-
-  #     - run: echo "🍏 This job's status is ${{ job.status }}."
-
-  # Test-Download:
-  #   runs-on: [self-hosted, linux, x64, run]
-  #   # running container with only a single arguement passes the image being used
-  #   container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
-  #   # needs: job1
-
-  #   steps:
-  #     - run: echo ${{needs.job1.outputs.output1}}
-
-    # kvm tests don't work on github actions
-  testlib-long-kvm-fork-tests:
+  testlib-long-gem5_library_example_tests:
     runs-on: [self-hosted, linux, x64, build]
     container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
-    needs: build-gem5
+    needs: [build-gem5, build-gem5-ALL_MESI_Two_Level]
     timeout-minutes: 1440 # 24 hours
     steps:
     - uses: actions/checkout@v3
@@ -214,72 +69,23 @@ jobs:
         # Scheduled workflows run on the default branch by default. We
         # therefore need to explicitly checkout the develop branch.
         ref: develop
-    # - name: Enable KVM group perms
-    #   run: |
-    #     echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
-    #     sudo udevadm control --reload-rules
-    #     sudo udevadm trigger --name-match=kvm
-    #     sudo apt-get update
-    #     sudo apt-get install -y libvirt-clients libvirt-daemon-system libvirt-daemon virtinst bridge-utils qemu qemu-system-x86
-    #     sudo usermod -a -G kvm,libvirt $USER
-    - run: ls
     - uses: actions/download-artifact@v3
       with:
         name: ${{needs.build-gem5.outputs.build-name}}
-        path: build/ALL/gem5.opt
+        path: build/ALL
     - run: chmod u+x build/ALL/gem5.opt
-    - name: long kvm-fork-tests
-      # working-directory: ${{ github.workspace }}/tests
-      run: |
-        chmod u+x build/ALL/gem5.opt
-        ./build/ALL/gem5.opt configs/example/gem5_library/riscvmatched-hello.py
-        cd tests
-        ./main.py run gem5/kvm-fork-tests --length=long --skip-build -vv -t $(nproc)
-    - name: create zip of results
-      if: success() || failure()
-      run: |
-        zip -r output.zip tests/testing-results
-    - name: upload zip
-      if: success() || failure()
-      uses: actions/upload-artifact@v3
-      env:
-        MY_STEP_VAR: ${{github.job}}_COMMIT.${{github.sha}}_RUN.${{github.run_id}}_ATTEMPT.${{github.run_attempt}}
-      with:
-        name: ${{ env.MY_STEP_VAR }}
-        path: output.zip
-        retention-days: 7
-    - run: echo "This job's status is ${{ job.status }}."
-
-  testlib-long-kvm-switch-tests:
-    runs-on: [self-hosted, linux, x64, kvm]
-    container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
-    needs: build-gem5
-    timeout-minutes: 1440 # 24 hourss
-    steps:
-    - uses: actions/checkout@v3
-      with:
-        # Scheduled workflows run on the default branch by default. We
-        # therefore need to explicitly checkout the develop branch.
-        ref: develop
-    # - name: Enable KVM group perms
-    #   run: |
-    #     echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
-    #     sudo udevadm control --reload-rules
-    #     sudo udevadm trigger --name-match=kvm
-    #     sudo apt-get update
-    #     sudo apt-get install -y libvirt-clients libvirt-daemon-system libvirt-daemon virtinst bridge-utils qemu qemu-system-x86
-    #     sudo usermod -a -G kvm,libvirt $USER
     - uses: actions/download-artifact@v3
       with:
-        name: ${{needs.build-gem5.outputs.build-name}}
-        path: build/ALL/gem5.opt
-    - run: chmod u+x build/ALL/gem5.opt
-    - name: long kvm-switch-tests
+        name: ${{needs.build-gem5-ALL_MESI_Two_Level.outputs.build-name}}
+        path: build/ALL_MESI_Two_Level
+    - run: chmod u+x build/ALL_MESI_Two_Level/gem5.opt
+    - name: long gem5_library_example_tests
       working-directory: ${{ github.workspace }}/tests
-      run: ./main.py run gem5/kvm-switch-tests --length=long --skip-build -vv -t $(nproc)
+      run: ./main.py run gem5/gem5_library_example_tests --length=long --skip-build -vv -t $(nproc)
     - name: create zip of results
       if: success() || failure()
       run: |
+        apt-get -y install zip
         zip -r output.zip tests/testing-results
     - name: upload zip
       if: success() || failure()
@@ -291,32 +97,3 @@ jobs:
         path: output.zip
         retention-days: 7
     - run: echo "This job's status is ${{ job.status }}."
-    # steps:
-    # # checks out repository, should be more useful when
-    # # running checks on changed files
-    #   - uses: actions/checkout@v3
-    #     with:
-    #       fetch-depth: 0
-
-      # - name: Generate artifact name
-      #   id: generate-name
-      #   run: |
-
-
-      # - uses: actions/download-artifact@v3
-      #   with:
-      #     name: $GITHUB_SHA $GITHUB_RUN_ID $GITHUB_RUN_ATTEMPT
-      #     path: build/ALL/gem5.fast
-
-      # - name: Display structure of downloaded files
-      #   run: ls -R
-        # working-directory: build/X86
-
-      # double checking that steps are run chronologically
-      # - name: Run gem5 separately (memory_traffic.py)
-      #   run: |
-      #     chmod u+x build/ALL/gem5.opt
-      #     cd tests
-      #     ./main.py run --length=long gem5/cpu_tests/ --skip-build
-
-      # - run: echo "🍏 This job's status is ${{ job.status }}."
