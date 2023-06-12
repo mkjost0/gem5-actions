@@ -592,7 +592,6 @@ def obtain_resource(
     to_path = None
     # If the "url" field is specified, the resoruce must be downloaded.
     if "url" in resource_json and resource_json["url"]:
-
         # If the `resource_directory` parameter is not set via this function, we
         # check the "GEM5_RESOURCE_DIR" environment variable. If this too is not
         # set we call `_get_default_resource_dir()` to determine where the

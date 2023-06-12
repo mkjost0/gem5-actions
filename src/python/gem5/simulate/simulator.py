@@ -365,7 +365,7 @@ class Simulator:
         """
         start = 0
         to_return = []
-        for (exit_event, tick) in self._tick_stopwatch:
+        for exit_event, tick in self._tick_stopwatch:
             if exit_event == ExitEvent.WORKBEGIN:
                 start = tick
             elif exit_event == ExitEvent.WORKEND:
@@ -381,7 +381,6 @@ class Simulator:
         """
 
         if not self._instantiated:
-
             # Before anything else we run the AbstractBoard's
             # `_pre_instantiate` function.
             self._board._pre_instantiate()
@@ -458,7 +457,6 @@ class Simulator:
 
         # This while loop will continue until an a generator yields True.
         while True:
-
             self._last_exit_event = m5.simulate(max_ticks)
 
             # Translate the exit event cause to the exit event enum.

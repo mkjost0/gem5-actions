@@ -110,7 +110,6 @@ def _get_resources_json_at_path(path: str, use_caching: bool = True) -> Dict:
     # its Truncated Exponential Backoff algorithm
     # (maximum of roughly 1 minute). Typically this code will run quickly.
     with FileLock(f"{download_path}.lock", timeout=120):
-
         # The resources.json file can change at any time, but to avoid
         # excessive retrieval we cache a version locally and use it for up to
         # an hour before obtaining a fresh copy.
@@ -322,14 +321,14 @@ def _download(url: str, download_to: str, max_attempts: int = 6) -> None:
             else:
                 raise e
         except ValueError as e:
-            print('Handling error:', e)
+            print("Handling error:", e)
             raise Exception(
                 "Environment variable GEM5_USE_PROXY is set to "
                 f"'{use_proxy}'. The expected form is "
                 "<host>:<port>'."
             )
         except ImportError as e:
-            print('Handling error:', e)
+            print("Handling error:", e)
             raise Exception(
                 "Environment variable GEM5_USE_PROXY is set to "
                 f"'{use_proxy}'. The expected form is "
@@ -535,7 +534,6 @@ def get_resource(
             with tarfile.open(download_dest) as f:
 
                 def is_within_directory(directory, target):
-
                     abs_directory = os.path.abspath(directory)
                     abs_target = os.path.abspath(target)
 
@@ -546,7 +544,6 @@ def get_resource(
                 def safe_extract(
                     tar, path=".", members=None, *, numeric_owner=False
                 ):
-
                     for member in tar.getmembers():
                         member_path = os.path.join(path, member.name)
                         if not is_within_directory(path, member_path):
