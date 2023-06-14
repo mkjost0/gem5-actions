@@ -15,14 +15,13 @@ jobs:
     container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
     steps:
       - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
       - run: |
+          echo '${{ toJSON(github.event.commits) }}' | jq ".[0].author"
           git config --global --add safe.directory /__w/gem5-actions/gem5-actions
-          for commit in $(git rev-list ${{ github.base_ref }}..${{ github.head_ref }}); do
-              git checkout $commit
-              echo "run test"
-          done
+          # for commit in $(git rev-list ${{ github.base_ref }}..${{ github.head_ref }}); do
+          #     git checkout $commit
+          #     echo "run test"
+          # done
       - name: testing change-id check
         run: |
           cd util
