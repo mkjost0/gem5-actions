@@ -28,7 +28,7 @@ jobs:
           script: |
             const commits = ${{ toJSON(github.event.commits) }}
             for (const commit of commits) {
-              console.log(commit);
+              console.log(commit.message);
             }
       - name: testing change-id check
         run: |
