@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: |
-          sudo apt install jq -y
+          apt install jq -y
           echo '${{ toJSON(github.event.commits) }}' | jq ".[0].message"
           git config --global --add safe.directory /__w/gem5-actions/gem5-actions
           # for commit in $(git rev-list ${{ github.base_ref }}..${{ github.head_ref }}); do
