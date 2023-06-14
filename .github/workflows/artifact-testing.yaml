@@ -23,12 +23,12 @@ jobs:
       #     #     git checkout $commit
       #     #     echo "run test"
       #     # done
+      # outputs all commit messages in pr
       - uses: actions/github-script@v6
         with:
           script: |
             commits = ${{ toJSON(github.event.commits) }}
             for (commit of commits) {
-              # outputs all commit messages in pr
               console.log(commit.message);
             }
       - name: testing change-id check
