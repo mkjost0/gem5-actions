@@ -18,7 +18,7 @@ jobs:
       - name: testing change-id check
         run: |
           cd util
-          ./gerrit-commit-msg-hook ../.git/COMMIT_EDITMSG
+          ./gerrit-commit-msg-hook ${{ github.event.head_commit.message }}
       - run: echo "This job's status is ${{ job.status }}."
 
   # build-gem5:
