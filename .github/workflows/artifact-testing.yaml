@@ -26,8 +26,9 @@ jobs:
       - uses: actions/github-script@v6
         with:
           script: |
-            const commits = ${{ toJSON(github.event.commits) }}
-            for (const commit of commits) {
+            commits = ${{ toJSON(github.event.commits) }}
+            for (commit of commits) {
+              # outputs all commit messages in pr
               console.log(commit.message);
             }
       - name: testing change-id check
