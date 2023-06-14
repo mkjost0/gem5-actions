@@ -7,7 +7,7 @@ on:
   push:
   workflow_dispatch:
 
-# This file is an example of using artifacts in different runs, for us to utilize in
+# This file is an example of using artifact in different runs, for us to utilize in
 # separating jobs amongst different runners
 jobs:
   build-gem5:
