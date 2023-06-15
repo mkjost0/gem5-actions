@@ -22,8 +22,7 @@ jobs:
         run: |
           apt install jq -y
           echo '${{ toJSON(github.event.commits) }}' >> input.json
-          echo "complete"
-          for i in $(jq -r ".[] | .message" input.json)
+          for i in $(jq -r ".[] | .message" input.json) | sed 's/\\n/\n/g'
           do
             echo $i
             echo $i > commit-message.txt
