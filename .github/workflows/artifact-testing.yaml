@@ -20,16 +20,7 @@ jobs:
           token: "Change-Id"
           pattern: ".*"
         run: |
-          # apt install jq -y
-          # echo ${{ github.event.pull_request.commits }}
-          # echo '${{ toJSON(github.event.commits) }}' >> input.json
-          # for i in $(jq -r ".[] | .message" input.json)
-          # do
-          #   echo "hello"
-          #   echo $i > commit-message.txt
-          #   git interpret-trailers --parse commit-message.txt | grep -q "^${{ env.token }}: ${{ env.pattern }}$"
-          # done
-          echo "outside loop"
+
 
       # outputs all commit messages in pr
       # https://stackoverflow.com/questions/71571528/iterate-on-github-event-commits-in-github-action-script
@@ -44,6 +35,17 @@ jobs:
               let message:string = commit.message
               git interpret-trailers --parse message | grep -q "^${{ env.token }}: ${{ env.pattern }}$"
             }
+
+          # apt install jq -y
+          # echo ${{ github.event.pull_request.commits }}
+          # echo '${{ toJSON(github.event.commits) }}' >> input.json
+          # for i in $(jq -r ".[] | .message" input.json)
+          # do
+          #   echo "hello"
+          #   echo $i > commit-message.txt
+          #   git interpret-trailers --parse commit-message.txt | grep -q "^${{ env.token }}: ${{ env.pattern }}$"
+          # done
+          echo "outside loop"
   # build-gem5:
   #   runs-on: [self-hosted, linux, x64, build]
   #   container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
