@@ -6,8 +6,8 @@ run-name: testing change id
 on:
   push:
   workflow_dispatch:
-  pull_request:
-    types: [opened, edited, synchronize]
+  # pull_request:
+  #   types: [opened, edited, synchronize]
 
 # This file is an example of using artifact in different runs, for us to utilize in
 # separating jobs amongst different runners
@@ -23,7 +23,7 @@ jobs:
           token: "Change-Id"
           pattern: ".*"
         run: |
-          for commit in $(git rev-list ${{ github.base_ref }}..${{ github.head_ref }}); do
+          for commit in $(git rev-list ${{ github.event.before }}..${{ github.sha }}); do
               git checkout $commit
               git log -1 >> commit-message.txt
               git interpret-trailers --parse commit-message.txt | grep -q "^${{ env.token }}: ${{ env.pattern }}$"
