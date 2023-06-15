@@ -29,9 +29,9 @@ jobs:
         with:
           script: |
             for i in $(jq -r ".[] | .message" ${{ toJSON(github.event.commits) }})
-              do
-                echo $i
-              done
+            do
+              echo $i
+            done
       - name: testing change-id check
         run: |
           cd util
