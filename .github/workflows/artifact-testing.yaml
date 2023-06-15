@@ -25,16 +25,12 @@ jobs:
           token: "Change-Id"
           pattern: ".*"
         run: |
-          apt install jq -y
-          echo "${{ env.JSON }} | sed -z 's/\n/\\n/g; s/"//g'" > testing.json
-          cat testing.json
-          for i in $(jq -r ".[] | .message" testing.json)
-          do
-            echo "hello"
-            echo $i > commit-message.txt
-            git interpret-trailers --parse commit-message.txt | grep -q "^${{ env.token }}: ${{ env.pattern }}$"
+          for commit in $(git rev-list ${{ github.base_ref }}..${{ github.head_ref }}); do
+              git checkout $commit
+              echo "run test"
+              git interpret-trailers --parse commit-message.txt | grep -q "^${{ env.token }}: ${{ env.pattern }}$"
           done
-          echo "outside loop"
+
 
       # outputs all commit messages in pr
       # https://stackoverflow.com/questions/71571528/iterate-on-github-event-commits-in-github-action-script
