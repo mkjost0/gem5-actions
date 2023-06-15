@@ -23,7 +23,7 @@ jobs:
       #     #     git checkout $commit
       #     #     echo "run test"
       #     # done
-      # outputs all commit messages in pr
+      # outputs all commit messages in prs
       # https://stackoverflow.com/questions/71571528/iterate-on-github-event-commits-in-github-action-script
       - uses: actions/github-script@v6
         with:
