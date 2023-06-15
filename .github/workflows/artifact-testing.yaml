@@ -17,11 +17,11 @@ jobs:
       - uses: actions/checkout@v3
       - run: |
           apt install jq -y
-          ${{ toJSON(github.event.commits) }} >> output.json
-          for i in $(jq -r ".[] | .message" output.json)
-          do
-            echo $i
-          done
+          # ${{ toJSON(github.event.commits) }} >> output.json
+          # for i in $(jq -r ".[] | .message" output.json)
+          # do
+          #   echo $i
+          # done
       #     echo '${{ toJSON(github.event.commits) }}' | jq ".[0].message"
       #     git config --global --add safe.directory /__w/gem5-actions/gem5-actions
       #     # for commit in $(git rev-list ${{ github.base_ref }}..${{ github.head_ref }}); do
@@ -34,6 +34,13 @@ jobs:
         with:
           script: |
             const commits = ${{ toJSON(github.event.commits) }}
+            for (const commit of commits) {
+              const id = "Change-ID"
+              const message = commit.message;
+              console.log(commit.message);
+              const result= message.includes(id);
+              console.log(result);
+            }
 
       - name: testing change-id check
         run: |
