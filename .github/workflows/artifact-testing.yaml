@@ -12,7 +12,7 @@ on:
 jobs:
   build-gem5:
     runs-on: [self-hosted, linux, x64, build]
-    container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
+    # container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
     steps:
       - uses: actions/checkout@v3
       - name: tesssst
