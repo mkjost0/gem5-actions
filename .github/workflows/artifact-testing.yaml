@@ -21,6 +21,7 @@ jobs:
           pattern: ".*"
         run: |
           apt install jq -y
+          npm install json-stringify --save
           echo '${{ JSON.stringify(toJSON(github.event.commits)) }}' >> input.json
           for i in $(jq -r ".[] | .message" input.json)
           do
