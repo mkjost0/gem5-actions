@@ -11,8 +11,8 @@ on:
 # separating jobs amongst different runners
 jobs:
   build-gem5:
-    runs-on: [self-hosted, linux, x64, build]
-    container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
+    runs-on: ubuntu-latest
+    # container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
     steps:
       - uses: actions/checkout@v3
       - name: tesssst
@@ -25,7 +25,6 @@ jobs:
           token: "Change-Id"
           pattern: ".*"
         run: |
-          # git config --global --add safe.directory /__w/gem5-actions/gem5-actions
           for commit in $(git rev-list ${{ github.base_ref }}..${{ github.head_ref }}); do
               git checkout $commit
               echo "run test"
