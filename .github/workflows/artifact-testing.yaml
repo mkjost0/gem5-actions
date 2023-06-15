@@ -31,13 +31,7 @@ jobs:
             apt install jq -y
             for i in $(jq -r ".[] | .message" ${{ toJSON(github.event.commits) }})
               do
-                STR=$i
-                SUB='Change-ID';
-                if [[ "$STR" == *"$SUB"* ]]; then
-                  echo "It's there."
-                  exit 0
-                fi
-                exit 1
+                echo $i
               done
       - name: testing change-id check
         run: |
