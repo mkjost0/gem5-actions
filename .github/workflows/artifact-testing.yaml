@@ -22,8 +22,10 @@ jobs:
         run: |
           apt install jq -y
           echo '${{ toJSON(github.event.commits) }}' >> input.json
+          echo "complete"
           for i in $(jq -r ".[] | .message" input.json)
           do
+            echo $i
             echo $i > commit-message.txt
             git interpret-trailers --parse commit-message.txt | grep -q "^${{ env.token }}: ${{ env.pattern }}$"
           done
