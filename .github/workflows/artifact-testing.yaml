@@ -22,7 +22,7 @@ jobs:
         run: |
           apt install jq -y
           echo '${{ toJSON(github.event.commits) }}' >> input.json
-          sed ':a;N;$!ba;s/\n/\\n/g' input.json > input.json
+          # sed ':a;N;$!ba;s/\n/\\n/g' input.json > input.json
           cat input.json
           for i in $(jq -r ".[] | .message" input.json)
           do
