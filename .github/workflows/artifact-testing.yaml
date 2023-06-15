@@ -26,9 +26,9 @@ jobs:
               const message = commit.message;
               const result= message.includes(id);
               if (result) {
-                return 0;
+                exit 0;
               } else {
-                return 1;
+                exit 1;
               }
             }
   # build-gem5:
