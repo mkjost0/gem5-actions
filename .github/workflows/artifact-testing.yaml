@@ -24,7 +24,7 @@ jobs:
           pattern: ".*"
         run: |
           apt install jq -y
-          echo ${{ toJSON(github.event.commits) }} > testing.json
+          echo '${{ toJSON(github.event.commits) }}' >> testing.json
           cat testing.json
           for i in $(jq -r ".[] | .message" testing.json)
           do
