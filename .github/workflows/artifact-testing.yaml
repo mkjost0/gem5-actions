@@ -13,11 +13,16 @@ jobs:
   build-gem5:
     runs-on: [self-hosted, linux, x64, build]
     container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
+    env:
     steps:
       - uses: actions/checkout@v3
-      - run: |
+      - name: testing
+        env:
+          token: "Change-Id"
+          pattern: ".*"
+        run: |
           # echo ${{ github.event.head_commit.message }} >> commit-message.txt
-          git interpret-trailers --parse commit-message.txt
+          git interpret-trailers --parse commit-message.txt | grep -q "^${{ env.token }}: ${{ env.pattern }}$"
       # outputs all commit messages in pr
       # https://stackoverflow.com/questions/71571528/iterate-on-github-event-commits-in-github-action-script
       - uses: actions/github-script@v6
