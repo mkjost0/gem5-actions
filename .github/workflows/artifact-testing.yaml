@@ -24,7 +24,7 @@ jobs:
           pattern: ".*"
         run: |
           apt install jq -y
-          echo "${{ env.JSON }} > testing.json | sed -z 's/\n/\\n/g; s/"//g'"
+          echo ${{ env.JSON }} > testing.json | sed -z 's/\n/\\n/g; s/"//g'
           cat testing.json
           for i in $(jq -r ".[] | .message" testing.json)
           do
