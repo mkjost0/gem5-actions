@@ -17,13 +17,15 @@ jobs:
       - uses: actions/checkout@v3
       - name: testing
         env:
-          JSON: ${{ toJSON(github.event.commits) }}
+          JSON: "${{ github.event.commits }}"
           token: "Change-Id"
           pattern: ".*"
         run: |
           apt install jq -y
           echo '${{ env.JSON }}' >> input.json
-          jq length input.json
+          PR_DESCRIPTION="${{ github.event.commits }}"
+          PR_DESCRIPTION="$(echo "$PR_DESCRIPTION" | sed -z 's/\n/\\n/g')"
+          echo "::set-output name=pr-description::${PR_DESCRIPTION}"
           # for i in $(jq -r ".[] | .message" input.json)
           # do
           #   echo "hello"
