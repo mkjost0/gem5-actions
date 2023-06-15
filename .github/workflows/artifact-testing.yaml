@@ -34,10 +34,10 @@ jobs:
       # outputs all commit messages in pr
       # https://stackoverflow.com/questions/71571528/iterate-on-github-event-commits-in-github-action-script
       - uses: actions/github-script@v6
-        with:
         env:
           token: "Change-Id"
           pattern: ".*"
+        with:
           script: |
             const commits = ${{ toJSON(github.event.commits) }}
             for (const commit of commits) {
