@@ -27,7 +27,7 @@ jobs:
         run: |
           apt install jq -y
           echo "before"
-          echo ${{ toJSON(github.event.commits) }} | sed -z 's/\n/\\n/g; s/"//g' >> testing.json
+          echo (${{ toJSON(github.event.commits) }} | sed -z 's/\n/\\n/g; s/"//g') >> testing.json
           echo "after"
           for i in $(jq -r ".[] | .message" testing.json)
           do
@@ -39,13 +39,13 @@ jobs:
 
       # outputs all commit messages in pr
       # https://stackoverflow.com/questions/71571528/iterate-on-github-event-commits-in-github-action-script
-      - uses: actions/github-script@v6
-        with:
-          script: |
-            const commits = ${{ toJSON(github.event.commits) }}
-            for (const commit of commits) {
-              git interpret-trailers --parse commit-message.txt | grep -q "^${{ env.token }}: ${{ env.pattern }}$"
-            }
+      # - uses: actions/github-script@v6
+      #   with:
+      #     script: |
+      #       const commits = ${{ toJSON(github.event.commits) }}
+      #       for (const commit of commits) {
+      #         git interpret-trailers --parse commit-message.txt | grep -q "^${{ env.token }}: ${{ env.pattern }}$"
+      #       }
   # build-gem5:
   #   runs-on: [self-hosted, linux, x64, build]
   #   container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
