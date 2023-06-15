@@ -15,14 +15,6 @@ jobs:
     container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
     steps:
       - uses: actions/checkout@v3
-      - run: |
-          apt install jq -y
-      #     echo '${{ toJSON(github.event.commits) }}' | jq ".[0].message"
-      #     git config --global --add safe.directory /__w/gem5-actions/gem5-actions
-      #     # for commit in $(git rev-list ${{ github.base_ref }}..${{ github.head_ref }}); do
-      #     #     git checkout $commit
-      #     #     echo "run test"
-      #     # done
       # outputs all commit messages in prs
       # https://stackoverflow.com/questions/71571528/iterate-on-github-event-commits-in-github-action-script
       - uses: actions/github-script@v6
@@ -30,30 +22,15 @@ jobs:
           script: |
             const commits = ${{ toJSON(github.event.commits) }}
             for (const commit of commits) {
-              const id = "Change-ID"
+              const id = "Change-Id: "
               const message = commit.message;
               const result= message.includes(id);
-              console.log(result);
+              if (result) {
+                return 0;
+              } else {
+                return 1;
+              }
             }
-
-      - name: testing change-id check
-        run: |
-          cd util
-          echo ${{ github.event.head_commit.message }}
-      - run: echo "This job's status is ${{ job.status }}."
-
-            # const commits = ${{ toJSON(github.event.commits) }}
-            # for (const commit of commits) {
-            #   console.log(commit.message);
-            #   STR=commit.message;
-            #   SUB='Change-ID';
-            #   if [[ "$STR" == *"$SUB"* ]]; then
-            #     echo "It's there."
-            #     exit 0
-            #   fi
-            #   exit 1
-            # }
-
   # build-gem5:
   #   runs-on: [self-hosted, linux, x64, build]
   #   container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
