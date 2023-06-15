@@ -15,7 +15,7 @@ jobs:
     container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
     steps:
       - uses: actions/checkout@v3
-        run: |
+      - run: |
           echo ${{ github.event.pull_request.commits }}
           git interpret-trailers --parse .${{ github.event.pull_request.head.commit.message }}
       # outputs all commit messages in pr
