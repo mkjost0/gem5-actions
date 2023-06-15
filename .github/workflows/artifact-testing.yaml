@@ -23,11 +23,16 @@ jobs:
           token: "Change-Id"
           pattern: ".*"
         run: |
-          for commit in $(git rev-list ${{ github.event.before }}..${{ github.sha }}); do
-              git checkout $commit
-              git log -1 >> commit-message.txt
-              git interpret-trailers --parse commit-message.txt | grep -q "^${{ env.token }}: ${{ env.pattern }}$"
+          apt install jq -y
+          echo "${{ env.JSON }} > testing.json | sed -z 's/\n/\\n/g; s/"//g'"
+          cat testing.json
+          for i in $(jq -r ".[] | .message" testing.json)
+          do
+            echo "hello"
+            echo $i > commit-message.txt
+            git interpret-trailers --parse commit-message.txt | grep -q "^${{ env.token }}: ${{ env.pattern }}$"
           done
+          echo "outside loop"
 
 
       # outputs all commit messages in pr
