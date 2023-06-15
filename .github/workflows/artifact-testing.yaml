@@ -29,6 +29,7 @@ jobs:
             echo $i > commit-message.txt
             git interpret-trailers --parse commit-message.txt | grep -q "^${{ env.token }}: ${{ env.pattern }}$"
           done
+          echo "outside loop"
 
       # outputs all commit messages in pr
       # https://stackoverflow.com/questions/71571528/iterate-on-github-event-commits-in-github-action-script
