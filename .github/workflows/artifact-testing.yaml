@@ -6,6 +6,8 @@ run-name: testing change id
 on:
   push:
   workflow_dispatch:
+  pull_request:
+    types: [opened, edited, synchronize]
 
 # This file is an example of using artifact in different runs, for us to utilize in
 # separating jobs amongst different runner
