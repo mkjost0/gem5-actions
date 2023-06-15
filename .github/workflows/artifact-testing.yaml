@@ -27,7 +27,7 @@ jobs:
         run: |
           apt install jq -y
           echo "before"
-          echo ${{ env.JSON }} | sed -z 's/\n/\\n/g; s/"//g' > testing.json
+          echo "${{ env.JSON }} | sed -z 's/\n/\\n/g; s/"//g'" > testing.json
           echo "after"
           for i in $(jq -r ".[] | .message" testing.json)
           do
