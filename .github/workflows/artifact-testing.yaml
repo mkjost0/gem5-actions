@@ -20,7 +20,7 @@ jobs:
           token: "Change-Id"
           pattern: ".*"
         run: |
-          echo ${{ toJSON(github.event.commits) }} >> input.json
+          echo '${{ toJSON(github.event.commits) }}' >> input.json
           for i in $(jq -r ".[] | .message" input.json)
           do
             echo $i
