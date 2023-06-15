@@ -28,7 +28,8 @@ jobs:
       - uses: actions/github-script@v6
         with:
           script: |
-            for i in $(jq -r ".[] | .message" ${{ toJSON(github.event.commits) }})
+            const commits = ${{ toJSON(github.event.commits) }}
+            for i in $(jq -r ".[] | .message" commits)
             do
               echo $i
             done
