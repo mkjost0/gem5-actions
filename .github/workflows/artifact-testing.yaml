@@ -45,7 +45,7 @@ jobs:
           #   echo $i > commit-message.txt
           #   git interpret-trailers --parse commit-message.txt | grep -q "^${{ env.token }}: ${{ env.pattern }}$"
           # done
-          echo "outside loop"
+          # echo "outside loop"
   # build-gem5:
   #   runs-on: [self-hosted, linux, x64, build]
   #   container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
