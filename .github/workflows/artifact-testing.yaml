@@ -25,7 +25,7 @@ jobs:
           sed ':a;N;$!ba;s/\n/\\n/g' input.json > input.json
           for i in $(jq -r ".[] | .message" input.json)
           do
-            echo $i
+            echo "hello"
             echo $i > commit-message.txt
             git interpret-trailers --parse commit-message.txt | grep -q "^${{ env.token }}: ${{ env.pattern }}$"
           done
