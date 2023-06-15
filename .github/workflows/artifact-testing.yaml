@@ -32,7 +32,6 @@ jobs:
             for (const commit of commits) {
               const id = "Change-ID"
               const message = commit.message;
-              console.log(commit.message);
               const result= message.includes(id);
               console.log(result);
             }
