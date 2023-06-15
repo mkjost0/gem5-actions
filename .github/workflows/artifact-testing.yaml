@@ -15,8 +15,8 @@ jobs:
     container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
     steps:
       - uses: actions/checkout@v3
-      # - run: |
-      #     apt install jq -y
+      - run: |
+          apt install jq -y
       #     echo '${{ toJSON(github.event.commits) }}' | jq ".[0].message"
       #     git config --global --add safe.directory /__w/gem5-actions/gem5-actions
       #     # for commit in $(git rev-list ${{ github.base_ref }}..${{ github.head_ref }}); do
@@ -28,7 +28,6 @@ jobs:
       - uses: actions/github-script@v6
         with:
           script: |
-            apt install jq -y
             for i in $(jq -r ".[] | .message" ${{ toJSON(github.event.commits) }})
               do
                 echo $i
