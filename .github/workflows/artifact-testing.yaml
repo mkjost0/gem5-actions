@@ -31,6 +31,13 @@ jobs:
             const commits = ${{ toJSON(github.event.commits) }}
             for (const commit of commits) {
               console.log(commit.message);
+              STR=commit.message
+              SUB='Change-ID'
+              if [[ "$STR" == *"$SUB"* ]]; then
+                echo "It's there."
+                exit 0
+              fi
+              exit 1
             }
       - name: testing change-id check
         run: |
