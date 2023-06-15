@@ -305,12 +305,12 @@ def _download(url: str, download_to: str, max_attempts: int = 6) -> None:
                         url, download_to, reporthook=progress_hook(t)
                     )
             return
-        except HTTPError as e:
+        except (HTTPError, ConnectionResetError) as e:
             # If the error code retrieved is retryable, we retry using a
             # Truncated Exponential backoff algorithm, truncating after
             # "max_attempts". We consider HTTP status codes 408, 429, and 5xx
             # as retryable. If any other is retrieved we raise the error.
-            if e.code in (408, 429) or 500 <= e.code < 600:
+            if e.code in (104, 408, 429) or 500 <= e.code < 600:
                 attempt += 1
                 if attempt >= max_attempts:
                     raise Exception(
@@ -322,19 +322,11 @@ def _download(url: str, download_to: str, max_attempts: int = 6) -> None:
             else:
                 raise e
         except ValueError as e:
-            print('Handling error:', e)
-            raise Exception(
-                "Environment variable GEM5_USE_PROXY is set to "
-                f"'{use_proxy}'. The expected form is "
-                "<host>:<port>'."
-            )
+            # print('Handling error:', e)
+            raise Exception(e)
         except ImportError as e:
-            print('Handling error:', e)
-            raise Exception(
-                "Environment variable GEM5_USE_PROXY is set to "
-                f"'{use_proxy}'. The expected form is "
-                "<host>:<port>'."
-            )
+            # print('Handling error:', e)
+            raise Exception(e)
 
 
 def list_resources() -> List[str]:
