@@ -4,7 +4,7 @@ run-name: testing change id
 # run-name: Testing artifact usage
 #  https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#schedule
 on:
-  # push:
+  push:
   workflow_dispatch:
 
 # This file is an example of using artifact in different runs, for us to utilize in
