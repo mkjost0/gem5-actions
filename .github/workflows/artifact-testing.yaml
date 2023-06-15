@@ -25,10 +25,11 @@ jobs:
               const id = "Change-Id: "
               const message = commit.message;
               const result= message.includes(id);
+              console.log(result)
               if (result) {
-                exit 0;
+                return 0;
               } else {
-                exit 1;
+                return 1;
               }
             }
   # build-gem5:
