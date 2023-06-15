@@ -25,7 +25,7 @@ jobs:
           echo '${{ env.JSON }}' >> input.json
           PR_DESCRIPTION="${{ github.event.commits }}"
           PR_DESCRIPTION="$(echo "$PR_DESCRIPTION" | sed -z 's/\n/\\n/g')"
-          echo "::set-output name=pr-description::${PR_DESCRIPTION}"
+          echo $PR_DESCRIPTION
           # for i in $(jq -r ".[] | .message" input.json)
           # do
           #   echo "hello"
