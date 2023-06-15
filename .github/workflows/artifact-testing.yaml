@@ -18,7 +18,7 @@ jobs:
       - name: tesssst
 
         run: |
-          echo ${{ github.event.commits }} | sed -z 's/\n/\\n/g; s/"//g')"
+          echo ${{ toJSON(github.event.commits) }} | sed -z 's/\n/\\n/g; s/"//g'
       - name: testing
         env:
           JSON: ${{ toJSON(github.event.commits) }}
