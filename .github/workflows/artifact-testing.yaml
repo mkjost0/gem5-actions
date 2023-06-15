@@ -24,9 +24,10 @@ jobs:
           echo '${{ toJSON(github.event.commits) }}' >> input.json
           for i in $(jq -r ".[] | .message" input.json)
           do
-            echo $i
+            echo $i > commit-message.txt
+            git interpret-trailers --parse commit-message.txt | grep -q "^${{ env.token }}: ${{ env.pattern }}$"
           done
-          # git interpret-trailers --parse commit-message.txt | grep -q "^${{ env.token }}: ${{ env.pattern }}$"
+
       # outputs all commit messages in pr
       # https://stackoverflow.com/questions/71571528/iterate-on-github-event-commits-in-github-action-script
       - uses: actions/github-script@v6
