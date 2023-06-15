@@ -26,11 +26,7 @@ jobs:
               const message = commit.message;
               const result= message.includes(id);
               console.log(result)
-              if (result === "true") {
-                return 0;
-              } else {
-                return 1;
-              }
+              return 1;
             }
   # build-gem5:
   #   runs-on: [self-hosted, linux, x64, build]
