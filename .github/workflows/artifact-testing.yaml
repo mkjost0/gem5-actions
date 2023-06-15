@@ -28,22 +28,34 @@ jobs:
       - uses: actions/github-script@v6
         with:
           script: |
-            const commits = ${{ toJSON(github.event.commits) }}
-            for (const commit of commits) {
-              console.log(commit.message);
-              STR=commit.message
-              SUB='Change-ID'
-              if [[ "$STR" == *"$SUB"* ]]; then
-                echo "It's there."
-                exit 0
-              fi
-              exit 1
-            }
+            apt install jq -y
+            for i in $(jq -r ".[] | .message" ${{ toJSON(github.event.commits) }})
+              do
+                STR=$i
+                SUB='Change-ID';
+                if [[ "$STR" == *"$SUB"* ]]; then
+                  echo "It's there."
+                  exit 0
+                fi
+                exit 1
+              done
       - name: testing change-id check
         run: |
           cd util
           echo ${{ github.event.head_commit.message }}
       - run: echo "This job's status is ${{ job.status }}."
+
+            # const commits = ${{ toJSON(github.event.commits) }}
+            # for (const commit of commits) {
+            #   console.log(commit.message);
+            #   STR=commit.message;
+            #   SUB='Change-ID';
+            #   if [[ "$STR" == *"$SUB"* ]]; then
+            #     echo "It's there."
+            #     exit 0
+            #   fi
+            #   exit 1
+            # }
 
   # build-gem5:
   #   runs-on: [self-hosted, linux, x64, build]
