@@ -15,6 +15,16 @@ jobs:
     container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
     steps:
       - uses: actions/checkout@v3
+      - name:
+
+        run: |
+          if [ ${{ contains(github.event.head_commit.message, '"') }} = true ]; then
+            COMMIT_MESSAGE='${{ contains(github.event.head_commit.message, '"') && github.event.head_commit.message || 'default commit message' }}'
+          else
+            COMMIT_MESSAGE="${{ contains(github.event.head_commit.message, '"') && 'default commit message' || github.event.head_commit.message }}"
+          fi
+          COMMIT_MESSAGE="$(echo $COMMIT_MESSAGE | sed -z 's/\n/\\n/g; s/"//g')"
+          echo "::set-output name=commit-message::${COMMIT_MESSAGE}"
       - name: testing
         env:
           JSON: ${{ toJSON(github.event.commits) }}
