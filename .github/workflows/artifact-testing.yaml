@@ -4,7 +4,7 @@ run-name: testing change id
 # run-name: Testing artifact usage
 #  https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#schedule
 on:
-  # push:
+  push:
   workflow_dispatch:
   # pull_request:
   #   types: [opened, edited, synchronize]
@@ -25,7 +25,7 @@ jobs:
         run: |
           apt install jq -y
           "$(echo '${{ toJSON(github.event.commits)' }})"
-          for i in $(jq -r ".[] | .message" '${{ toJSON(github.event.commits) }}')
+          for i in $(jq -r ".[] | .message"  <(echo ${{ toJSON(github.event.commits) }}))
           do
             echo "hello"
             echo $i > commit-message.txt
