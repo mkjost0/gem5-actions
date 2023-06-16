@@ -4,7 +4,7 @@ name: CI Tests
 run-name: ${{ github.actor }} is testing unittests
 
 on:
-  # push:
+  push:
   workflow_dispatch:
   pull_request:
     types: [opened, reopened, edited]
@@ -65,7 +65,7 @@ jobs:
   #     - run: echo "This job's status is ${{ job.status }}."
 
   testlib-quick:
-    runs-on: [self-hosted, linux, x64, run]
+    runs-on: [self-hosted, linux, x64, build]
     container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
     needs: [build-gem5]
     timeout-minutes: 360     # 6 hours
