@@ -123,7 +123,7 @@ def _download(url: str, download_to: str, max_attempts: int = 6) -> None:
                         url, download_to, reporthook=progress_hook(t)
                     )
             return
-        except (HTTPError, ConnectionResetError) as e:
+        except HTTPError as e:
             # If the error code retrieved is retryable, we retry using a
             # Truncated Exponential backoff algorithm, truncating after
             # "max_attempts". We consider HTTP status codes 408, 429, and 5xx
@@ -135,6 +135,18 @@ def _download(url: str, download_to: str, max_attempts: int = 6) -> None:
                         f"After {attempt} attempts, the resource json could "
                         "not be retrieved. HTTP Status Code retrieved: "
                         f"{e.code}"
+                    )
+                time.sleep((2**attempt) + random.uniform(0, 1))
+            else:
+                raise e
+        except ConnectionResetError as e:
+            if e.errno in (104):
+                attempt += 1
+                if attempt >= max_attempts:
+                    raise Exception(
+                        f"After {attempt} attempts, the resource json could "
+                        "not be retrieved. OS Error Code retrieved: "
+                        f"{e.errno}"
                     )
                 time.sleep((2**attempt) + random.uniform(0, 1))
             else:
