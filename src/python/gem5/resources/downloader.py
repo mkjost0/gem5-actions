@@ -140,7 +140,7 @@ def _download(url: str, download_to: str, max_attempts: int = 6) -> None:
             else:
                 raise e
         except ConnectionResetError as e:
-            if e.errno in (104):
+            if e.errno == 104:
                 attempt += 1
                 if attempt >= max_attempts:
                     raise Exception(
