@@ -94,7 +94,6 @@ for id in ids:
         continue
 
     for resource_version in ids[id]:
-
         resource_json = get_resource_json_obj(
             resource_id=id,
             resource_version=resource_version,
