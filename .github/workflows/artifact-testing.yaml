@@ -1,44 +1,97 @@
-name: artifact naming
-run-name: testing change id
-# name: Github Artifacting Tests
-# run-name: Testing artifact usage
-#  https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#schedule
-on:
-  push:
-  workflow_dispatch:
-  # pull_request:
-  #   types: [opened, edited, synchronize]
+name: 'Github Workflow History'
 
-# This file is an example of using artifact in different runs, for us to utilize in
-# separating jobs amongst different runners
+'on':
+  push:
+    inputs:
+      failJob:
+        description: Fail the job?
+        type: boolean
+        required: true
+        default: false
+
 jobs:
-  build-gem5:
+  exampleJob:
     runs-on: ubuntu-latest
-    # container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
     steps:
-      - uses: actions/checkout@v3
-      # - name: testing
-      #   env:
-      #     JSON: ${{ toJSON(github.event.commits) }}
-      #     token: "Change-Id"
-      #     pattern: ".*"
-      #   run: |
-      #     apt install jq -y
-      #     for i in $(jq -r ".[] | .message"  echo "${{ env.JSON }}")
-      #     do
-      #       echo "hello"
-      #       echo $i > commit-message.txt
-      #       git interpret-trailers --parse commit-message.txt | grep -q "^${{ env.token }}: ${{ env.pattern }}$"
-      #     done
-      #     echo "outside loop"
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Pass or fail job
+        run: exit 1
+        if: github.event.inputs.failJob == 'true'
+
       - name: Check last job status
         id: lastJobStatus
         if: always()
         run: |
-          LAST_JOB_STATUS=$(gh run list --workflow daily.yaml | grep -oh "completed.*" | head -1 | awk '{print $2}')
+          LAST_JOB_STATUS=$(gh run list --workflow daily-tests.yaml | grep -oh "completed.*" | head -1 | awk '{print $2}')
           THIS_JOB_STATUS="${{ job.status }}"
+          if [ "$LAST_JOB_STATUS" != "$THIS_JOB_STATUS" ]; then
+            echo "status changed from $LAST_JOB_STATUS to $THIS_JOB_STATUS"
+          else
+            echo "status is still $THIS_JOB_STATUS"
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Showcase output variable
+        if: always() && steps.lastJobStatus.outputs.changedState == 'true'
+        run: echo "CHANGED STATE!!!"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# name: artifact naming
+# run-name: testing change id
+# # name: Github Artifacting Tests
+# # run-name: Testing artifact usage
+# #  https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#schedule
+# on:
+#   push:
+#   workflow_dispatch:
+#   # pull_request:
+#   #   types: [opened, edited, synchronize]
+
+# # This file is an example of using artifact in different runs, for us to utilize in
+# # separating jobs amongst different runners
+# jobs:
+#   build-gem5:
+#     runs-on: ubuntu-latest
+#     # container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
+#     steps:
+#       - uses: actions/checkout@v3
+#       # - name: testing
+#       #   env:
+#       #     JSON: ${{ toJSON(github.event.commits) }}
+#       #     token: "Change-Id"
+#       #     pattern: ".*"
+#       #   run: |
+#       #     apt install jq -y
+#       #     for i in $(jq -r ".[] | .message"  echo "${{ env.JSON }}")
+#       #     do
+#       #       echo "hello"
+#       #       echo $i > commit-message.txt
+#       #       git interpret-trailers --parse commit-message.txt | grep -q "^${{ env.token }}: ${{ env.pattern }}$"
+#       #     done
+#       #     echo "outside loop"
+#       - name: Check last job status
+#         id: lastJobStatus
+#         if: always()
+#         run: |
+#           LAST_JOB_STATUS=$(gh run list --workflow daily.yaml | grep -oh "completed.*" | head -1 | awk '{print $2}')
+#           THIS_JOB_STATUS="${{ job.status }}"
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
       # outputs all commit messages in pr
