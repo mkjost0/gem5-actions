@@ -30,7 +30,8 @@ jobs:
           cd gem5-resources
           git checkout develop
           cd ../
-          scons build/GCN3_X86/gem5.opt -j $(nproc) --ignore-style
+          scons build/GCN3_X86/gem5.opt -j4 --ignore-style || rm -rf build && scons build/GCN3_X86/gem5.opt -j4
+        --ignore-styl
           cd util/m5
           export TERM=xterm-256color
           scons build/x86/out/m5
@@ -42,10 +43,10 @@ jobs:
 
 
 
-      - uses: actions/upload-artifact@v3
-        with:
-          name: ${{ steps.artifact-name.outputs.name }}
-          path: build/ALL/gem5.opt
-          retention-days: 5
-      - run: echo "This job's status is ${{ job.status }}."
+      # - uses: actions/upload-artifact@v3
+      #   with:
+      #     name: ${{ steps.artifact-name.outputs.name }}
+      #     path: build/ALL/gem5.opt
+      #     retention-days: 5
+      # - run: echo "This job's status is ${{ job.status }}."
 
