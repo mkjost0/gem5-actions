@@ -36,8 +36,9 @@ jobs:
           scons build/x86/out/m5
           cd ../../gem5-resources/src/gpu/lulesh
           make
-          cd bin
+          cd ../../../..
           build/GCN3_X86/gem5.opt configs/example/apu_se.py -n3
+          cd gem5-resources/src/gpu/lulesh/bin
           lulesh
 
 
