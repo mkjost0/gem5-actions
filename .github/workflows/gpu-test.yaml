@@ -6,7 +6,7 @@ run-name: ${{ github.actor }} is running the gpu tests
 
 on:
   # Runs every Sunday from 7AM UTC
-  # push:
+  push:
   schedule:
     - cron:  '00 7 * * 6'
 
@@ -24,9 +24,23 @@ jobs:
           ref: develop
       - id: artifact-name
         run: echo "name=$(date +"%Y-%m-%d_%H.%M.%S")-ALL" >> $GITHUB_OUTPUT
-      - name: Build gem5
+      - name: Test gpu tests (just lulesh)
         run: |
+          git clone https://gem5.googlesource.com/public/gem5-resources
+          cd gem5-resources
+          git checkout develop
+          cd ../
           scons build/GCN3_X86/gem5.opt -j $(nproc) --ignore-style
+          cd util/m5
+          export TERM=xterm-256color
+          scons build/x86/out/m5
+          cd ../../gem5-resources/src/gpu/lulesh
+          make
+          cd bin
+          build/GCN3_X86/gem5.opt configs/example/apu_se.py -n3
+          lulesh
+
+
 
       - uses: actions/upload-artifact@v3
         with:
