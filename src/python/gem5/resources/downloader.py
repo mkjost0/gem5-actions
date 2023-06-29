@@ -123,7 +123,7 @@ def _download(url: str, download_to: str, max_attempts: int = 6) -> None:
                         url, download_to, reporthook=progress_hook(t)
                     )
             return
-        except (HTTPError, ConnectionResetError) as e:
+        except HTTPError as e:
             # If the error code retrieved is retryable, we retry using a
             # Truncated Exponential backoff algorithm, truncating after
             # "max_attempts". We consider HTTP status codes 408, 429, and 5xx
@@ -140,10 +140,13 @@ def _download(url: str, download_to: str, max_attempts: int = 6) -> None:
             else:
                 raise e
         except ConnectionResetError as e:
+<<<<<<< HEAD
             # This catches the ConnectionResetError we see occassionally see
             # when accessing resources on GitHub Actions.  It retries using a
             # Truncated Exponential backoff algorithm, truncating after
             # "max_attempts". If any other is retrieved we raise the error.
+=======
+>>>>>>> 0cc110a406261c422d502b5a792a09ad03cde240
             if e.errno == 104:
                 attempt += 1
                 if attempt >= max_attempts:
@@ -156,13 +159,6 @@ def _download(url: str, download_to: str, max_attempts: int = 6) -> None:
             else:
                 raise e
         except ValueError as e:
-<<<<<<< HEAD
-            # print('Handling error:', e)
-            raise Exception(e)
-        except ImportError as e:
-            # print('Handling error:', e)
-            raise Exception(e)
-=======
             raise Exception(
                 f"ValueError: {e}\n"
                 "Environment variable GEM5_USE_PROXY is set to "
@@ -177,7 +173,6 @@ def _download(url: str, download_to: str, max_attempts: int = 6) -> None:
                 "installed. It can be installed with "
                 "`pip install PySocks`."
             )
->>>>>>> 051801a7bfa772698d2e1587ebff78de93ff4b7d
 
 
 def list_resources(
