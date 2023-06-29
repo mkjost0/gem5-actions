@@ -1,0 +1,24 @@
+gem5 Simulator System.  https://www.gem5.org
+gem5 is copyrighted software; use the --copyright option for details.
+
+gem5 version [DEVELOP-FOR-23.0]
+gem5 compiled Jun  6 2023 13:44:42
+gem5 started Jun  6 2023 16:52:14
+gem5 executing on challenger, pid 3794170
+command line: /home/mkjost/vm-testing/gem5-actions/build/ALL/gem5.opt -d /tmp/gem5outp9xo26a8 -re --silent-redirect /home/mkjost/vm-testing/gem5-actions/tests/pyunit/../run_pyunit.py
+
+context.exception:  Resource test-binary-resource with version '3.0.0' not found.
+Resource versions can be found at: https://resources.gem5.org/resources/test-binary-resource/versions
+Resource test-binary-resource with version '3.0.0' not found.
+Resource versions can be found at: https://resources.gem5.org/resources/test-binary-resource/versions
+Resource 'file-example' was not found locally. Downloading to '/home/mkjost/vm-testing/gem5-actions/tests/pyunit/stdlib/resources/../../../gem5/resources/file-example'...
+Finished downloading resource 'file-example'.
+Resource 'git-example' was not found locally. Downloading to '/home/mkjost/vm-testing/gem5-actions/tests/pyunit/stdlib/resources/../../../gem5/resources/git-example.tar'...
+Finished downloading resource 'git-example'.
+Unpacking the the resource 'git-example' ('/home/mkjost/vm-testing/gem5-actions/tests/pyunit/stdlib/resources/../../../gem5/resources/git-example.tar')
+Resource 'looppoint-json-restore-resource-region-1' was not found locally. Downloading to '/home/mkjost/vm-testing/gem5-actions/tests/pyunit/stdlib/resources/../../../gem5/resources/looppoint-json-restore-resource-region-1'...
+Finished downloading resource 'looppoint-json-restore-resource-region-1'.
+Resource 'x86-hello64-static' was not found locally. Downloading to '/home/mkjost/.cache/gem5/x86-hello64-static'...
+Handling error: unknown url type: '{url_base}/test-progs/hello/bin/x86/linux/hello64-static'
+Resource 'x86-linux-kernel-5.2.3' was not found locally. Downloading to '/home/mkjost/.cache/gem5/x86-linux-kernel-5.2.3'...
+Handling error: unknown url type: '{url_base}/kernels/x86/static/vmlinux-5.2.3'

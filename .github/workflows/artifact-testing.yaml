@@ -17,20 +17,28 @@ jobs:
     container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
     steps:
       - uses: actions/checkout@v3
-      - name: testing
-        env:
-          JSON: ${{ toJSON(github.event.commits) }}
-          token: "Change-Id"
-          pattern: ".*"
+      # - name: testing
+      #   env:
+      #     JSON: ${{ toJSON(github.event.commits) }}
+      #     token: "Change-Id"
+      #     pattern: ".*"
+      #   run: |
+      #     apt install jq -y
+      #     for i in $(jq -r ".[] | .message"  echo "${{ env.JSON }}")
+      #     do
+      #       echo "hello"
+      #       echo $i > commit-message.txt
+      #       git interpret-trailers --parse commit-message.txt | grep -q "^${{ env.token }}: ${{ env.pattern }}$"
+      #     done
+      #     echo "outside loop"
+      - name: Check last job status
+        id: lastJobStatus
+        if: always()
         run: |
-          apt install jq -y
-          for i in $(jq -r ".[] | .message"  echo "${{ env.JSON }}")
-          do
-            echo "hello"
-            echo $i > commit-message.txt
-            git interpret-trailers --parse commit-message.txt | grep -q "^${{ env.token }}: ${{ env.pattern }}$"
-          done
-          echo "outside loop"
+          LAST_JOB_STATUS=$(gh run list --workflow daily.yaml | grep -oh "completed.*" | head -1 | awk '{print $2}')
+          THIS_JOB_STATUS="${{ job.status }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
       # outputs all commit messages in pr

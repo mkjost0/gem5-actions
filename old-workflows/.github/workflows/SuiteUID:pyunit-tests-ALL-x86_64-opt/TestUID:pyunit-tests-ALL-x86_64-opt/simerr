@@ -1,0 +1,206 @@
+test_to_json (pyunit_jsonserializable_check.JsonSerializableTestSuite) ... ok
+test_load_pinpoints_matrix (stdlib.pyunit_looppoint.LooppointCSVLoaderTestSuite) ... ok
+test_load_pinpoints_matrix_region_1 (stdlib.pyunit_looppoint.LooppointCSVLoaderTestSuite) ... ok
+test_load_pinpoints_matrix_region_1 (stdlib.pyunit_looppoint.LooppointJsonLoaderTestSuite) ... ok
+test_load_pinpoints_matrix_region_2 (stdlib.pyunit_looppoint.LooppointJsonLoaderTestSuite) ... ok
+test_construction_with_relative (stdlib.pyunit_looppoint.LooppointRegionPCTestSuite) ... ok
+test_construction_without_relative (stdlib.pyunit_looppoint.LooppointRegionPCTestSuite) ... ok
+test_get_pc_count_pair (stdlib.pyunit_looppoint.LooppointRegionPCTestSuite) ... ok
+test_to_json_with_relative (stdlib.pyunit_looppoint.LooppointRegionPCTestSuite) ... ok
+test_to_json_without_relative (stdlib.pyunit_looppoint.LooppointRegionPCTestSuite) ... ok
+test_construction_with_warmup (stdlib.pyunit_looppoint.LooppointRegionTestSuite) ... ok
+test_construction_without_warmup (stdlib.pyunit_looppoint.LooppointRegionTestSuite) ... ok
+test_get_pc_count_pairs_with_warmup (stdlib.pyunit_looppoint.LooppointRegionTestSuite) ... ok
+test_get_pc_count_pairs_without_warmup (stdlib.pyunit_looppoint.LooppointRegionTestSuite) ... ok
+test_construction (stdlib.pyunit_looppoint.LooppointRegionWarmupTestSuite) ... ok
+test_get_pc_count_pairs (stdlib.pyunit_looppoint.LooppointRegionWarmupTestSuite) ... ok
+test_to_json (stdlib.pyunit_looppoint.LooppointRegionWarmupTestSuite) ... ok
+test_construction_with (stdlib.pyunit_looppoint.LooppointSimulationTestSuite) ... ok
+test_get_json (stdlib.pyunit_looppoint.LooppointSimulationTestSuite) ... ok
+test_get_pc_count_pairs (stdlib.pyunit_looppoint.LooppointSimulationTestSuite) ... ok
+test_construction (stdlib.pyunit_looppoint.LooppointTestSuite) ... ok
+test_get_region_start_id_map (stdlib.pyunit_looppoint.LooppointTestSuite) ... ok
+test_get_targets (stdlib.pyunit_looppoint.LooppointTestSuite) ... ok
+test_to_json (stdlib.pyunit_looppoint.LooppointTestSuite) ... ok
+test_get_resource_json_obj (stdlib.resources.pyunit_client_wrapper_checks.ClientWrapperTestSuite) ... warn: Resource this-is-a-test-resource with version 2.0.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/this-is-a-test-resource/versions
+ok
+test_get_resource_json_obj_1 (stdlib.resources.pyunit_client_wrapper_checks.ClientWrapperTestSuite) ... warn: Resource x86-ubuntu-18.04-img with version 1.1.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/x86-ubuntu-18.04-img/versions
+ok
+test_get_resource_json_obj_combine (stdlib.resources.pyunit_client_wrapper_checks.ClientWrapperTestSuite) ... warn: Resource x86-ubuntu-18.04-img with version 1.0.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/x86-ubuntu-18.04-img/versions
+warn: Resource this-is-a-test-resource with version 1.0.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/this-is-a-test-resource/versions
+ok
+test_get_resource_json_obj_invalid_client (stdlib.resources.pyunit_client_wrapper_checks.ClientWrapperTestSuite) ... ok
+test_get_resource_json_obj_multi_database_second_only (stdlib.resources.pyunit_client_wrapper_checks.ClientWrapperTestSuite) ... warn: Resource simpoint-resource with version 0.2.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/simpoint-resource/versions
+ok
+test_get_resource_json_obj_with_id_invalid_mongodb (stdlib.resources.pyunit_client_wrapper_checks.ClientWrapperTestSuite) ... ok
+test_get_resource_json_obj_with_version (stdlib.resources.pyunit_client_wrapper_checks.ClientWrapperTestSuite) ... warn: Resource this-is-a-test-resource with version 1.0.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/this-is-a-test-resource/versions
+ok
+test_get_resource_json_obj_with_version_invalid_json (stdlib.resources.pyunit_client_wrapper_checks.ClientWrapperTestSuite) ... ok
+test_get_resource_json_obj_with_version_invalid_mongodb (stdlib.resources.pyunit_client_wrapper_checks.ClientWrapperTestSuite) ... ok
+test_get_resource_json_obj_with_version_mongodb (stdlib.resources.pyunit_client_wrapper_checks.ClientWrapperTestSuite) ... warn: Resource x86-ubuntu-18.04-img with version 1.0.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/x86-ubuntu-18.04-img/versions
+ok
+test_get_resource_json_same_resource_different_versions (stdlib.resources.pyunit_client_wrapper_checks.ClientWrapperTestSuite) ... warn: Resource x86-ubuntu-18.04-img with version 2.0.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/x86-ubuntu-18.04-img/versions
+warn: Resource x86-ubuntu-18.04-img with version 1.0.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/x86-ubuntu-18.04-img/versions
+ok
+test_get_resource_same_resource_same_version (stdlib.resources.pyunit_client_wrapper_checks.ClientWrapperTestSuite) ... ok
+test_invalid_auth_url (stdlib.resources.pyunit_client_wrapper_checks.ClientWrapperTestSuite) ... ok
+test_invalid_url (stdlib.resources.pyunit_client_wrapper_checks.ClientWrapperTestSuite) ... ok
+test_get_resources_json (stdlib.resources.pyunit_downloader_checks.ResourceDownloaderTestSuite) ... ok
+test_get_resources_json_at_path (stdlib.resources.pyunit_downloader_checks.ResourceDownloaderTestSuite) ... ok
+test_get_resources_json_invalid_url (stdlib.resources.pyunit_downloader_checks.ResourceDownloaderTestSuite) ... ok
+test_identicalDirsIdenticalMd5 (stdlib.resources.pyunit_md5_utils_check.MD5DirTestSuite) ... ok
+test_md5DirConsistency (stdlib.resources.pyunit_md5_utils_check.MD5DirTestSuite) ... ok
+test_identicalFilesIdenticalMd5 (stdlib.resources.pyunit_md5_utils_check.MD5FileTestSuite) ... ok
+test_md5FileConsistency (stdlib.resources.pyunit_md5_utils_check.MD5FileTestSuite) ... ok
+test_obtain_resources_no_version (stdlib.resources.pyunit_obtain_resources_check.TestObtainResourcesCheck)
+Test that the resource loader returns latest version compatible with that version of gem5 when no version is specified. ... warn: Resource test-binary-resource with version 2.5.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/test-binary-resource/versions
+warn: Resource test-binary-resource with version 2.5.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/test-binary-resource/versions
+ok
+test_obtain_resources_no_version_invalid_id (stdlib.resources.pyunit_obtain_resources_check.TestObtainResourcesCheck) ... ok
+test_obtain_resources_with_version_compatible (stdlib.resources.pyunit_obtain_resources_check.TestObtainResourcesCheck) ... warn: Resource test-binary-resource with version 1.7.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/test-binary-resource/versions
+warn: Resource test-binary-resource with version 1.7.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/test-binary-resource/versions
+ok
+test_obtain_resources_with_version_incompatible (stdlib.resources.pyunit_obtain_resources_check.TestObtainResourcesCheck) ... warn: Resource test-binary-resource with version 1.5.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/test-binary-resource/versions
+warn: Resource test-binary-resource with version 1.5.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/test-binary-resource/versions
+ok
+test_obtain_resources_with_version_invalid_id (stdlib.resources.pyunit_obtain_resources_check.TestObtainResourcesCheck) ... ok
+test_obtain_resources_with_version_invalid_version (stdlib.resources.pyunit_obtain_resources_check.TestObtainResourcesCheck) ... ok
+test_binary_resource (stdlib.resources.pyunit_resource_specialization.ResourceSpecializationSuite)
+Tests the loading of of a BinaryResource ... warn: Resource binary-example with version 1.0.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/binary-example/versions
+warn: Resource binary-example with version 1.0.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/binary-example/versions
+ok
+test_bootloader_resource (stdlib.resources.pyunit_resource_specialization.ResourceSpecializationSuite)
+Tests the loading of a BootloaderResource. ... warn: Resource bootloader-example with version 1.0.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/bootloader-example/versions
+warn: Resource bootloader-example with version 1.0.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/bootloader-example/versions
+ok
+test_checkpoint_resource (stdlib.resources.pyunit_resource_specialization.ResourceSpecializationSuite)
+Tests the loading of a CheckpointResource. ... warn: Resource checkpoint-example with version 1.0.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/checkpoint-example/versions
+warn: Resource checkpoint-example with version 1.0.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/checkpoint-example/versions
+ok
+test_directory_resource (stdlib.resources.pyunit_resource_specialization.ResourceSpecializationSuite)
+Tests the loading of a DirectoryResource. ... warn: Resource directory-example with version 1.0.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/directory-example/versions
+warn: Resource directory-example with version 1.0.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/directory-example/versions
+ok
+test_disk_image_resource (stdlib.resources.pyunit_resource_specialization.ResourceSpecializationSuite)
+Tests the loading of a DiskImageResource. ... warn: Resource disk-image-example with version 1.0.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/disk-image-example/versions
+warn: Resource disk-image-example with version 1.0.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/disk-image-example/versions
+ok
+test_file_resource (stdlib.resources.pyunit_resource_specialization.ResourceSpecializationSuite)
+Tests the loading of a FileResource. ... warn: Resource file-example with version 1.0.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/file-example/versions
+warn: Resource file-example with version 1.0.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/file-example/versions
+ok
+test_git_resource (stdlib.resources.pyunit_resource_specialization.ResourceSpecializationSuite)
+Tests the loading of a GitResource. ... warn: Resource git-example with version 1.0.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/git-example/versions
+warn: Resource git-example with version 1.0.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/git-example/versions
+ok
+test_kernel_resource (stdlib.resources.pyunit_resource_specialization.ResourceSpecializationSuite)
+Tests the loading of a KernelResource. ... warn: Resource kernel-example with version 1.0.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/kernel-example/versions
+warn: Resource kernel-example with version 1.0.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/kernel-example/versions
+ok
+test_looppoint_json_restore_resource (stdlib.resources.pyunit_resource_specialization.ResourceSpecializationSuite)
+Tests the creation of LooppointJsonResource via a ... warn: Resource looppoint-json-restore-resource-region-1 with version 1.0.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/looppoint-json-restore-resource-region-1/versions
+warn: Resource looppoint-json-restore-resource-region-1 with version 1.0.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/looppoint-json-restore-resource-region-1/versions
+ok
+test_looppoint_pinpoints_resource (stdlib.resources.pyunit_resource_specialization.ResourceSpecializationSuite)
+Tests the creation of LooppointCreatorCSVResource via a Looppoint ... warn: Resource looppoint-pinpoint-csv-resource with version 1.0.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/looppoint-pinpoint-csv-resource/versions
+warn: Resource looppoint-pinpoint-csv-resource with version 1.0.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/looppoint-pinpoint-csv-resource/versions
+ok
+test_simpoint_directory_resource (stdlib.resources.pyunit_resource_specialization.ResourceSpecializationSuite)
+Tests the loading of a Simpoint directory resource. ... warn: Resource simpoint-directory-example with version 1.0.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/simpoint-directory-example/versions
+warn: Resource simpoint-directory-example with version 1.0.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/simpoint-directory-example/versions
+ok
+test_simpoint_resource (stdlib.resources.pyunit_resource_specialization.ResourceSpecializationSuite)
+Tests the loading of a Simpoint resource. ... warn: Resource simpoint-example with version 1.0.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/simpoint-example/versions
+ok
+warn: Resource x86-hello64-static with version 1.0.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/x86-hello64-static/versions
+warn: Resource x86-hello64-static with version 1.0.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/x86-hello64-static/versions
+ERROR
+warn: Resource simple-boot with version 1.0.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/simple-boot/versions
+warn: Resource x86-linux-kernel-5.2.3 with version 1.0.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/x86-linux-kernel-5.2.3/versions
+warn: Resource x86-linux-kernel-5.2.3 with version 1.0.0 is not known to be compatible with gem5 version [DEVELOP-FOR-23.0]. This may cause problems with your simulation. This resource's compatibility with different gem5 versions can be found here: https://resources.gem5.org/resources/x86-linux-kernel-5.2.3/versions
+ERROR
+test_anyToFrequency (util.pyunit_convert_check.ConvertTestSuite) ... ok
+test_anyToLatency (util.pyunit_convert_check.ConvertTestSuite) ... ok
+test_temperature (util.pyunit_convert_check.ConvertTestSuite) ... ok
+test_toBool (util.pyunit_convert_check.ConvertTestSuite) ... ok
+test_toCurrent (util.pyunit_convert_check.ConvertTestSuite) ... ok
+test_toEnergy (util.pyunit_convert_check.ConvertTestSuite) ... ok
+test_toFrequency (util.pyunit_convert_check.ConvertTestSuite) ... ok
+test_toIpAddress (util.pyunit_convert_check.ConvertTestSuite) ... ok
+test_toIpNetmask (util.pyunit_convert_check.ConvertTestSuite) ... ok
+test_toIpWithPort (util.pyunit_convert_check.ConvertTestSuite) ... ok
+test_toLatency (util.pyunit_convert_check.ConvertTestSuite) ... ok
+test_toMemoryBandwidth (util.pyunit_convert_check.ConvertTestSuite) ... ok
+test_toMemorySize (util.pyunit_convert_check.ConvertTestSuite) ... ok
+test_toMetricFloat (util.pyunit_convert_check.ConvertTestSuite) ... ok
+test_toMetricInteger (util.pyunit_convert_check.ConvertTestSuite) ... ok
+test_toNetworkBandwidth (util.pyunit_convert_check.ConvertTestSuite) ... ok
+test_toVoltage (util.pyunit_convert_check.ConvertTestSuite) ... ok
+
+======================================================================
+ERROR: setUpClass (stdlib.resources.pyunit_workload_checks.CustomWorkloadTestSuite)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "src/python/gem5/resources/downloader.py", line 304, in _download
+  File "/usr/lib/python3.8/urllib/request.py", line 247, in urlretrieve
+    with contextlib.closing(urlopen(url, data)) as fp:
+  File "/usr/lib/python3.8/urllib/request.py", line 222, in urlopen
+    return opener.open(url, data, timeout)
+  File "/usr/lib/python3.8/urllib/request.py", line 509, in open
+    req = Request(fullurl, data)
+  File "/usr/lib/python3.8/urllib/request.py", line 328, in __init__
+    self.full_url = url
+  File "/usr/lib/python3.8/urllib/request.py", line 354, in full_url
+    self._parse()
+  File "/usr/lib/python3.8/urllib/request.py", line 383, in _parse
+    raise ValueError("unknown url type: %r" % self.full_url)
+ValueError: unknown url type: '{url_base}/test-progs/hello/bin/x86/linux/hello64-static'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.8/unittest/mock.py", line 1325, in patched
+    return func(*newargs, **newkeywargs)
+  File "/home/mkjost/vm-testing/gem5-actions/tests/pyunit/stdlib/resources/pyunit_workload_checks.py", line 83, in setUpClass
+    "binary": obtain_resource("x86-hello64-static"),
+  File "src/python/gem5/resources/resource.py", line 626, in obtain_resource
+  File "src/python/gem5/resources/downloader.py", line 514, in get_resource
+  File "src/python/gem5/resources/downloader.py", line 326, in _download
+Exception: Environment variable GEM5_USE_PROXY is set to 'None'. The expected form is <host>:<port>'.
+
+======================================================================
+ERROR: setUpClass (stdlib.resources.pyunit_workload_checks.WorkloadTestSuite)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "src/python/gem5/resources/downloader.py", line 304, in _download
+  File "/usr/lib/python3.8/urllib/request.py", line 247, in urlretrieve
+    with contextlib.closing(urlopen(url, data)) as fp:
+  File "/usr/lib/python3.8/urllib/request.py", line 222, in urlopen
+    return opener.open(url, data, timeout)
+  File "/usr/lib/python3.8/urllib/request.py", line 509, in open
+    req = Request(fullurl, data)
+  File "/usr/lib/python3.8/urllib/request.py", line 328, in __init__
+    self.full_url = url
+  File "/usr/lib/python3.8/urllib/request.py", line 354, in full_url
+    self._parse()
+  File "/usr/lib/python3.8/urllib/request.py", line 383, in _parse
+    raise ValueError("unknown url type: %r" % self.full_url)
+ValueError: unknown url type: '{url_base}/kernels/x86/static/vmlinux-5.2.3'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.8/unittest/mock.py", line 1325, in patched
+    return func(*newargs, **newkeywargs)
+  File "/home/mkjost/vm-testing/gem5-actions/tests/pyunit/stdlib/resources/pyunit_workload_checks.py", line 162, in setUpClass
+    cls.workload = Workload("simple-boot")
+  File "src/python/gem5/resources/workload.py", line 221, in __init__
+  File "src/python/gem5/resources/resource.py", line 626, in obtain_resource
+  File "src/python/gem5/resources/downloader.py", line 514, in get_resource
+  File "src/python/gem5/resources/downloader.py", line 326, in _download
+Exception: Environment variable GEM5_USE_PROXY is set to 'None'. The expected form is <host>:<port>'.
+
+----------------------------------------------------------------------
+Ran 80 tests in 4.193s
+
+FAILED (errors=2)
