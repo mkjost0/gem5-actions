@@ -30,8 +30,7 @@ jobs:
           cd gem5-resources
           git checkout develop
           cd ../
-          scons build/GCN3_X86/gem5.opt -j4 --ignore-style || rm -rf build && scons build/GCN3_X86/gem5.opt -j4
-        --ignore-styl
+          scons build/GCN3_X86/gem5.opt -j4 --ignore-style || rm -rf build && scons build/GCN3_X86/gem5.opt -j4 --ignore-style
           cd util/m5
           export TERM=xterm-256color
           scons build/x86/out/m5
