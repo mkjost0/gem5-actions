@@ -140,13 +140,6 @@ def _download(url: str, download_to: str, max_attempts: int = 6) -> None:
             else:
                 raise e
         except ConnectionResetError as e:
-<<<<<<< HEAD
-            # This catches the ConnectionResetError we see occassionally see
-            # when accessing resources on GitHub Actions.  It retries using a
-            # Truncated Exponential backoff algorithm, truncating after
-            # "max_attempts". If any other is retrieved we raise the error.
-=======
->>>>>>> 0cc110a406261c422d502b5a792a09ad03cde240
             if e.errno == 104:
                 attempt += 1
                 if attempt >= max_attempts:
