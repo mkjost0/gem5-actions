@@ -97,6 +97,7 @@ jobs:
               const result= message.includes(id);
               console.log(result)
             }
+            return false
       # - name: Check last job status
       #   id: lastJobStatus
       #   if: always()
