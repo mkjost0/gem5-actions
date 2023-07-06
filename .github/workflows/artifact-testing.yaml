@@ -96,8 +96,9 @@ jobs:
               const message = commit.message;
               const result= message.includes(id);
               console.log(result)
+              core.setFailed(result)
             }
-            core.setFailed(result)
+
       # - name: Check last job status
       #   id: lastJobStatus
       #   if: always()
