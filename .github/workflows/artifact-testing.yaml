@@ -96,7 +96,7 @@ jobs:
               const message = commit.message;
               const result= message.includes(id);
               console.log(result)
-              core.setFailed("make sure to set gerrit id hehe")
+              core.setFailed("One or more of the commits in this pull request is missing a Change-ID. To automatically insert one, run the following:\n f=`git rev-parse --git-dir`/hooks/commit-msg ; mkdir -p $(dirname $f) ; curl -Lo $f https://gerrit-review.googlesource.com/tools/hooks/commit-msg ; chmod +x $f\n Then amend the commit with git commit --amend --no-edit, and update your pull request.")
             }
 
       # - name: Check last job status
