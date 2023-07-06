@@ -83,7 +83,7 @@ jobs:
       #       echo $i > commit-message.txt
       #       git interpret-trailers --parse commit-message.txt | grep -q "^${{ env.token }}: ${{ env.pattern }}$"
       #     done
-      #     echo "outside loop"
+      #     echo "outsde loop"
       - uses: actions/github-script@v6
         env:
           token: "Change-Id"
