@@ -85,11 +85,14 @@ jobs:
       #     done
       #     echo "outside loop"
       - uses: actions/github-script@v6
+        env:
+          token: "Change-Id"
+          pattern: ".*"
         with:
           script: |
             const commits = ${{ toJSON(github.event.commits) }}
             for (const commit of commits) {
-              console.log(commit.message)
+              git interpret-trailers --parse commit.message | grep -q "^${{ env.token }}: ${{ env.pattern }}$"
             }
       # - name: Check last job status
       #   id: lastJobStatus
