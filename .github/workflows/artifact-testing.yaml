@@ -76,7 +76,7 @@ jobs:
           token: "Change-Id"
           pattern: ".*"
         run: |
-          apt install jq -y
+          apt-get install jq -y
           for i in $(jq -r ".[] | .message"  echo "${{ env.JSON }}")
           do
             echo "hello"
