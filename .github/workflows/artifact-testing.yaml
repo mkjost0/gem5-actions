@@ -89,7 +89,7 @@ jobs:
           script: |
             const commits = ${{ toJSON(github.event.commits) }}
             for (const commit of commits) {
-              console.log(commit)
+              console.log(commit.message)
             }
       # - name: Check last job status
       #   id: lastJobStatus
