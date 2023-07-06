@@ -97,7 +97,7 @@ jobs:
               const result= message.includes(id);
               console.log(result)
             }
-            return false
+            core.setFailed(result)
       # - name: Check last job status
       #   id: lastJobStatus
       #   if: always()
