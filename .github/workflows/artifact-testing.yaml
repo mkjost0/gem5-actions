@@ -65,25 +65,10 @@ on:
 # This file is an example of using artifact in different runs, for us to utilize in
 # separating jobs amongst different runners
 jobs:
-  build-gem5:
+  check-for-change-id:
     runs-on: ubuntu-latest
     container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
     steps:
-      - uses: actions/checkout@v3
-      # - name: testing
-      #   env:
-      #     JSON: ${{ toJSON(github.event.commits) }}
-      #     token: "Change-Id"
-      #     pattern: ".*"
-      #   run: |
-      #     apt-get install jq -y
-      #     for i in $(jq -r ".[] | .message"  echo "${{ env.JSON }}")
-      #     do
-      #       echo "hello"
-      #       echo $i > commit-message.txt
-      #       git interpret-trailers --parse commit-message.txt | grep -q "^${{ env.token }}: ${{ env.pattern }}$"
-      #     done
-      #     echo "outsde loop"
       - uses: actions/github-script@v6
         env:
           token: "Change-Id"
@@ -94,31 +79,11 @@ jobs:
             for (const commit of commits) {
               const id = "Change-Id: "
               const message = commit.message;
-              const result= message.includes(id);
               if (!message.includes(id)) {
                 core.setFailed("One or more of the commits in this pull request is missing a Change-ID, which we require for any changes made to gem5. To automatically insert one, run the following:\n f=`git rev-parse --git-dir`/hooks/commit-msg ; mkdir -p $(dirname $f) ; curl -Lo $f https://gerrit-review.googlesource.com/tools/hooks/commit-msg ; chmod +x $f\n Then amend the commit with git commit --amend --no-edit, and update your pull request.")
               }
             }
 
-      # - name: Check last job status
-      #   id: lastJobStatus
-      #   if: always()
-      #   run: |
-      #     LAST_JOB_STATUS=$(gh run list --workflow daily.yaml | grep -oh "completed.*" | head -1 | awk '{print $2}')
-      #     THIS_JOB_STATUS="${{ job.status }}"
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-
-      # outputs all commit messages in pr
-      # https://stackoverflow.com/questions/71571528/iterate-on-github-event-commits-in-github-action-script
-      # - uses: actions/github-script@v6
-      #   with:
-      #     script: |
-      #       const commits = ${{ toJSON(github.event.commits) }}
-      #       for (const commit of commits) {
-      #         console.log(commit)
-      #       }
   # build-gem5:
   #   runs-on: [self-hosted, linux, x64, build]
   #   container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
