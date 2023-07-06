@@ -90,20 +90,12 @@ jobs:
           pattern: ".*"
         with:
           script: |
-            const commits = ${{ toJSON(github.event.commits) }}
-            const fs = require('fs')
             for (const commit of commits) {
-              fs.writeFile('testing.txt', commit.message, (err) => {
-                if (err) throw err;
-                else{
-                  console.log("The file is updated with the given data")
-                }
-              })
+              const id = "Change-Id: "
+              const message = commit.message;
+              const result= message.includes(id);
+              return result
             }
-            # for (const commit of commits) {
-            #   console.log(commit.message)
-            #   git interpret-trailers --parse commit.message | grep -q "^${{ env.token }}: ${{ env.pattern }}"
-            # }
       # - name: Check last job status
       #   id: lastJobStatus
       #   if: always()
