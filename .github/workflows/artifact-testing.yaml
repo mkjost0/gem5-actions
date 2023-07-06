@@ -70,20 +70,27 @@ jobs:
     container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
     steps:
       - uses: actions/checkout@v3
-      - name: testing
-        env:
-          JSON: ${{ toJSON(github.event.commits) }}
-          token: "Change-Id"
-          pattern: ".*"
-        run: |
-          apt-get install jq -y
-          for i in $(jq -r ".[] | .message"  echo "${{ env.JSON }}")
-          do
-            echo "hello"
-            echo $i > commit-message.txt
-            git interpret-trailers --parse commit-message.txt | grep -q "^${{ env.token }}: ${{ env.pattern }}$"
-          done
-          echo "outside loop"
+      # - name: testing
+      #   env:
+      #     JSON: ${{ toJSON(github.event.commits) }}
+      #     token: "Change-Id"
+      #     pattern: ".*"
+      #   run: |
+      #     apt-get install jq -y
+      #     for i in $(jq -r ".[] | .message"  echo "${{ env.JSON }}")
+      #     do
+      #       echo "hello"
+      #       echo $i > commit-message.txt
+      #       git interpret-trailers --parse commit-message.txt | grep -q "^${{ env.token }}: ${{ env.pattern }}$"
+      #     done
+      #     echo "outside loop"
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            const commits = ${{ toJSON(github.event.commits) }}
+            for (const commit of commits) {
+              console.log(commit)
+            }
       # - name: Check last job status
       #   id: lastJobStatus
       #   if: always()
@@ -101,7 +108,7 @@ jobs:
       #     script: |
       #       const commits = ${{ toJSON(github.event.commits) }}
       #       for (const commit of commits) {
-      #         git interpret-trailers --parse commit-message.txt | grep -q "^${{ env.token }}: ${{ env.pattern }}$"
+      #         console.log(commit)
       #       }
   # build-gem5:
   #   runs-on: [self-hosted, linux, x64, build]
