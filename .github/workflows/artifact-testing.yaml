@@ -92,7 +92,8 @@ jobs:
           script: |
             const commits = ${{ toJSON(github.event.commits) }}
             for (const commit of commits) {
-              git interpret-trailers --parse commit.message | grep -q "^${{ env.token }}: ${{ env.pattern }}$"
+              console.log(commit.message)
+              git interpret-trailers --parse commit.message | grep -q "^${{ env.token }}: ${{ env.pattern }}"
             }
       # - name: Check last job status
       #   id: lastJobStatus
