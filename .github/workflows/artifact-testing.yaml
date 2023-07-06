@@ -90,11 +90,13 @@ jobs:
           pattern: ".*"
         with:
           script: |
+            const commits = ${{ toJSON(github.event.commits) }}
             for (const commit of commits) {
               const id = "Change-Id: "
               const message = commit.message;
               const result= message.includes(id);
-              return result
+              console.log(result)
+              return result;
             }
       # - name: Check last job status
       #   id: lastJobStatus
