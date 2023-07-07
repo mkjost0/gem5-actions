@@ -49,4 +49,3 @@ jobs:
       #     path: build/ALL/gem5.opt
       #     retention-days: 5
       # - run: echo "This job's status is ${{ job.status }}."
-
