@@ -69,7 +69,7 @@ on:
 jobs:
   check-for-change-id:
     runs-on: ubuntu-latest
-    container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
+    # container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
     steps:
       - name: Test
         run: |
