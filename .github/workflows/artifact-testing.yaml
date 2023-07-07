@@ -81,6 +81,10 @@ jobs:
   #         GH_TOKEN: ${{ github.token }}
   #       run: |
   #         gh pr view --json commits
+      - name: Test
+        run: |
+          commits=${{join(github.event.commits.*.message, ', ') }}
+          echo $commits
       - uses: actions/github-script@v6
         env:
           token: "Change-Id"
