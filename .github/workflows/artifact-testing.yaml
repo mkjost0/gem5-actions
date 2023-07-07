@@ -65,7 +65,7 @@ on:
   #   types: [opened, edited, synchronize]
 
 # This file is an example of using artifact in different runs, for us to utilize in
-# separating jobs amongst different runners
+# separating jobs amongst different runner
 jobs:
   check-for-change-id:
     runs-on: ubuntu-latest
