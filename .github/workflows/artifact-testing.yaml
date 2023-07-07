@@ -71,16 +71,16 @@ jobs:
     runs-on: ubuntu-latest
     # container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
     steps:
-      - uses: actions/checkout@v3
-  #       with:
-  # #         # Scheduled workflows run on the default branch by default. We
-  # #         # therefore need to explicitly checkout the develop branch.
-  #         ref: ghjghjfhj
-      - name: Test
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh pr view --json commits
+  #     - uses: actions/checkout@v3
+  # #       with:
+  # # #         # Scheduled workflows run on the default branch by default. We
+  # # #         # therefore need to explicitly checkout the develop branch.
+  # #         ref: ghjghjfhj
+  #     - name: Test
+  #       env:
+  #         GH_TOKEN: ${{ github.token }}
+  #       run: |
+  #         gh pr view --json commits
       - uses: actions/github-script@v6
         env:
           token: "Change-Id"
