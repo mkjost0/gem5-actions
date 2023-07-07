@@ -87,7 +87,7 @@ jobs:
           pattern: ".*"
         with:
           script: |
-            const commits = ${{ toJSON(github.event.pull_request) }}
+            const commits = ${{ toJSON( github.event.pull_request.commits) }}
             for (const commit of commits) {
               const id = "Change-Id: "
               const message = commit.message;
