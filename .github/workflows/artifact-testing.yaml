@@ -71,6 +71,9 @@ jobs:
     runs-on: ubuntu-latest
     container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
     steps:
+      - name: Test
+        run: |
+          gh pr view --json commits
       - uses: actions/github-script@v6
         env:
           token: "Change-Id"
