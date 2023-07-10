@@ -8,8 +8,8 @@ on:
   # Runs every day from 7AM UTC
   # push:
   workflow_dispatch:
-  schedule:
-    - cron:  '0 7 * * *'
+  # schedule:
+  #   - cron:  '0 7 * * *'
 
 jobs:
 # build all necessary versions of gem5

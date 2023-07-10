@@ -6,8 +6,8 @@ run-name: ${{ github.actor }} is running compiler tests
 
 on:
   # Runs every Friday from 7AM UTC
-  schedule:
-    - cron:  '00 7 * * 5'
+  # schedule:
+  #   - cron:  '00 7 * * 5'
   # Allows us to manually start workflow for testing
   workflow_dispatch:
 
