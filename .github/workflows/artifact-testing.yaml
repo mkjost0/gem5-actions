@@ -1,3 +1,32 @@
+name: CI Tests
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, ready_for_review]
+
+jobs:
+  # ensures we have a change-id in every commit, needed for gerrit
+  check-for-change-id:
+    # runs on github hosted runner
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Check for Change-Id
+        run: |
+          for commit in $(git rev-list ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}); do
+              git checkout $commit
+              if !(git log -1 --pretty=format:"%B" | grep -q "Change-Id: ")
+              then
+                echo "One or more of the commits in this pull request is missing a Change-ID, which we require for any changes made to gem5. "\
+                "To automatically insert one, run the following:\n f=`git rev-parse --git-dir`/hooks/commit-msg ; mkdir -p $(dirname $f) ; "\
+                "curl -Lo $f https://gerrit-review.googlesource.com/tools/hooks/commit-msg ; chmod +x $f\n Then amend the commit with git commit --amend --no-edit, and update your pull request."
+                exit 1
+              fi
+          done
+
+
 # name: 'Github Workflow History'
 
 # 'on':
@@ -51,56 +80,56 @@
 
 
 
-name: artifact naming
-run-name: testing change id
-# name: Github Artifacting Tests
-# run-name: Testing artifact usage
-#  https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#schedule
-on:
-  # push:
-  workflow_dispatch:
-  pull_request:
-    types: [opened, edited, synchronize, ready_for_review]
-  # pull_request:
-  #   types: [opened, edited, synchronize]
+# name: artifact naming
+# run-name: testing change id
+# # name: Github Artifacting Tests
+# # run-name: Testing artifact usage
+# #  https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#schedule
+# on:
+#   # push:
+#   workflow_dispatch:
+#   pull_request:
+#     types: [opened, edited, synchronize, ready_for_review]
+#   # pull_request:
+#   #   types: [opened, edited, synchronize]
 
-# This file is an example of using artifact in different runs, for us to utilize in
-# separating jobs amongst different runner
-jobs:
-  check-for-change-id:
-    runs-on: ubuntu-latest
-    # container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
-    steps:
-  #     - uses: actions/checkout@v3
-  # #       with:
-  # # #         # Scheduled workflows run on the default branch by default. We
-  # # #         # therefore need to explicitly checkout the develop branch.
-  # #         ref: ghjghjfhj
-  #     - name: Test
-  #       env:
-  #         GH_TOKEN: ${{ github.token }}
-  #       run: |
-  #         gh pr view --json commits
-      - name: Test
-        run: |
-          commits=${{join(github.event.commits.*.message, ', ') }}
-          echo $commits
-      - uses: actions/github-script@v6
-        env:
-          token: "Change-Id"
-          pattern: ".*"
-        with:
-          script: |
-            const commits = ${{ toJSON( github.event.pull_request.commits) }}
-            for (const commit of commits) {
-              const id = "Change-Id: "
-              const message = commit.message;
-              if (!message.includes(id)) {
-                core.setFailed('One or more of the commits in this pull request is missing a Change-ID, which we require for any changes made to gem5. ' +
-                'To automatically insert one, run the following:\n f=`git rev-parse --git-dir`/hooks/commit-msg ; mkdir -p $(dirname $f) ; ' +
-                'curl -Lo $f https://gerrit-review.googlesource.com/tools/hooks/commit-msg ; chmod +x $f\n Then amend the commit with git commit --amend --no-edit, and update your pull request.')
-              }
-            }
+# # This file is an example of using artifact in different runs, for us to utilize in
+# # separating jobs amongst different runner
+# jobs:
+#   check-for-change-id:
+#     runs-on: ubuntu-latest
+#     # container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
+#     steps:
+#   #     - uses: actions/checkout@v3
+#   # #       with:
+#   # # #         # Scheduled workflows run on the default branch by default. We
+#   # # #         # therefore need to explicitly checkout the develop branch.
+#   # #         ref: ghjghjfhj
+#   #     - name: Test
+#   #       env:
+#   #         GH_TOKEN: ${{ github.token }}
+#   #       run: |
+#   #         gh pr view --json commits
+#       - name: Test
+#         run: |
+#           commits=${{join(github.event.commits.*.message, ', ') }}
+#           echo $commits
+#       - uses: actions/github-script@v6
+#         env:
+#           token: "Change-Id"
+#           pattern: ".*"
+#         with:
+#           script: |
+#             const commits = ${{ toJSON( github.event.pull_request.commits) }}
+#             for (const commit of commits) {
+#               const id = "Change-Id: "
+#               const message = commit.message;
+#               if (!message.includes(id)) {
+#                 core.setFailed('One or more of the commits in this pull request is missing a Change-ID, which we require for any changes made to gem5. ' +
+#                 'To automatically insert one, run the following:\n f=`git rev-parse --git-dir`/hooks/commit-msg ; mkdir -p $(dirname $f) ; ' +
+#                 'curl -Lo $f https://gerrit-review.googlesource.com/tools/hooks/commit-msg ; chmod +x $f\n Then amend the commit with git commit --amend --no-edit, and update your pull request.')
+#               }
+#             }
 
   # build-gem5:
   #   runs-on: [self-hosted, linux, x64, build]
