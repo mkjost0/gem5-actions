@@ -5,7 +5,7 @@ on:
     types: [opened, edited, synchronize, ready_for_review]
 
 jobs:
-  # ensures we have a change-id in every commit, needed for gerrit
+  # ensures we have a change-id in every commit, needed for gerrits
   check-for-change-id:
     # runs on github hosted runner
     runs-on: ubuntu-22.04
