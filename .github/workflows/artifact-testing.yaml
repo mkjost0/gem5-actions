@@ -31,7 +31,7 @@ jobs:
       - name: Delete stuff
         run: |
           ls -la ./
-          ls -la /actions_runner/_work/_temp/_github_home/.cache
+          # ls -la /actions_runner/_work/_temp/_github_home/.cache
           rm -rf ./* || true
           rm -rf ./.??* || true
           rm -rf ~/.cache
