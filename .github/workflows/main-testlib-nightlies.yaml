@@ -3,7 +3,8 @@
 name: Running main.py
 run-name: ${{ github.actor }} is running long main.py tests
 
-on: [push]
+on:
+  workflow_dispatch:
   # schedule:
   #   - cron:  '0 0 * * *'
 
