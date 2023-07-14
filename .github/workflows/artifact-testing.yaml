@@ -27,7 +27,7 @@ jobs:
       #     done
       - name: Download stuff
         run: |
-          wget https://dist.gem5.org/dist/develop/images/x86/ubuntu-18-04/x86-ubuntu.img.gz
+          wget https://dist.gem5.org/dist/develop/images/x86/ubuntu-18-04/x86-ubuntu.img.gz --no-check-certificate
       - name: Delete stuff
         run: |
           ls -la ./
