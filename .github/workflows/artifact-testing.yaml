@@ -5,7 +5,7 @@ on: [push]
   #   types: [opened, edited, synchronize, ready_for_review]
 
 jobs:
-  # ensures we have a change-id in every commit, needed for gerrits
+  # ensures we have a change-id in every commit, needed for gerrit
   check-for-change-id:
     # runs on github hosted runner
     runs-on: runs-on: [self-hosted, linux, x64, build]
@@ -27,62 +27,16 @@ jobs:
       #     done
       - name: Download stuff
         run: |
-          wget https://dist.gem5.org/dist/develop/images/x86/ubuntu-18-04/x86-ubuntu.img.gz
-      - name: Remove stuff
-        run: |
-          ls -la ./
-          rm -rf ./* || true
-          rm -rf ./.??* || true
-          rm ~/.cache
-          ls -la ./
-      # - name: Send email
-# - name: Send mail
-#   uses: dawidd6/action-send-mail@v3
-#   with:
-#     # Specify connection via URL (replaces server_address, server_port, secure,
-#     # username and password)
-#     #
-#     # Format:
-#     #
-#     #  * smtp://user:password@server:port
-#     #  * smtp+starttls://user:password@server:port
-#     connection_url: ${{secrets.MAIL_CONNECTION}}
-#     # Required mail server address if not connection_url:
-#     server_address: smtp.gmail.com
-#     # Server port, default 25:
-#     server_port: 465
-#     # Optional whether this connection use TLS (default is true if server_port is 465)
-#     secure: true
-#     # Optional (recommended) mail server username:
-#     username: ${{secrets.MAIL_USERNAME}}
-#     # Optional (recommended) mail server password:
-#     password: ${{secrets.MAIL_PASSWORD}}
-#     # Required mail subject:
-#     subject: Github Actions job result
-#     # Required recipients' addresses:
-#     to: obiwan@example.com,yoda@example.com
-#     # Required sender full name (address can be skipped):
-#     from: Luke Skywalker # <user@example.com>
-#     # Optional plain body:
-#     body: Build job of ${{github.repository}} completed successfully!
-#     # Optional HTML body read from file:
-#     html_body: file://README.html
-#     # Optional carbon copy recipients:
-#     cc: kyloren@example.com,leia@example.com
-#     # Optional blind carbon copy recipients:
-#     bcc: r2d2@example.com,hansolo@example.com
-#     # Optional recipient of the email response:
-#     reply_to: luke@example.com
-#     # Optional Message ID this message is replying to:
-#     in_reply_to: <random-luke@example.com>
-#     # Optional unsigned/invalid certificates allowance:
-#     ignore_cert: true
-#     # Optional converting Markdown to HTML (set content_type to text/html too):
-#     convert_markdown: true
-#     # Optional attachments:
-#     attachments: attachments.zip,git.diff,./dist/static/*.js
-#     # Optional priority: 'high', 'normal' (default) or 'low'
-#     priority: low
+          for commit in $(git rev-list ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}); do
+              git checkout $commit
+              if !(git log -1 --pretty=format:"%s" | grep -q "Change-Id: ")
+              then
+                echo "One or more of the commits in this pull request is missing a Change-ID, which we require for any changes made to gem5. "\
+                "To automatically insert one, run the following:\n f=`git rev-parse --git-dir`/hooks/commit-msg ; mkdir -p $(dirname $f) ; "\
+                "curl -Lo $f https://gerrit-review.googlesource.com/tools/hooks/commit-msg ; chmod +x $f\n Then amend the commit with git commit --amend --no-edit, and update your pull request."
+                exit 1
+              fi
+          done
 
 
 # name: 'Github Workflow History'
