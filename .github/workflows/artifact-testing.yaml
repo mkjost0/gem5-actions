@@ -34,7 +34,7 @@ jobs:
           # ls -la /actions_runner/_work/_temp/_github_home/.cache
           rm -rf ./* || true
           rm -rf ./.??* || true
-          rm -rf ~/.cache
+          rm -rf ~/.cache || true
           ls -la ./
           # for commit in $(git rev-list ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}); do
           #     git checkout $commit
