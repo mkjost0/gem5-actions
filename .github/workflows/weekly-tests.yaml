@@ -8,7 +8,7 @@ on:
     - cron:  '00 7 * * 6'
   # Allows us to manually start workflow for testing
   workflow_dispatch:
-  push:
+  # push:
 
 jobs:
   build-gem5:
