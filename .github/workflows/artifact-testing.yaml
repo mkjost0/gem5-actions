@@ -10,7 +10,7 @@ jobs:
   build-gem5:
     strategy:
       matrix:
-        image: [ALL, ALL_CHI, ARM, ALL_MSI, ALL_MESI_Two_Level, NULL, NULL_MI_example, RISCV, VEGA_X86]
+        image: [ALL, ARM, ALL_MESI_Two_Level, NULL_MI_example, RISCV, VEGA_X86]
     runs-on: [self-hosted, linux, x64, build]
     container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
     outputs:
