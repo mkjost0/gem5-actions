@@ -1,5 +1,5 @@
-# Copyright (c) 2020 The Regents of the University of California
-# All Rights Reserved.
+# Copyright (c) 2022 The Regents of the University of California
+# All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -24,30 +24,45 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-FROM ubuntu:18.04
+from testlib import *
 
-# Valid version values:
-# 3.9
-# 4.0
-# 5.0
-# 6.0
-# 7
-# 8
-# 9
-ARG version
+"""
+These tests are designed to test the BaseCPUProcessor. It utilizes the
+tests/gem5/configs/simple_binary_run.py to run a simple SE-mode simualation
+with different configurations of the BaseCPUProcessor.
+"""
 
-RUN apt -y update && apt -y upgrade && \
-    apt -y install git m4 scons zlib1g zlib1g-dev clang-${version} \
-    libprotobuf-dev protobuf-compiler libprotoc-dev libgoogle-perftools-dev \
-    python3-dev python3 doxygen make
+verifiers = (verifier.MatchStdoutNoPerf(joinpath(getcwd(), "ref", "simout")),)
 
-RUN apt-get --purge -y remove gcc
 
-RUN update-alternatives --install \
-    /usr/bin/clang++ clang++ /usr/bin/clang++-${version} 100
-RUN update-alternatives --install \
-    /usr/bin/clang clang /usr/bin/clang-${version} 100
-RUN update-alternatives --install \
-    /usr/bin/c++ c++ /usr/bin/clang++-${version} 100
-RUN update-alternatives --install \
-    /usr/bin/cc cc /usr/bin/clang-${version} 100
+gem5_verify_config(
+    name="simulator-exit-event-handler-with-function-list",
+    verifiers=verifiers,
+    fixtures=(),
+    config=joinpath(
+        config.base_dir,
+        "tests",
+        "gem5",
+        "configs",
+        "simulator_exit_event_run.py",
+    ),
+    config_args=["-l"],
+    valid_isas=(constants.all_compiled_tag,),
+    length=constants.quick_tag,
+)
+
+gem5_verify_config(
+    name="simulator-exit-event-handler-with-generator",
+    verifiers=verifiers,
+    fixtures=(),
+    config=joinpath(
+        config.base_dir,
+        "tests",
+        "gem5",
+        "configs",
+        "simulator_exit_event_run.py",
+    ),
+    config_args=[],
+    valid_isas=(constants.all_compiled_tag,),
+    length=constants.quick_tag,
+)

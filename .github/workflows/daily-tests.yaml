@@ -371,6 +371,11 @@ jobs:
         name: ${{ env.MY_STEP_VAR }}
         path: output.zip
         retention-days: 7
+    - name: Clean runner
+      run:
+        rm -rf ./* || true
+        rm -rf ./.??* || true
+        rm -rf ~/.cache || true
     - run: echo "This job's status is ${{ job.status }}."
 
   testlib-long-gem5_library_example_tests_riscv_ubuntu_run_ALL_x86_64_opt:
@@ -411,6 +416,11 @@ jobs:
         name: ${{ env.MY_STEP_VAR }}
         path: output.zip
         retention-days: 7
+    - name: Clean runner
+      run:
+        rm -rf ./* || true
+        rm -rf ./.??* || true
+        rm -rf ~/.cache || true
     - run: echo "This job's status is ${{ job.status }}."
 
   testlib-long-gem5_library_example_tests_lupv_example_ALL_x86_64_opt:
@@ -451,6 +461,11 @@ jobs:
         name: ${{ env.MY_STEP_VAR }}
         path: output.zip
         retention-days: 7
+    - name: Clean runner
+      run:
+        rm -rf ./* || true
+        rm -rf ./.??* || true
+        rm -rf ~/.cache || true
     - run: echo "This job's status is ${{ job.status }}."
 
   testlib-long-gem5_library_example_tests_arm_ubuntu_run_test_ALL_x86_64_opt:
@@ -491,6 +506,11 @@ jobs:
         name: ${{ env.MY_STEP_VAR }}
         path: output.zip
         retention-days: 7
+    - name: Clean runner
+      run:
+        rm -rf ./* || true
+        rm -rf ./.??* || true
+        rm -rf ~/.cache || true
     - run: echo "This job's status is ${{ job.status }}."
 
   testlib-long-gem5_library_example_tests_riscvmatched_hello_ALL_x86_64_opt:
@@ -531,42 +551,46 @@ jobs:
         name: ${{ env.MY_STEP_VAR }}
         path: output.zip
         retention-days: 7
+    - name: Clean runner
+      run:
+        rm -rf ./* || true
+        rm -rf ./.??* || true
+        rm -rf ~/.cache || true
     - run: echo "This job's status is ${{ job.status }}."
 
-  # testlib-long-gpu:
-  #   runs-on: [self-hosted, linux, x64, run]
-  #   container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
-  #   needs: [build-gem5, build-gem5-VEGA_X86]
-  #   timeout-minutes: 1440 # 24 hours
-  #   steps:
-  #   - uses: actions/checkout@v3
-  #     with:
-  #       # Scheduled workflows run on the default branch by default. We
-  #       # therefore need to explicitly checkout the develop branch.
-  #       ref: develop
-  #   - uses: actions/download-artifact@v3
-  #     with:
-  #       name: ${{needs.build-gem5-VEGA_X86.outputs.build-name}}
-  #       path: build/VEGA_X86
-  #   - run: chmod u+x build/VEGA_X86/gem5.opt
-  #   - name: long gpu
-  #     working-directory: ${{ github.workspace }}/tests
-  #     run: ./main.py run gem5/gpu --length=long --skip-build -vv -t $(nproc)
-  #   - name: create zip of results
-  #     if: success() || failure()
-  #     run: |
-  #       apt-get -y install zip
-  #       zip -r output.zip tests/testing-results
-  #   - name: upload zip
-  #     if: success() || failure()
-  #     uses: actions/upload-artifact@v3
-  #     env:
-  #       MY_STEP_VAR: ${{github.job}}_COMMIT.${{github.sha}}_RUN.${{github.run_id}}_ATTEMPT.${{github.run_attempt}}
-  #     with:
-  #       name: ${{ env.MY_STEP_VAR }}
-  #       path: output.zip
-  #       retention-days: 7
-  #   - run: echo "This job's status is ${{ job.status }}."
+# kvm tests don't work on github actions
+#   testlib-long-kvm-fork-tests:
+#     runs-on: [self-hosted, linux, x64, run]
+#     container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
+#     needs: build-gem5
+#     timeout-minutes: 1440 # 24 hours
+#     steps:
+#     - uses: actions/checkout@v3
+#       with:
+#         # Scheduled workflows run on the default branch by default. We
+#         # therefore need to explicitly checkout the develop branch.
+#         ref: develop
+#     - uses: actions/download-artifact@v3
+#       with:
+#         name: ${{ env.artifact-name }}
+#         path: build/ALL/gem5.opt
+#     - run: chmod u+x build/ALL/gem5.opt
+#     - name: long kvm-fork-tests
+#       working-directory: ${{ github.workspace }}/tests
+#       run: ./main.py run gem5/kvm-fork-tests --length=long --skip-build -vv -t $(nproc)
+#     - uses: actions/upload-artifact@v3
+#       env:
+#         MY_STEP_VAR: ${{github.job}}_COMMIT.${{github.sha}}_RUN.${{github.run_id}}_ATTEMPT.${{github.run_attempt}}
+#       with:
+#         name: ${{ env.MY_STEP_VAR }}
+#         path: tests/testing-results
+#         retention-days: 7
+#     - name: Clean runner
+#       run:
+#         rm -rf ./* || true
+#         rm -rf ./.??* || true
+#         rm -rf ~/.cache || true
+#     - run: echo "This job's status is ${{ job.status }}."
 
   # testlib-long-insttest_se:
   #   runs-on: [self-hosted, linux, x64, run]
@@ -630,6 +654,11 @@ jobs:
   #       name: ${{ env.MY_STEP_VAR }}
   #       path: tests/testing-results
   #       retention-days: 7
+  #   - name: Clean runner
+  #     run:
+  #       rm -rf ./* || true
+  #       rm -rf ./.??* || true
+  #       rm -rf ~/.cache || true
   #   - run: echo "This job's status is ${{ job.status }}."
 
   # testlib-long-kvm-switch-tests:
