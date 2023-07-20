@@ -102,28 +102,28 @@ jobs:
   #         retention-days: 5
   #     - run: echo "This job's status is ${{ job.status }}."
 
-  # build-gem5-ALL_MESI_Two_Level:
-  #   runs-on: [self-hosted, linux, x64, build,]
-  #   container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
-  #   outputs:
-  #     build-name: ${{ steps.artifact-name.outputs.name }}
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #       with:
-  #         # Scheduled workflows run on the default branch by default. We
-  #         # therefore need to explicitly checkout the develop branch.
-  #         ref: develop
-  #     - id: artifact-name
-  #       run: echo "name=$(date +"%Y-%m-%d_%H.%M.%S")-ALL_MESI_Two_Level" >> $GITHUB_OUTPUT
-  #     - name: Build gem5
-  #       run: |
-  #         scons build/ALL_MESI_Two_Level/gem5.opt --default=ALL PROTOCOL=MESI_Two_Level -j $(nproc)
-  #     - uses: actions/upload-artifact@v3
-  #       with:
-  #         name: ${{ steps.artifact-name.outputs.name }}
-  #         path: build/ALL_MESI_Two_Level/gem5.opt
-  #         retention-days: 5
-  #     - run: echo "This job's status is ${{ job.status }}."
+  build-gem5-ALL_MESI_Two_Level:
+    runs-on: [self-hosted, linux, x64, build,]
+    container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
+    outputs:
+      build-name: ${{ steps.artifact-name.outputs.name }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          # Scheduled workflows run on the default branch by default. We
+          # therefore need to explicitly checkout the develop branch.
+          ref: develop
+      - id: artifact-name
+        run: echo "name=$(date +"%Y-%m-%d_%H.%M.%S")-ALL_MESI_Two_Level" >> $GITHUB_OUTPUT
+      - name: Build gem5
+        run: |
+          scons build/ALL_MESI_Two_Level/gem5.opt --default=ALL PROTOCOL=MESI_Two_Level -j $(nproc)
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ${{ steps.artifact-name.outputs.name }}
+          path: build/ALL_MESI_Two_Level/gem5.opt
+          retention-days: 5
+      - run: echo "This job's status is ${{ job.status }}."
 
   # build-gem5-NULL:
   #   runs-on: [self-hosted, linux, x64, build]
