@@ -35,42 +35,6 @@ jobs:
       - run: echo "This job's status is ${{ job.status }}."
 
 # start running the very-long tests
-<<<<<<< HEAD
-  # testlib-very-long-gem5_library_example_tests:
-  #   runs-on: [self-hosted, linux, x64, run]
-  #   container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
-  #   needs: [build-gem5]
-  #   timeout-minutes: 4320 # 3 days
-  #   steps:
-  #   - uses: actions/checkout@v3
-  #     with:
-  #       # Scheduled workflows run on the default branch by default. We
-  #       # therefore need to explicitly checkout the develop branch.
-  #       ref: develop
-  #   - uses: actions/download-artifact@v3
-  #     with:
-  #       name: ${{needs.build-gem5.outputs.build-name}}
-  #       path: build/ALL
-  #   - run: chmod u+x build/ALL/gem5.opt
-  #   - name: very-long gem5_library_example_tests
-  #     working-directory: ${{ github.workspace }}/tests
-  #     run: ./main.py run gem5/gem5_library_example_tests --length very-long --skip-build -vv -t $(nproc)
-  #   - name: create zip of results
-  #     if: success() || failure()
-  #     run: |
-  #       apt-get -y install zip
-  #       zip -r output.zip tests/testing-results
-  #   - name: upload zip
-  #     if: success() || failure()
-  #     uses: actions/upload-artifact@v3
-  #     env:
-  #       MY_STEP_VAR: ${{github.job}}_COMMIT.${{github.sha}}_RUN.${{github.run_id}}_ATTEMPT.${{github.run_attempt}}
-  #     with:
-  #       name: ${{ env.MY_STEP_VAR }}
-  #       path: output.zip
-  #       retention-days: 7
-  #   - run: echo "This job's status is ${{ job.status }}."
-=======
   testlib-very-long-gem5_library_example_tests:
     runs-on: [self-hosted, linux, x64, run]
     container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
@@ -110,7 +74,6 @@ jobs:
         rm -rf ./.??* || true
         rm -rf ~/.cache || true
     - run: echo "This job's status is ${{ job.status }}."
->>>>>>> 5d2edca1e36189052739250c25471c285746665b
 
 
   testlib-long-gem5-resources:

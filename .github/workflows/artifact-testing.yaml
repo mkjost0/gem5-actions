@@ -1,52 +1,78 @@
 name: CI Tests
 
 on:
-  workflow_dispatch:
+  push:
+  # workflow_dispatch:
   # pull_request:
   #   types: [opened, edited, synchronize, ready_for_review]
 
 jobs:
-  # ensures we have a change-id in every commit, needed for gerrit
-  check-for-change-id:
-    # runs on github hosted runner
+  build-gem5:
+    strategy:
+      matrix:
+        image: [ALL, ALL_CHI, ARM, ALL_MSI, ALL_MESI_Two_Level, NULL, NULL_MI_example, RISCV, VEGA_X86]
     runs-on: [self-hosted, linux, x64, build]
+    container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
+    outputs:
+      build-name: ${{ steps.artifact-name.outputs.name }}
     steps:
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 0
-      # - name: Check for Change-Id
-      #   run: |
-      #     for commit in $(git rev-list ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}); do
-      #         git checkout $commit
-      #         if !(git log -1 --pretty=format:"%B" | grep -q "Change-Id: ")
-      #         then
-      #           echo "One or more of the commits in this pull request is missing a Change-ID, which we require for any changes made to gem5. "\
-      #           "To automatically insert one, run the following:\n f=`git rev-parse --git-dir`/hooks/commit-msg ; mkdir -p $(dirname $f) ; "\
-      #           "curl -Lo $f https://gerrit-review.googlesource.com/tools/hooks/commit-msg ; chmod +x $f\n Then amend the commit with git commit --amend --no-edit, and update your pull request."
-      #           exit 1
-      #         fi
-      #     done
-      - name: Download stuff
+          # Scheduled workflows run on the default branch by default. We
+          # therefore need to explicitly checkout the develop branch.
+          ref: develop
+      - id: artifact-name
+        run: echo "name=$(date +"%Y-%m-%d_%H.%M.%S")" >> $GITHUB_OUTPUT
+      - name: Build gem5
         run: |
-          wget https://dist.gem5.org/dist/develop/images/x86/ubuntu-18-04/x86-ubuntu.img.gz --no-check-certificate
-      - name: Delete stuff
-        run: |
-          ls -la ./
-          # ls -la /actions_runner/_work/_temp/_github_home/.cache
-          rm -rf ./* || true
-          rm -rf ./.??* || true
-          rm -rf ~/.cache || true
-          ls -la ./
-          # for commit in $(git rev-list ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}); do
-          #     git checkout $commit
-          #     if !(git log -1 --pretty=format:"%s" | grep -q "Change-Id: ")
-          #     then
-          #       echo "One or more of the commits in this pull request is missing a Change-ID, which we require for any changes made to gem5. "\
-          #       "To automatically insert one, run the following:\n f=`git rev-parse --git-dir`/hooks/commit-msg ; mkdir -p $(dirname $f) ; "\
-          #       "curl -Lo $f https://gerrit-review.googlesource.com/tools/hooks/commit-msg ; chmod +x $f\n Then amend the commit with git commit --amend --no-edit, and update your pull request."
-          #       exit 1
-          #     fi
-          # done
+          scons build/${{ matrix.image }}/gem5.opt -j $(nproc)
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ${{ steps.artifact-name.outputs.name }}${{ matrix.image }}
+          path: build/${{ matrix.image }}/gem5.opt
+          retention-days: 5
+      - run: echo "This job's status is ${{ job.status }}."
+  # ensures we have a change-id in every commit, needed for gerrit
+  # check-for-change-id:
+  #   # runs on github hosted runner
+  #   runs-on: [self-hosted, linux, x64, build]
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         fetch-depth: 0
+  #     # - name: Check for Change-Id
+  #     #   run: |
+  #     #     for commit in $(git rev-list ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}); do
+  #     #         git checkout $commit
+  #     #         if !(git log -1 --pretty=format:"%B" | grep -q "Change-Id: ")
+  #     #         then
+  #     #           echo "One or more of the commits in this pull request is missing a Change-ID, which we require for any changes made to gem5. "\
+  #     #           "To automatically insert one, run the following:\n f=`git rev-parse --git-dir`/hooks/commit-msg ; mkdir -p $(dirname $f) ; "\
+  #     #           "curl -Lo $f https://gerrit-review.googlesource.com/tools/hooks/commit-msg ; chmod +x $f\n Then amend the commit with git commit --amend --no-edit, and update your pull request."
+  #     #           exit 1
+  #     #         fi
+  #     #     done
+  #     - name: Download stuff
+  #       run: |
+  #         wget https://dist.gem5.org/dist/develop/images/x86/ubuntu-18-04/x86-ubuntu.img.gz --no-check-certificate
+  #     - name: Delete stuff
+  #       run: |
+  #         ls -la ./
+  #         # ls -la /actions_runner/_work/_temp/_github_home/.cache
+  #         rm -rf ./* || true
+  #         rm -rf ./.??* || true
+  #         rm -rf ~/.cache || true
+  #         ls -la ./
+  #         # for commit in $(git rev-list ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}); do
+  #         #     git checkout $commit
+  #         #     if !(git log -1 --pretty=format:"%s" | grep -q "Change-Id: ")
+  #         #     then
+  #         #       echo "One or more of the commits in this pull request is missing a Change-ID, which we require for any changes made to gem5. "\
+  #         #       "To automatically insert one, run the following:\n f=`git rev-parse --git-dir`/hooks/commit-msg ; mkdir -p $(dirname $f) ; "\
+  #         #       "curl -Lo $f https://gerrit-review.googlesource.com/tools/hooks/commit-msg ; chmod +x $f\n Then amend the commit with git commit --amend --no-edit, and update your pull request."
+  #         #       exit 1
+  #         #     fi
+  #         # done
 
 
 # name: 'Github Workflow History'
