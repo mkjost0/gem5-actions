@@ -10,7 +10,17 @@ jobs:
   build-gem5:
     strategy:
       matrix:
-        image: [ALL, ARM, RISCV, VEGA_X86]
+        image: [ALL, ALL_CHI, ARM, ALL_MSI, ALL_MESI_Two_Level, NULL_MI_example, RISCV, VEGA_X86] #note: NULL doesn't work
+        include:
+          - command-line: -j $(nproc)
+          - image: ALL_CHI
+            command-line: --default=ALL PROTOCOL=CHI -j $(nproc)
+          - image: ALL_MSI
+            command-line: --default=ALL PROTOCOL=MSI -j $(nproc)
+          - image: ALL_MESI_Two_Level
+            command-line: --default=ALL PROTOCOL=MESI_Two_Level -j $(nproc)
+          - image: NULL_MI_example
+            command-line: --default=NULL PROTOCOL=MI_example -j $(nproc)
     runs-on: [self-hosted, linux, x64, build]
     container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
     outputs:
@@ -25,7 +35,7 @@ jobs:
         run: echo "name=$(date +"%Y-%m-%d_%H.%M.%S")" >> $GITHUB_OUTPUT
       - name: Build gem5
         run: |
-          scons build/${{ matrix.image }}/gem5.opt -j $(nproc)
+          scons build/${{ matrix.image }}/gem5.opt ${{ matrix.command-line }}
       - uses: actions/upload-artifact@v3
         with:
           name: ${{ steps.artifact-name.outputs.name }}${{ matrix.image }}
