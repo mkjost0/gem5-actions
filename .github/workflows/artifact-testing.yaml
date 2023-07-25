@@ -80,7 +80,7 @@ jobs:
           # therefore need to explicitly checkout the develop branch.
           ref: develop
       - name: ALL/unittests.${{ matrix.type }} UnitTests
-        run: scons build/ALL/unittests.${{ matrix.image }} -j $(nproc)
+        run: scons build/ALL/unittests.${{ matrix.type }} -j $(nproc)
 
 # start running all of the long tests
   testlib-long-tests:
