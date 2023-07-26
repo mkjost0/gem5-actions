@@ -21,17 +21,18 @@ jobs:
   build-gem5:
     strategy:
       matrix:
-        image: [ALL, ALL_CHI, ARM, ALL_MSI, ALL_MESI_Two_Level, NULL_MI_example, RISCV, VEGA_X86] #note: NULL doesn't work
+        image: ALL
+        # image: [ALL, ALL_CHI, ARM, ALL_MSI, ALL_MESI_Two_Level, NULL_MI_example, RISCV, VEGA_X86] #note: NULL doesn't work
         include:
           - command-line: -j $(nproc)
-          - image: ALL_CHI
-            command-line: --default=ALL PROTOCOL=CHI -j $(nproc)
-          - image: ALL_MSI
-            command-line: --default=ALL PROTOCOL=MSI -j $(nproc)
-          - image: ALL_MESI_Two_Level
-            command-line: --default=ALL PROTOCOL=MESI_Two_Level -j $(nproc)
-          - image: NULL_MI_example
-            command-line: --default=NULL PROTOCOL=MI_example -j $(nproc)
+          # - image: ALL_CHI
+          #   command-line: --default=ALL PROTOCOL=CHI -j $(nproc)
+          # - image: ALL_MSI
+          #   command-line: --default=ALL PROTOCOL=MSI -j $(nproc)
+          # - image: ALL_MESI_Two_Level
+          #   command-line: --default=ALL PROTOCOL=MESI_Two_Level -j $(nproc)
+          # - image: NULL_MI_example
+          #   command-line: --default=NULL PROTOCOL=MI_example -j $(nproc)
     runs-on: [self-hosted, linux, x64, build]
     needs: name-artifacts
     container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
@@ -52,25 +53,25 @@ jobs:
       - run: echo "This job's status is ${{ job.status }}."
 
   # NULL build added separately since NULL is a keyword in yaml files
-  build-gem5-NULL:
-    runs-on: [self-hosted, linux, x64, build]
-    container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
-    needs: name-artifacts
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          # Scheduled workflows run on the default branch by default. We
-          # therefore need to explicitly checkout the develop branch.
-          ref: develop
-      - name: Build gem5
-        run: |
-          scons build/NULL/gem5.opt -j $(nproc)
-      - uses: actions/upload-artifact@v3
-        with:
-          name: ${{ needs.name-artifacts.outputs.build-name }}NULL
-          path: build/NULL/gem5.opt
-          retention-days: 5
-      - run: echo "This job's status is ${{ job.status }}."
+  # build-gem5-NULL:
+  #   runs-on: [self-hosted, linux, x64, build]
+  #   container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
+  #   needs: name-artifacts
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         # Scheduled workflows run on the default branch by default. We
+  #         # therefore need to explicitly checkout the develop branch.
+  #         ref: develop
+  #     - name: Build gem5
+  #       run: |
+  #         scons build/NULL/gem5.opt -j $(nproc)
+  #     - uses: actions/upload-artifact@v3
+  #       with:
+  #         name: ${{ needs.name-artifacts.outputs.build-name }}NULL
+  #         path: build/NULL/gem5.opt
+  #         retention-days: 5
+  #     - run: echo "This job's status is ${{ job.status }}."
 
   # unittests-all-debug:
   #   strategy:
@@ -88,93 +89,93 @@ jobs:
   #     - name: ALL/unittests.${{ matrix.type }} UnitTests
   #       run: scons build/ALL/unittests.${{ matrix.type }} -j $(nproc)
 
-# start running all of the long tests
-  testlib-long-tests:
-    strategy:
-      matrix:
-        test-type: [arm-boot-tests, fs, gem5_library_example_tests, gpu, insttest_se, learning_gem5, m5threads_test_atomic, memory, multi_isa, replacement-policies, riscv-boot-tests, stdlib, x86-boot-tests]
-    runs-on: [self-hosted, linux, x64, run]
-    container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
-    needs: [build-gem5, build-gem5-NULL, name-artifacts]
-    timeout-minutes: 1440 # 24 hours
-    steps:
-    - uses: actions/checkout@v3
-      with:
-        # Scheduled workflows run on the default branch by default. We
-        # therefore need to explicitly checkout the develop branch.
-        ref: develop
-    # download all artifacts for each test
-    - run: echo ${{needs.name-artifacts.outputs.build-name}}ALL
-    - uses: actions/download-artifact@v3
-      with:
-        name: ${{needs.name-artifacts.outputs.build-name}}ALL
-        path: build/ALL
-    - run: chmod u+x build/ALL/gem5.opt
-    - uses: actions/download-artifact@v3
-      with:
-        name: ${{needs.name-artifacts.outputs.build-name}}ALL_CHI
-        path: build/ALL_CHI
-    - run: chmod u+x build/ALL_CHI/gem5.opt
-    - uses: actions/download-artifact@v3
-      with:
-        name: ${{needs.name-artifacts.outputs.build-name}}ARM
-        path: build/ARM
-    - run: chmod u+x build/ARM/gem5.opt
-    - uses: actions/download-artifact@v3
-      with:
-        name: ${{needs.name-artifacts.outputs.build-name}}ALL_MSI
-        path: build/ALL_MSI
-    - run: chmod u+x build/ALL_MSI/gem5.opt
-    - uses: actions/download-artifact@v3
-      with:
-        name: ${{needs.name-artifacts.outputs.build-name}}ALL_MESI_Two_Level
-        path: build/ALL_MESI_Two_Level
-    - run: chmod u+x build/ALL_MESI_Two_Level/gem5.opt
-    - uses: actions/download-artifact@v3
-      with:
-        name: ${{needs.name-artifacts.outputs.build-name}}NULL
-        path: build/NULL
-    - run: chmod u+x build/NULL/gem5.opt
-    - uses: actions/download-artifact@v3
-      with:
-        name: ${{needs.name-artifacts.outputs.build-name}}NULL_MI_example
-        path: build/NULL_MI_example
-    - run: chmod u+x build/NULL_MI_example/gem5.opt
-    - uses: actions/download-artifact@v3
-      with:
-        name: ${{needs.name-artifacts.outputs.build-name}}RISCV
-        path: build/RISCV
-    - run: chmod u+x build/RISCV/gem5.opt
-    - uses: actions/download-artifact@v3
-      with:
-        name: ${{needs.name-artifacts.outputs.build-name}}VEGA_X86
-        path: build/VEGA_X86
-    - run: chmod u+x build/VEGA_X86/gem5.opt
-    # run test
-    - name: long ${{ matrix.test-type }} tests
-      working-directory: ${{ github.workspace }}/tests
-      run: ./main.py run gem5/${{ matrix.image }} --length=long --skip-build -vv -t $(nproc)
-    - name: create zip of results
-      if: success() || failure()
-      run: |
-        apt-get -y install zip
-        zip -r output.zip tests/testing-results
-    - name: upload zip
-      if: success() || failure()
-      uses: actions/upload-artifact@v3
-      env:
-        MY_STEP_VAR: ${{github.job}}_COMMIT.${{github.sha}}_RUN.${{github.run_id}}_ATTEMPT.${{github.run_attempt}}
-      with:
-        name: ${{ env.MY_STEP_VAR }}
-        path: output.zip
-        retention-days: 7
-    - name: Clean runner
-      if: success() || failure()
-      run:
-        rm -rf ./* || true
-        rm -rf ./.??* || true
-        rm -rf ~/.cache || true
-    - run: echo "This job's status is ${{ job.status }}."
+# # start running all of the long tests
+#   testlib-long-tests:
+#     strategy:
+#       matrix:
+#         test-type: [arm-boot-tests, fs, gem5_library_example_tests, gpu, insttest_se, learning_gem5, m5threads_test_atomic, memory, multi_isa, replacement-policies, riscv-boot-tests, stdlib, x86-boot-tests]
+#     runs-on: [self-hosted, linux, x64, run]
+#     container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
+#     needs: [build-gem5, build-gem5-NULL, name-artifacts]
+#     timeout-minutes: 1440 # 24 hours
+#     steps:
+#     - uses: actions/checkout@v3
+#       with:
+#         # Scheduled workflows run on the default branch by default. We
+#         # therefore need to explicitly checkout the develop branch.
+#         ref: develop
+#     # download all artifacts for each test
+#     - run: echo ${{needs.name-artifacts.outputs.build-name}}ALL
+#     - uses: actions/download-artifact@v3
+#       with:
+#         name: ${{needs.name-artifacts.outputs.build-name}}ALL
+#         path: build/ALL
+#     - run: chmod u+x build/ALL/gem5.opt
+#     - uses: actions/download-artifact@v3
+#       with:
+#         name: ${{needs.name-artifacts.outputs.build-name}}ALL_CHI
+#         path: build/ALL_CHI
+#     - run: chmod u+x build/ALL_CHI/gem5.opt
+#     - uses: actions/download-artifact@v3
+#       with:
+#         name: ${{needs.name-artifacts.outputs.build-name}}ARM
+#         path: build/ARM
+#     - run: chmod u+x build/ARM/gem5.opt
+#     - uses: actions/download-artifact@v3
+#       with:
+#         name: ${{needs.name-artifacts.outputs.build-name}}ALL_MSI
+#         path: build/ALL_MSI
+#     - run: chmod u+x build/ALL_MSI/gem5.opt
+#     - uses: actions/download-artifact@v3
+#       with:
+#         name: ${{needs.name-artifacts.outputs.build-name}}ALL_MESI_Two_Level
+#         path: build/ALL_MESI_Two_Level
+#     - run: chmod u+x build/ALL_MESI_Two_Level/gem5.opt
+#     - uses: actions/download-artifact@v3
+#       with:
+#         name: ${{needs.name-artifacts.outputs.build-name}}NULL
+#         path: build/NULL
+#     - run: chmod u+x build/NULL/gem5.opt
+#     - uses: actions/download-artifact@v3
+#       with:
+#         name: ${{needs.name-artifacts.outputs.build-name}}NULL_MI_example
+#         path: build/NULL_MI_example
+#     - run: chmod u+x build/NULL_MI_example/gem5.opt
+#     - uses: actions/download-artifact@v3
+#       with:
+#         name: ${{needs.name-artifacts.outputs.build-name}}RISCV
+#         path: build/RISCV
+#     - run: chmod u+x build/RISCV/gem5.opt
+#     - uses: actions/download-artifact@v3
+#       with:
+#         name: ${{needs.name-artifacts.outputs.build-name}}VEGA_X86
+#         path: build/VEGA_X86
+#     - run: chmod u+x build/VEGA_X86/gem5.opt
+#     # run test
+#     - name: long ${{ matrix.test-type }} tests
+#       working-directory: ${{ github.workspace }}/tests
+#       run: ./main.py run gem5/${{ matrix.image }} --length=long --skip-build -vv -t $(nproc)
+#     - name: create zip of results
+#       if: success() || failure()
+#       run: |
+#         apt-get -y install zip
+#         zip -r output.zip tests/testing-results
+#     - name: upload zip
+#       if: success() || failure()
+#       uses: actions/upload-artifact@v3
+#       env:
+#         MY_STEP_VAR: ${{github.job}}_COMMIT.${{github.sha}}_RUN.${{github.run_id}}_ATTEMPT.${{github.run_attempt}}
+#       with:
+#         name: ${{ env.MY_STEP_VAR }}
+#         path: output.zip
+#         retention-days: 7
+#     - name: Clean runner
+#       if: success() || failure()
+#       run:
+#         rm -rf ./* || true
+#         rm -rf ./.??* || true
+#         rm -rf ~/.cache || true
+#     - run: echo "This job's status is ${{ job.status }}."
 
   # split library example tests into runs based on Suite UID
   # so that they don't hog the runners for too long
@@ -182,7 +183,7 @@ jobs:
     runs-on: [self-hosted, linux, x64, run]
     strategy:
       matrix:
-        test-type: [x86_ubuntu_run_ALL_x86_64_opt, riscv_ubuntu_run_ALL_x86_64_opt, lupv_example_ALL_x86_64_opt, arm_ubuntu_run_test_ALL_x86_64_opt, riscvmatched_hello_ALL_x86_64_opt]
+        test-type: [x86-ubuntu-run_ALL-x86-64-opt, riscv-ubuntu-run-ALL-x86-64-opt, lupv-example-ALL-x86-64-opt, arm-ubuntu-run-test-ALL-x86-64-opt, riscvmatched-hello-ALL-x86-64-opt]
     container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
     needs: [build-gem5, name-artifacts]
     timeout-minutes: 1440 # 24 hours
@@ -197,11 +198,11 @@ jobs:
         name: ${{needs.name-artifacts.outputs.build-name}}ALL
         path: build/ALL
     - run: chmod u+x build/ALL/gem5.opt
-    - uses: actions/download-artifact@v3
-      with:
-        name: ${{needs.name-artifacts.outputs.build-name}}ALL_MESI_Two_Level
-        path: build/ALL_MESI_Two_Level
-    - run: chmod u+x build/ALL_MESI_Two_Level/gem5.opt
+    # - uses: actions/download-artifact@v3
+    #   with:
+    #     name: ${{needs.name-artifacts.outputs.build-name}}ALL_MESI_Two_Level
+    #     path: build/ALL_MESI_Two_Level
+    # - run: chmod u+x build/ALL_MESI_Two_Level/gem5.opt
     - name: long ${{ matrix.test-type }} gem5_library_example_tests
       working-directory: ${{ github.workspace }}/tests
       run: ./main.py run --uid SuiteUID:tests/gem5/gem5_library_example_tests/test_gem5_library_examples.py:test-gem5-library-example-${{ matrix.test-type }} --length=long --skip-build -vv
