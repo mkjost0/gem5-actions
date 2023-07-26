@@ -8,11 +8,14 @@ on:
 env:
   # Setting an environment variable with the value of a configuration variable
   env_var: ${{ vars.ENV_CONTEXT_VAR }}
+  GITHUB_SHA_SHORT: "blank"
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: test
+      run: echo $GITHUB_SHA_SHORT
     - name: Set env
       run: echo "GITHUB_SHA_SHORT=$(date +"%Y-%m-%d_%H.%M.%S")" >> $GITHUB_ENV
     - name: Test
