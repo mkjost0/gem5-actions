@@ -8,13 +8,6 @@ on:
 
 # This workflow runs all of the long tests within main.py, extra tests in nightly.sh, and unittests
 
-name: Daily Tests
-
-on:
-  # Runs every day from 7AM UTC
-  schedule:
-    - cron:  '0 7 * * *'
-
 jobs:
   name-artifacts:
     runs-on: ubuntu-latest
