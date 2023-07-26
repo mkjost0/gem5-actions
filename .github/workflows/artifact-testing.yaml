@@ -18,59 +18,59 @@ jobs:
     - id: artifact-name
       run: echo "name=$(date +"%Y-%m-%d_%H.%M.%S-")" >> $GITHUB_OUTPUT
 
-  build-gem5:
-    strategy:
-      matrix:
-        image: [ALL, ALL_CHI, ARM, ALL_MSI, ALL_MESI_Two_Level, NULL_MI_example, RISCV, VEGA_X86] #note: NULL doesn't work
-        include:
-          - command-line: -j $(nproc)
-          - image: ALL_CHI
-            command-line: --default=ALL PROTOCOL=CHI -j $(nproc)
-          - image: ALL_MSI
-            command-line: --default=ALL PROTOCOL=MSI -j $(nproc)
-          - image: ALL_MESI_Two_Level
-            command-line: --default=ALL PROTOCOL=MESI_Two_Level -j $(nproc)
-          - image: NULL_MI_example
-            command-line: --default=NULL PROTOCOL=MI_example -j $(nproc)
-    runs-on: [self-hosted, linux, x64, build]
-    needs: name-artifacts
-    container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          # Scheduled workflows run on the default branch by default. We
-          # therefore need to explicitly checkout the develop branch.
-          ref: develop
-      - name: Build gem5
-        run: |
-          scons build/${{ matrix.image }}/gem5.opt ${{ matrix.command-line }}
-      - uses: actions/upload-artifact@v3
-        with:
-          name: ${{ needs.name-artifacts.outputs.build-name }}${{ matrix.image }}
-          path: build/${{ matrix.image }}/gem5.opt
-          retention-days: 5
-      - run: echo "This job's status is ${{ job.status }}."
+  # build-gem5:
+  #   strategy:
+  #     matrix:
+  #       image: [ALL, ALL_CHI, ARM, ALL_MSI, ALL_MESI_Two_Level, NULL_MI_example, RISCV, VEGA_X86] #note: NULL doesn't work
+  #       include:
+  #         - command-line: -j $(nproc)
+  #         - image: ALL_CHI
+  #           command-line: --default=ALL PROTOCOL=CHI -j $(nproc)
+  #         - image: ALL_MSI
+  #           command-line: --default=ALL PROTOCOL=MSI -j $(nproc)
+  #         - image: ALL_MESI_Two_Level
+  #           command-line: --default=ALL PROTOCOL=MESI_Two_Level -j $(nproc)
+  #         - image: NULL_MI_example
+  #           command-line: --default=NULL PROTOCOL=MI_example -j $(nproc)
+  #   runs-on: [self-hosted, linux, x64, build]
+  #   needs: name-artifacts
+  #   container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         # Scheduled workflows run on the default branch by default. We
+  #         # therefore need to explicitly checkout the develop branch.
+  #         ref: develop
+  #     - name: Build gem5
+  #       run: |
+  #         scons build/${{ matrix.image }}/gem5.opt ${{ matrix.command-line }}
+  #     - uses: actions/upload-artifact@v3
+  #       with:
+  #         name: ${{ needs.name-artifacts.outputs.build-name }}${{ matrix.image }}
+  #         path: build/${{ matrix.image }}/gem5.opt
+  #         retention-days: 5
+  #     - run: echo "This job's status is ${{ job.status }}."
 
-  # NULL build added separately since NULL is a keyword in yaml files
-  build-gem5-NULL:
-    runs-on: [self-hosted, linux, x64, build]
-    container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
-    needs: name-artifacts
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          # Scheduled workflows run on the default branch by default. We
-          # therefore need to explicitly checkout the develop branch.
-          ref: develop
-      - name: Build gem5
-        run: |
-          scons build/NULL/gem5.opt -j $(nproc)
-      - uses: actions/upload-artifact@v3
-        with:
-          name: ${{ needs.name-artifacts.outputs.build-name }}NULL
-          path: build/NULL/gem5.opt
-          retention-days: 5
-      - run: echo "This job's status is ${{ job.status }}."
+  # # NULL build added separately since NULL is a keyword in yaml files
+  # build-gem5-NULL:
+  #   runs-on: [self-hosted, linux, x64, build]
+  #   container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
+  #   needs: name-artifacts
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         # Scheduled workflows run on the default branch by default. We
+  #         # therefore need to explicitly checkout the develop branch.
+  #         ref: develop
+  #     - name: Build gem5
+  #       run: |
+  #         scons build/NULL/gem5.opt -j $(nproc)
+  #     - uses: actions/upload-artifact@v3
+  #       with:
+  #         name: ${{ needs.name-artifacts.outputs.build-name }}NULL
+  #         path: build/NULL/gem5.opt
+  #         retention-days: 5
+  #     - run: echo "This job's status is ${{ job.status }}."
 
   unittests-all-debug:
     strategy:
@@ -95,7 +95,8 @@ jobs:
         test-type: [arm-boot-tests, fs, gem5_library_example_tests, gpu, insttest_se, learning_gem5, m5threads_test_atomic, memory, multi_isa, replacement-policies, riscv-boot-tests, stdlib, x86-boot-tests]
     runs-on: [self-hosted, linux, x64, run]
     container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
-    needs: [build-gem5, build-gem5-NULL]
+    # needs: [build-gem5, build-gem5-NULL]
+    needs: name-artifacts
     timeout-minutes: 1440 # 24 hours
     steps:
     - uses: actions/checkout@v3
@@ -104,6 +105,7 @@ jobs:
         # therefore need to explicitly checkout the develop branch.
         ref: develop
     # download all artifacts for each test
+    - run: echo ${{needs.name-artifacts.outputs.build-name}}ALL
     - uses: actions/download-artifact@v3
       with:
         name: ${{needs.name-artifacts.outputs.build-name}}ALL
