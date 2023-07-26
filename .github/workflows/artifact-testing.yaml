@@ -13,7 +13,7 @@ jobs:
       build-name: ${{ steps.artifact-name.outputs.name }}
     steps:
     - uses: actions/checkout@v2
-    - name: Set env
+    - id: artifact-name
       run: echo "name=$(date +"%Y-%m-%d_%H.%M.%S")" >> $GITHUB_OUTPUT
 
   test-workflow:
