@@ -21,7 +21,7 @@ jobs:
   build-gem5:
     strategy:
       matrix:
-        image: ["NULL"]
+        image: [ALL]
         # image: [ALL, ALL_CHI, ARM, ALL_MSI, ALL_MESI_Two_Level, NULL_MI_example, RISCV, VEGA_X86] #note: NULL doesn't work
         include:
           - command-line: -j $(nproc)
@@ -179,11 +179,11 @@ jobs:
 
   # split library example tests into runs based on Suite UID
   # so that they don't hog the runners for too long
-  testlib-long-gem5_library_example_tests_x86_ubuntu_run_ALL_x86_64_opt:
+  testlib-long-gem5_library_example_tests:
     runs-on: [self-hosted, linux, x64, run]
     strategy:
       matrix:
-        test-type: [x86-ubuntu-run_ALL-x86-64-opt, riscv-ubuntu-run-ALL-x86-64-opt, lupv-example-ALL-x86-64-opt, arm-ubuntu-run-test-ALL-x86-64-opt, riscvmatched-hello-ALL-x86-64-opt]
+        test-type: [gem5-library-example-x86-ubuntu-run-ALL-x86_64-opt, gem5-library-example-riscv-ubuntu-run-ALL-x86_64-opt, lupv-example-ALL-x86_64-opt, gem5-library-example-arm-ubuntu-run-test-ALL-x86_64-opt, gem5-library-example-riscvmatched-hello-ALL-x86_64-opt]
     container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
     needs: [build-gem5, name-artifacts]
     timeout-minutes: 1440 # 24 hours
@@ -205,7 +205,7 @@ jobs:
     # - run: chmod u+x build/ALL_MESI_Two_Level/gem5.opt
     - name: long ${{ matrix.test-type }} gem5_library_example_tests
       working-directory: ${{ github.workspace }}/tests
-      run: ./main.py run --uid SuiteUID:tests/gem5/gem5_library_example_tests/test_gem5_library_examples.py:test-gem5-library-example-${{ matrix.test-type }} --length=long --skip-build -vv
+      run: ./main.py run --uid SuiteUID:tests/gem5/gem5_library_example_tests/test_gem5_library_examples.py:test-${{ matrix.test-type }} --length=long --skip-build -vv
     - name: create zip of results
       if: success() || failure()
       run: |
