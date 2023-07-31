@@ -11,14 +11,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - id: artifact-name
-      run: echo ${{github.job}}
+      run: exit 1
 
   name-artifacts3:
     runs-on: ubuntu-latest
     needs: name-artifacts
+    if: always()
     steps:
     - id: artifact-name
-      run: echo ${{needs.name-artifacts.result == 'success'}}
+      if: ${{needs.name-artifacts.result == 'failed'}}
+      run: echo ${{needs.name-artifacts.result == 'failed'}}
 
   # build-gem5:
   #   strategy:
