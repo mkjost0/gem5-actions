@@ -18,7 +18,7 @@ jobs:
     needs: name-artifacts
     steps:
     - id: artifact-name
-      run: echo ${needs.name-artifacts.result == 'failed'}
+      run: echo ${{needs.name-artifacts.result}}
 
   # build-gem5:
   #   strategy:
