@@ -25,6 +25,7 @@ jobs:
     if: ${{ always() && (needs.first-job.result == 'failure' || needs.second-job.result == 'failure') }}
     steps:
     - id: artifact-name
+      if: ${{ always() && (needs.first-job.result == 'failure' || needs.second-job.result == 'failure') }}
       run: |
         echo "hellow"
         exit 1
