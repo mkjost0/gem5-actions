@@ -16,10 +16,9 @@ jobs:
   name-artifacts3:
     runs-on: ubuntu-latest
     needs: name-artifacts
-    if: always()
+    if: ${{needs.name-artifacts.result == 'failed'}}
     steps:
     - id: artifact-name
-      if: ${{needs.name-artifacts.result == 'failed'}}
       run: echo ${{needs.name-artifacts.result == 'failed'}}
 
   # build-gem5:
