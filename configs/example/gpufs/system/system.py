@@ -231,7 +231,7 @@ def makeGpuFSSystem(args):
         clock=args.ruby_clock, voltage_domain=system.voltage_domain
     )
 
-    for (i, cpu) in enumerate(system.cpu):
+    for i, cpu in enumerate(system.cpu):
         # Break once we reach the shader "CPU"
         if i == args.num_cpus:
             break
