@@ -11,13 +11,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - id: artifact-name
-      run: exit 1
+      run: exit 0
 
   second-job:
     runs-on: ubuntu-latest
     steps:
     - id: artifact-name
-      run: exit 1
+      run: exit 0
 
   name-artifacts3:
     runs-on: ubuntu-latest
