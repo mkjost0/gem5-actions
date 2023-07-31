@@ -40,7 +40,7 @@ jobs:
           scons build/x86/out/m5
       - name: continueee
         working-directory: ${{ github.workspace }}/gem5-resources/src/gpu/lulesh
-          make
+        run:  make
       - name: sdoklfj
         working-directory: ${{ github.workspace }}
         run: build/GCN3_X86/gem5.opt configs/example/apu_se.py -n3 --mem-size=8GB --reg-alloc-policy=dynamic --benchmark-root="gem5-resources/src/gpu/lulesh/bin" -c lulesh
