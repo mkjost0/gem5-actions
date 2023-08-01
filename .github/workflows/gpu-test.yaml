@@ -14,6 +14,7 @@ jobs:
   build-gem5:
     runs-on: [self-hosted, linux, x64, build]
     container: mkjost/testing-gpu-image:latest
+    timeout-minutes: 4320 # 3 days
     outputs:
       build-name: ${{ steps.artifact-name.outputs.name }}
     steps:
@@ -44,7 +45,12 @@ jobs:
       - name: sdoklfj
         working-directory: ${{ github.workspace }}
         run: build/GCN3_X86/gem5.opt configs/example/apu_se.py -n3 --mem-size=8GB --reg-alloc-policy=dynamic --benchmark-root="gem5-resources/src/gpu/lulesh/bin" -c lulesh
-
+      - name: start dnnmark
+        working-directory: ${{ github.workspace }}/gem5-resources/src/gpu/DNNMark
+        run: ./setup.sh HIP
+      - name: library
+        working-directory: ${{ github.workspace }}/gem5-resources/src/gpu/DNNMark/build
+        run: make -j4
 
 
 
