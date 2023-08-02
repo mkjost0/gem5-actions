@@ -7,6 +7,7 @@ run-name: ${{ github.actor }} is running the gpu tests
 on:
   # Runs every Sunday from 7AM UTC
   push:
+  # workflow-dispatch:
   # schedule:
   #   - cron:  '00 7 * * 6'
 
@@ -70,8 +71,6 @@ jobs:
         working-directory: ${{ github.workspace }}
         run: build/GCN3_X86/gem5.opt configs/example/apu_se.py -n3 --reg-alloc-policy=dynamic --benchmark-root=gem5-resources/src/gpu/halo-finder/src/hip -c ForceTreeTest --options="0.5 0.1 64 0.1 1 N 12 rcb"
 
-
-
       # test pannotia
       - name: Build BC
         working-directory: ${{ github.workspace }}/gem5-resources/src/gpu/pannotia/bc
@@ -118,14 +117,70 @@ jobs:
           make gem5-fusion
       - name: run MIS
         working-directory: ${{ github.workspace }}
-        run: build/GCN3_X86/gem5.opt configs/example/apu_se.py -n3 --mem-size=8GB
+        run: build/GCN3_X86/gem5.opt configs/example/apu_se.py -n3 --mem-size=8GB --reg-alloc-policy=dynamic --benchmark-root=gem5-resources/src/gpu/pannotia/mis/bin -c mis_hip.gem5 --options="1k_128k.gr 0"
 
-      - name: Make the DNNMark library
-        working-directory: ${{ github.workspace }}/gem5-resources/src/gpu/DNNMark/build
-        run: make -j4
-      - name: Make the DNNMark library
-        working-directory: ${{ github.workspace }}/gem5-resources/src/gpu/DNNMark/build
-        run: make -j4
-      - name: Make the DNNMark library
-        working-directory: ${{ github.workspace }}/gem5-resources/src/gpu/DNNMark/build
-        run: make -j4
+      - name: build Pagerank Default variant
+        working-directory: ${{ github.workspace }}/gem5-resources/src/gpu/pannotia/pagerank
+        run: |
+          export GEM5_PATH=${{ github.workspace }}
+          make gem5-fusion
+      - name: run PageRank (Default)
+        working-directory: ${{ github.workspace }}
+        run: |
+          wget http://dist.gem5.org/dist/develop/datasets/pannotia/pagerank/coAuthorsDBLP.graph
+          build/GCN3_X86/gem5.opt configs/example/apu_se.py -n3 --mem-size=8GB --reg-alloc-policy=dynamic --benchmark-root=gem5-resources/src/gpu/pannotia/pagerank/bin -c pagerank.gem5 --options="coAuthorsDBLP.graph 1"
+      - name: build PageRank SPMV variant
+        working-directory: ${{ github.workspace }}/gem5-resources/src/gpu/pannotia/pagerank
+        run: |
+          export GEM5_PATH=${{ github.workspace }}
+          export VARIANT=SPMV
+          make gem5-fusion
+      - name: run PageRank (SPMV)
+        working-directory: ${{ github.workspace }}
+        run: build/GCN3_X86/gem5.opt configs/example/apu_se.py -n3 --mem-size=8GB --reg-alloc-policy=dynamic --benchmark-root=${gem5_root}/gem5-resources/src/gpu/pannotia/pagerank/bin -c pagerank_spmv.gem5 --options="coAuthorsDBLP.graph 1"
+
+      - name: build SSSP CSR variant
+        working-directory: ${{ github.workspace }}
+        run:  |
+          export GEM5_PATH=${{ github.workspace }}
+          make gem5-fusion
+      - name: run SSSP (CSR)
+        working-directory: ${{ github.workspace }}
+        run: build/GCN3_X86/gem5.opt configs/example/apu_se.py -n3 --mem-size=8GB --reg-alloc-policy=dynamic --benchmark-root=${gem5_root}/gem5-resources/src/gpu/pannotia/sssp/bin -c sssp.gem5 --options="1k_128k.gr 0"
+      - name: build SSSP ELL variant
+        working-directory: ${{ github.workspace }}/gem5-resources/src/gpu/pannotia/sssp
+        run: |
+          export GEM5_PATH=${{ github.workspace }}
+          export VARIANT=ELL
+          make gem5-fusion
+      - name: run SSSP (ELL)
+        working-directory: ${{ github.workspace }}
+        run: build/GCN3_X86/gem5.opt configs/example/apu_se.py -n3 --mem-size=8GB --reg-alloc-policy=dynamic --benchmark-root=gem5-resources/src/gpu/pannotia/sssp/bin -c sssp_ell.gem5 --options="1k_128k.gr 0"
+
+      - name: Delete files
+        working-directory: ${{ github.workspace }}
+        run: |
+          rm -rf ${{ github.workspace }}/gem5-resources
+          rm -rf ${{ github.workspace }}/m5out
+          rm -f coAuthorsDBLP.graph 1k_128k.gr result.out
+
+      - name: Check DRAMSys integration is functioning
+        working-directory: ${{ github.workspace }}
+        if: ${{ -d "${{ github.workspace }}/ext/dramsys/DRAMSys" }}
+        run: rm -r "${{ github.workspace }}/ext/dramsys/DRAMSys"
+
+      - name: DRAMSys Check
+        working-directory: ${{ github.workspace }}/ext/dramsys
+        run: |
+          git clone --recursive git@github.com:tukl-msd/DRAMSys.git DRAMSys
+          cd DRAMSys
+          git checkout -b gem5 09f6dcbb91351e6ee7cadfc7bc8b29d97625db8f
+
+      - name: Final Checks
+        working-directory: ${{ github.workspace }}
+        run: |
+          rm -rf "${{ github.workspace }}/build/ALL"
+          scons build/ALL/gem5.opt -j${threads}
+          ./build/ALL/gem5.opt configs/example/gem5_library/dramsys/arm-hello-dramsys.py
+          ./build/ALL/gem5.opt configs/example/gem5_library/dramsys/dramsys-traffic.py
+          ./build/ALL/gem5.opt configs/example/dramsys.py
