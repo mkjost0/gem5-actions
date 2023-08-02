@@ -15,49 +15,72 @@ jobs:
     runs-on: [self-hosted, linux, x64, build]
     container: mkjost/testing-gpu-image:latest
     timeout-minutes: 4320 # 3 days
-    outputs:
-      build-name: ${{ steps.artifact-name.outputs.name }}
     steps:
       - uses: actions/checkout@v3
         with:
           # Scheduled workflows run on the default branch by default. We
           # therefore need to explicitly checkout the develop branch.
           ref: develop
-      - id: artifact-name
-        run: echo "name=$(date +"%Y-%m-%d_%H.%M.%S")-ALL" >> $GITHUB_OUTPUT
       - name: checkout gem5 resources
         working-directory: ${{ github.workspace }}
         run: |
           git clone https://gem5.googlesource.com/public/gem5-resources
           cd gem5-resources
           git checkout develop
-      - name: Test gpu tests (just lulesh)
+      - name: Build gem5.opt
         working-directory: ${{ github.workspace }}
         run: scons build/GCN3_X86/gem5.opt -j4 --ignore-style || rm -rf build && scons build/GCN3_X86/gem5.opt -j4 --ignore-style
-      - name: continue
+      - name: Compile m5ops and x86
         working-directory: ${{ github.workspace }}/util/m5
         run: |
           export TERM=xterm-256color
           scons build/x86/out/m5
-      - name: continueee
+      - name: Build LULESH
         working-directory: ${{ github.workspace }}/gem5-resources/src/gpu/lulesh
         run:  make
-      - name: sdoklfj
+      - name: Run LULUESH tests
         working-directory: ${{ github.workspace }}
         run: build/GCN3_X86/gem5.opt configs/example/apu_se.py -n3 --mem-size=8GB --reg-alloc-policy=dynamic --benchmark-root="gem5-resources/src/gpu/lulesh/bin" -c lulesh
-      - name: start dnnmark
+
+      - name: Setup cmark for DNNMark
         working-directory: ${{ github.workspace }}/gem5-resources/src/gpu/DNNMark
         run: ./setup.sh HIP
-      - name: library
+      - name: Make the DNNMark library
+        working-directory: ${{ github.workspace }}/gem5-resources/src/gpu/DNNMark/build
+        run: make -j4
+      - name: Generate cachefiles #iffy on working directory
+        working-directory: ${{ github.workspace }}/gem5-resources/src/gpu/DNNMark/
+        run: python3 generate_cachefiles.py cachefiles.csv --gfx-version=gfx801 --num-cus=4
+      - name: Generate mmap data
+        working-directory: ${{ github.workspace }}/gem5-resources/src/gpu/DNNMark
+        run: |
+          g++ -std=c++0x generate_rand_data.cpp -o generate_rand_data
+          ./generate_rand_data
+      - name: Run DNNMark
+        working-directory: ${{ github.workspace }}/gem5-resources/src/gpu/DNNMark
+        run: |
+          ${{ github.workspace }}/build/GCN3_X86/gem5.opt ${gem5_root}/configs/example/apu_se.py -n3 --reg-alloc-policy=dynamic --benchmark-root="build/benchmarks/test_fwd_softmax" -c dnnmark_test_fwd_softmax --options="-config config_example/softmax_config.dnnmark -mmap mmap.bin"
+          ${{ github.workspace }}/build/GCN3_X86/gem5.opt ${gem5_root}/configs/example/apu_se.py -n3 --reg-alloc-policy=dynamic --benchmark-root="build/benchmarks/test_fwd_pool" -c dnnmark_test_fwd_pool --options="-config config_example/pool_config.dnnmark -mmap mmap.bin"
+          ${{ github.workspace }}/build/GCN3_X86/gem5.opt ${gem5_root}/configs/example/apu_se.py -n3 --reg-alloc-policy=dynamic --benchmark-root="build/benchmarks/test_bwd_bn" -c dnnmark_test_bwd_bn --options="-config config_example/bn_config.dnnmark -mmap mmap.bin"
+
+      - name: Build HACC
+        working-directory: ${{ github.workspace }}/gem5-resources/src/gpu/halo-finder/src
+        run: make hip/ForceTreeTest
+      - name: Run HACC tests
+        working-directory: ${{ github.workspace }}
+        run: build/GCN3_X86/gem5.opt configs/example/apu_se.py -n3 --reg-alloc-policy=dynamic --benchmark-root=gem5-resources/src/gpu/halo-finder/src/hip -c ForceTreeTest --options="0.5 0.1 64 0.1 1 N 12 rcb"
+
+
+
+
+      - name: Make the DNNMark library
+        working-directory: ${{ github.workspace }}/gem5-resources/src/gpu/DNNMark/build
+        run: make -j4
+      - name: Make the DNNMark library
         working-directory: ${{ github.workspace }}/gem5-resources/src/gpu/DNNMark/build
         run: make -j4
 
-
-
-      # - uses: actions/upload-artifact@v3
-      #   with:
-      #     name: ${{ steps.artifact-name.outputs.name }}
-      #     path: build/ALL/gem5.opt
-      #     retention-days: 5
-      # - run: echo "This job's status is ${{ job.status }}."
+      - name: Make the DNNMark library
+        working-directory: ${{ github.workspace }}/gem5-resources/src/gpu/DNNMark/build
+        run: make -j4
 
