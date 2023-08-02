@@ -166,7 +166,7 @@ jobs:
 
       - name: Check DRAMSys integration is functioning
         working-directory: ${{ github.workspace }}
-        if: ${{ -d "${{ github.workspace }}/ext/dramsys/DRAMSys" }}
+        # if: ${{ -d "${{ github.workspace }}/ext/dramsys/DRAMSys" }}
         run: rm -r "${{ github.workspace }}/ext/dramsys/DRAMSys"
 
       - name: DRAMSys Check
