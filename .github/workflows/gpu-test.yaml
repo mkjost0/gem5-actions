@@ -227,7 +227,7 @@ jobs:
   dramsys-check: # check how to run this test since everything runs parallel now
     runs-on: [self-hosted, linux, x64, build]
     container: mkjost/testing-gpu-image:latest
-    needs: [build-gem5, pannotia]
+    needs: build-gem5
     timeout-minutes: 4320 # 3 days
     steps:
       - uses: actions/checkout@v3
