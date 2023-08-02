@@ -72,6 +72,53 @@ jobs:
 
 
 
+      # test pannotia
+      - name: Build BC
+        working-directory: ${{ github.workspace }}/gem5-resources/src/gpu/pannotia/bc
+        run: |
+          export GEM5_PATH=${{ github.workspace }}
+          make gem5-fusion
+      - name: Run BC
+        working-directory: ${{ github.workspace }}
+        run: |
+          wget http://dist.gem5.org/dist/develop/datasets/pannotia/bc/1k_128k.gr
+          build/GCN3_X86/gem5.opt configs/example/apu_se.py -n3 --mem-size=8GB --reg-alloc-policy=dynamic --benchmark-root=gem5-resources/src/gpu/pannotia/bc/bin -c bc.gem5 --options="1k_128k.gr"
+
+      - name: Build Color Max
+        working-directory: ${{ github.workspace }}/gem5-resources/src/gpu/pannotia/color
+        run: |
+          export GEM5_PATH=${{ github.workspace }}
+          make gem5-fusion
+      - name: run Color (Max)
+        working-directory: ${{ github.workspace }}
+        run: build/GCN3_X86/gem5.opt configs/example/apu_se.py -n3 --mem-size=8GB --reg-alloc-policy=dynamic --benchmark-root=gem5-resources/src/gpu/pannotia/color/bin -c color_max.gem5 --options="1k_128k.gr 0"
+      - name: build Color (MaxMin)
+        working-directory: ${{ github.workspace }}/gem5-resources/src/gpu/pannotia/color
+        run: |
+          export GEM5_PATH=${{ github.workspace }}
+          export VARIANT=MAXMIN
+          make gem5-fusion
+      - name: run Color (MaxMin)
+        working-directory: ${{ github.workspace }}
+        run: build/GCN3_X86/gem5.opt configs/example/apu_se.py -n3 --mem-size=8GB --reg-alloc-policy=dynamic --benchmark-root=gem5-resources/src/gpu/pannotia/color/bin -c color_maxmin.gem5 --options="1k_128k.gr 0"
+
+      - name: build FW
+        working-directory: ${{ github.workspace }}/gem5-resources/src/pannotia/fw
+        run: |
+          export GEM5_PATH=${{ github.workspace }}
+          make gem5-fusion
+      - name: run FW
+        working-directory: ${{ github.workspace }}
+        run: build/GCN3_X86/gem5.opt configs/example/apu_se.py -n3 --mem-size=8GB --reg-alloc-policy=dynamic --benchmark-root=gem5-resources/src/gpu/pannotia/fw/bin -c fw_hip.gem5 --options="1k_128k.gr"
+
+      - name: build MIS
+        working-directory: ${{ github.workspace }}/gem5-resources/src/gpu/pannotia/mis
+        run: |
+          export GEM5_PATH=${{ github.workspace }}
+          make gem5-fusion
+      - name: run MIS
+        working-directory: ${{ github.workspace }}
+        run: build/GCN3_X86/gem5.opt configs/example/apu_se.py -n3 --mem-size=8GB
 
       - name: Make the DNNMark library
         working-directory: ${{ github.workspace }}/gem5-resources/src/gpu/DNNMark/build
@@ -79,8 +126,6 @@ jobs:
       - name: Make the DNNMark library
         working-directory: ${{ github.workspace }}/gem5-resources/src/gpu/DNNMark/build
         run: make -j4
-
       - name: Make the DNNMark library
         working-directory: ${{ github.workspace }}/gem5-resources/src/gpu/DNNMark/build
         run: make -j4
-
