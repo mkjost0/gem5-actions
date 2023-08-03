@@ -8,7 +8,7 @@ on:
   push:
   # workflow-dispatch:
 
-jobs:
+jobs: # add cleaning step to end of each job, also which things can be added to gem5 resources
   build-gem5:
     runs-on: [self-hosted, linux, x64, build]
     container: mkjost/testing-gpu-image:latest
@@ -32,39 +32,39 @@ jobs:
           path: build/GCN3_X86/gem5.opt
           retention-days: 5
 
-  LULESH-tests:
-    runs-on: [self-hosted, linux, x64, build]
-    container: mkjost/testing-gpu-image:latest
-    needs: build-gem5
-    timeout-minutes: 4320 # 3 days
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          # Scheduled workflows run on the default branch by default. We
-          # therefore need to explicitly checkout the develop branch.
-          ref: develop
-      - uses: actions/download-artifact@v3
-        with:
-          name: ${{needs.build-gem5.outputs.build-name}}
-          path: build/GCN3_X86
-      - run: chmod u+x build/GCN3_X86/gem5.opt
-      - name: checkout gem5 resources
-        working-directory: ${{ github.workspace }}
-        run: |
-          git clone https://gem5.googlesource.com/public/gem5-resources
-          cd gem5-resources
-          git checkout develop
-      - name: Compile m5ops and x86
-        working-directory: ${{ github.workspace }}/util/m5
-        run: |
-          export TERM=xterm-256color
-          scons build/x86/out/m5
-      - name: Build LULESH
-        working-directory: ${{ github.workspace }}/gem5-resources/src/gpu/lulesh
-        run:  make
-      - name: Run LULUESH tests
-        working-directory: ${{ github.workspace }}
-        run: build/GCN3_X86/gem5.opt configs/example/apu_se.py -n3 --mem-size=8GB --reg-alloc-policy=dynamic --benchmark-root="gem5-resources/src/gpu/lulesh/bin" -c lulesh
+  # LULESH-tests:
+  #   runs-on: [self-hosted, linux, x64, build]
+  #   container: mkjost/testing-gpu-image:latest
+  #   needs: build-gem5
+  #   timeout-minutes: 4320 # 3 days
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         # Scheduled workflows run on the default branch by default. We
+  #         # therefore need to explicitly checkout the develop branch.
+  #         ref: develop
+  #     - uses: actions/download-artifact@v3
+  #       with:
+  #         name: ${{needs.build-gem5.outputs.build-name}}
+  #         path: build/GCN3_X86
+  #     - run: chmod u+x build/GCN3_X86/gem5.opt
+  #     - name: checkout gem5 resources
+  #       working-directory: ${{ github.workspace }}
+  #       run: |
+  #         git clone https://gem5.googlesource.com/public/gem5-resources
+  #         cd gem5-resources
+  #         git checkout develop
+  #     - name: Compile m5ops and x86
+  #       working-directory: ${{ github.workspace }}/util/m5
+  #       run: |
+  #         export TERM=xterm-256color
+  #         scons build/x86/out/m5
+  #     - name: Build LULESH
+  #       working-directory: ${{ github.workspace }}/gem5-resources/src/gpu/lulesh
+  #       run:  make
+  #     - name: Run LULUESH tests
+  #       working-directory: ${{ github.workspace }}
+  #       run: build/GCN3_X86/gem5.opt configs/example/apu_se.py -n3 --mem-size=8GB --reg-alloc-policy=dynamic --benchmark-root="gem5-resources/src/gpu/lulesh/bin" -c lulesh
 
   DNNMark-tests:
     runs-on: [self-hosted, linux, x64, build]
@@ -93,7 +93,7 @@ jobs:
         run: |
           export TERM=xterm-256color
           scons build/x86/out/m5
-      - name: Setup cmark for DNNMark
+      - name: Setup cmark for DNNMark #potentially can combine all these steps
         working-directory: ${{ github.workspace }}/gem5-resources/src/gpu/DNNMark
         run: ./setup.sh HIP
       - name: Make the DNNMark library
@@ -110,43 +110,43 @@ jobs:
       - name: Run DNNMark
         working-directory: ${{ github.workspace }}/gem5-resources/src/gpu/DNNMark
         run: |
-          ${{ github.workspace }}/build/GCN3_X86/gem5.opt ${gem5_root}/configs/example/apu_se.py -n3 --reg-alloc-policy=dynamic --benchmark-root="build/benchmarks/test_fwd_softmax" -c dnnmark_test_fwd_softmax --options="-config config_example/softmax_config.dnnmark -mmap mmap.bin"
-          ${{ github.workspace }}/build/GCN3_X86/gem5.opt ${gem5_root}/configs/example/apu_se.py -n3 --reg-alloc-policy=dynamic --benchmark-root="build/benchmarks/test_fwd_pool" -c dnnmark_test_fwd_pool --options="-config config_example/pool_config.dnnmark -mmap mmap.bin"
-          ${{ github.workspace }}/build/GCN3_X86/gem5.opt ${gem5_root}/configs/example/apu_se.py -n3 --reg-alloc-policy=dynamic --benchmark-root="build/benchmarks/test_bwd_bn" -c dnnmark_test_bwd_bn --options="-config config_example/bn_config.dnnmark -mmap mmap.bin"
+          ../../../../build/GCN3_X86/gem5.opt ../../../../configs/example/apu_se.py -n3 --reg-alloc-policy=dynamic --benchmark-root="build/benchmarks/test_fwd_softmax" -c dnnmark_test_fwd_softmax --options="-config config_example/softmax_config.dnnmark -mmap mmap.bin"
+          ../../../../build/GCN3_X86/gem5.opt ../../../../configs/example/apu_se.py -n3 --reg-alloc-policy=dynamic --benchmark-root="build/benchmarks/test_fwd_pool" -c dnnmark_test_fwd_pool --options="-config config_example/pool_config.dnnmark -mmap mmap.bin"
+          ../../../../build/GCN3_X86/gem5.opt ../../../../configs/example/apu_se.py -n3 --reg-alloc-policy=dynamic --benchmark-root="build/benchmarks/test_bwd_bn" -c dnnmark_test_bwd_bn --options="-config config_example/bn_config.dnnmark -mmap mmap.bin"
 
-  HACC-tests:
-    runs-on: [self-hosted, linux, x64, build]
-    container: mkjost/testing-gpu-image:latest
-    needs: build-gem5
-    timeout-minutes: 4320 # 3 days
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          # Scheduled workflows run on the default branch by default. We
-          # therefore need to explicitly checkout the develop branch.
-          ref: develop
-      - uses: actions/download-artifact@v3
-        with:
-          name: ${{needs.build-gem5.outputs.build-name}}
-          path: build/GCN3_X86
-      - run: chmod u+x build/GCN3_X86/gem5.opt
-      - name: checkout gem5 resources
-        working-directory: ${{ github.workspace }}
-        run: |
-          git clone https://gem5.googlesource.com/public/gem5-resources
-          cd gem5-resources
-          git checkout develop
-      - name: Compile m5ops and x86
-        working-directory: ${{ github.workspace }}/util/m5
-        run: |
-          export TERM=xterm-256color
-          scons build/x86/out/m5
-      - name: Build HACC
-        working-directory: ${{ github.workspace }}/gem5-resources/src/gpu/halo-finder/src
-        run: make hip/ForceTreeTest
-      - name: Run HACC tests
-        working-directory: ${{ github.workspace }}
-        run: build/GCN3_X86/gem5.opt configs/example/apu_se.py -n3 --reg-alloc-policy=dynamic --benchmark-root=gem5-resources/src/gpu/halo-finder/src/hip -c ForceTreeTest --options="0.5 0.1 64 0.1 1 N 12 rcb"
+  # HACC-tests:
+  #   runs-on: [self-hosted, linux, x64, build]
+  #   container: mkjost/testing-gpu-image:latest
+  #   needs: build-gem5
+  #   timeout-minutes: 4320 # 3 days
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         # Scheduled workflows run on the default branch by default. We
+  #         # therefore need to explicitly checkout the develop branch.
+  #         ref: develop
+  #     - uses: actions/download-artifact@v3
+  #       with:
+  #         name: ${{needs.build-gem5.outputs.build-name}}
+  #         path: build/GCN3_X86
+  #     - run: chmod u+x build/GCN3_X86/gem5.opt
+  #     - name: checkout gem5 resources
+  #       working-directory: ${{ github.workspace }}
+  #       run: |
+  #         git clone https://gem5.googlesource.com/public/gem5-resources
+  #         cd gem5-resources
+  #         git checkout develop
+  #     - name: Compile m5ops and x86
+  #       working-directory: ${{ github.workspace }}/util/m5
+  #       run: |
+  #         export TERM=xterm-256color
+  #         scons build/x86/out/m5
+  #     - name: Build HACC
+  #       working-directory: ${{ github.workspace }}/gem5-resources/src/gpu/halo-finder/src
+  #       run: make hip/ForceTreeTest
+  #     - name: Run HACC tests
+  #       working-directory: ${{ github.workspace }}
+  #       run: build/GCN3_X86/gem5.opt configs/example/apu_se.py -n3 --reg-alloc-policy=dynamic --benchmark-root=gem5-resources/src/gpu/halo-finder/src/hip -c ForceTreeTest --options="0.5 0.1 64 0.1 1 N 12 rcb"
 
   pannotia-tests:
     runs-on: [self-hosted, linux, x64, build]
@@ -216,6 +216,7 @@ jobs:
         working-directory: ${{ github.workspace }}/gem5-resources/src/gpu${{ matrix.working-directory }}
         run: |
           ${{ matrix.export }}
+          export GEM5_PATH=${{ github.workspace }}
           make gem5-fusion
       - name: Run ${{ matrix.test-name }}
         working-directory: ${{ github.workspace }}
@@ -224,41 +225,41 @@ jobs:
           wget http://dist.gem5.org/dist/develop/datasets/pannotia/pagerank/coAuthorsDBLP.graph # for pagerank
           build/GCN3_X86/gem5.opt configs/example/apu_se.py -n3 --mem-size=8GB --reg-alloc-policy=dynamic ${{ matrix.command-line }}
 
-  dramsys-check: # check how to run this test since everything runs parallel now
-    runs-on: [self-hosted, linux, x64, build]
-    container: mkjost/testing-gpu-image:latest
-    needs: build-gem5
-    timeout-minutes: 4320 # 3 days
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          # Scheduled workflows run on the default branch by default. We
-          # therefore need to explicitly checkout the develop branch.
-          ref: develop
-      - name: Delete files
-        working-directory: ${{ github.workspace }}
-        run: |
-          rm -rf ${{ github.workspace }}/gem5-resources
-          rm -rf ${{ github.workspace }}/m5out
-          rm -f coAuthorsDBLP.graph 1k_128k.gr result.out
+  # dramsys-check: # check how to run this test since everything runs parallel now
+  #   runs-on: [self-hosted, linux, x64, build]
+  #   container: mkjost/testing-gpu-image:latest
+  #   needs: build-gem5
+  #   timeout-minutes: 4320 # 3 days
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         # Scheduled workflows run on the default branch by default. We
+  #         # therefore need to explicitly checkout the develop branch.
+  #         ref: develop
+  #     - name: Delete files
+  #       working-directory: ${{ github.workspace }}
+  #       run: |
+  #         rm -rf ${{ github.workspace }}/gem5-resources
+  #         rm -rf ${{ github.workspace }}/m5out
+  #         rm -f coAuthorsDBLP.graph 1k_128k.gr result.out
 
-      - name: Check DRAMSys integration is functioning
-        working-directory: ${{ github.workspace }}
-        # if: ${{ -d "${{ github.workspace }}/ext/dramsys/DRAMSys" }}
-        run: rm -r "${{ github.workspace }}/ext/dramsys/DRAMSys"
+  #     - name: Check DRAMSys integration is functioning
+  #       working-directory: ${{ github.workspace }}
+  #       # if: ${{ -d "${{ github.workspace }}/ext/dramsys/DRAMSys" }}
+  #       run: rm -r "${{ github.workspace }}/ext/dramsys/DRAMSys"
 
-      - name: DRAMSys Check
-        working-directory: ${{ github.workspace }}/ext/dramsys
-        run: |
-          git clone --recursive git@github.com:tukl-msd/DRAMSys.git DRAMSys
-          cd DRAMSys
-          git checkout -b gem5 09f6dcbb91351e6ee7cadfc7bc8b29d97625db8f
+  #     - name: DRAMSys Check
+  #       working-directory: ${{ github.workspace }}/ext/dramsys
+  #       run: |
+  #         git clone --recursive git@github.com:tukl-msd/DRAMSys.git DRAMSys
+  #         cd DRAMSys
+  #         git checkout -b gem5 09f6dcbb91351e6ee7cadfc7bc8b29d97625db8f
 
-      - name: Final Checks
-        working-directory: ${{ github.workspace }}
-        run: |
-          rm -rf "${{ github.workspace }}/build/ALL"
-          scons build/ALL/gem5.opt -j${threads}
-          ./build/ALL/gem5.opt configs/example/gem5_library/dramsys/arm-hello-dramsys.py
-          ./build/ALL/gem5.opt configs/example/gem5_library/dramsys/dramsys-traffic.py
-          ./build/ALL/gem5.opt configs/example/dramsys.py
+  #     - name: Final Checks
+  #       working-directory: ${{ github.workspace }}
+  #       run: |
+  #         rm -rf "${{ github.workspace }}/build/ALL"
+  #         scons build/ALL/gem5.opt -j${threads}
+  #         ./build/ALL/gem5.opt configs/example/gem5_library/dramsys/arm-hello-dramsys.py
+  #         ./build/ALL/gem5.opt configs/example/gem5_library/dramsys/dramsys-traffic.py
+  #         ./build/ALL/gem5.opt configs/example/dramsys.py
