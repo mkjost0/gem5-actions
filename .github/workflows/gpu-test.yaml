@@ -68,7 +68,11 @@ jobs: # add cleaning step to end of each job, also which things can be added to 
 
   DNNMark-tests:
     runs-on: [self-hosted, linux, x64, build]
-    container: mkjost/testing-gpu-image:latest
+    container:
+      image: mkjost/testing-gpu-image:latest
+      volumes:
+        - ${{ github.workspace }}:${{ github.workspace }} -v${PWD}/cachefiles:/root/.cache/miopen/2.9.0
+        - ${{ github.workspace }}/cachefiles:/root/.cache/miopen/2.9.0
     needs: build-gem5
     timeout-minutes: 4320 # 3 days
     steps:
