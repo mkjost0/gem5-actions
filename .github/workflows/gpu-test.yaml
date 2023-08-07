@@ -6,7 +6,7 @@ run-name: ${{ github.actor }} is running the updated workflow gpu tests
 on:
   # Runs every Sunday from 7AM UTC
   # push:
-  workflow-dispatch:
+  workflow_dispatch:
 
 jobs: # add cleaning step to end of each job, also which things can be added to gem5 resources
   # build-gem5:
