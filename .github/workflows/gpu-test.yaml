@@ -9,28 +9,28 @@ on:
   # workflow-dispatch:
 
 jobs: # add cleaning step to end of each job, also which things can be added to gem5 resources
-  build-gem5:
-    runs-on: [self-hosted, linux, x64, build]
-    container: mkjost/testing-gpu-image:latest
-    timeout-minutes: 4320 # 3 days
-    outputs:
-      build-name: ${{ steps.artifact-name.outputs.name }}
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          # Scheduled workflows run on the default branch by default. We
-          # therefore need to explicitly checkout the develop branch.
-          ref: develop
-      - id: artifact-name
-        run: echo "name=$(date +"%Y-%m-%d_%H.%M.%S")-ALL" >> $GITHUB_OUTPUT
-      - name: Build gem5.opt
-        working-directory: ${{ github.workspace }}
-        run: scons build/GCN3_X86/gem5.opt -j4 --ignore-style || rm -rf build && scons build/GCN3_X86/gem5.opt -j4 --ignore-style
-      - uses: actions/upload-artifact@v3
-        with:
-          name: ${{ steps.artifact-name.outputs.name }}
-          path: build/GCN3_X86/gem5.opt
-          retention-days: 5
+  # build-gem5:
+  #   runs-on: [self-hosted, linux, x64, build]
+  #   container: mkjost/testing-gpu-image:latest
+  #   timeout-minutes: 4320 # 3 days
+  #   outputs:
+  #     build-name: ${{ steps.artifact-name.outputs.name }}
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         # Scheduled workflows run on the default branch by default. We
+  #         # therefore need to explicitly checkout the develop branch.
+  #         ref: develop
+  #     - id: artifact-name
+  #       run: echo "name=$(date +"%Y-%m-%d_%H.%M.%S")-ALL" >> $GITHUB_OUTPUT
+  #     - name: Build gem5.opt
+  #       working-directory: ${{ github.workspace }}
+  #       run: scons build/GCN3_X86/gem5.opt -j4 --ignore-style || rm -rf build && scons build/GCN3_X86/gem5.opt -j4 --ignore-style
+  #     - uses: actions/upload-artifact@v3
+  #       with:
+  #         name: ${{ steps.artifact-name.outputs.name }}
+  #         path: build/GCN3_X86/gem5.opt
+  #         retention-days: 5
 
   # LULESH-tests:
   #   runs-on: [self-hosted, linux, x64, build]
@@ -71,9 +71,9 @@ jobs: # add cleaning step to end of each job, also which things can be added to 
     container:
       image: mkjost/testing-gpu-image:latest
       volumes:
-        - ${{ github.workspace }}:${{ github.workspace }} -v${PWD}/cachefiles:/root/.cache/miopen/2.9.0
+        - ${{ github.workspace }}:${{ github.workspace }}
         - ${{ github.workspace }}/cachefiles:/root/.cache/miopen/2.9.0
-    needs: build-gem5
+    # needs: build-gem5
     timeout-minutes: 4320 # 3 days
     steps:
       - uses: actions/checkout@v3
@@ -81,11 +81,15 @@ jobs: # add cleaning step to end of each job, also which things can be added to 
           # Scheduled workflows run on the default branch by default. We
           # therefore need to explicitly checkout the develop branch.
           ref: develop
-      - uses: actions/download-artifact@v3
-        with:
-          name: ${{needs.build-gem5.outputs.build-name}}
-          path: build/GCN3_X86
-      - run: chmod u+x build/GCN3_X86/gem5.opt
+      - name: Build gem5.opt
+        working-directory: ${{ github.workspace }}
+        run: scons build/GCN3_X86/gem5.opt -j4 --ignore-style || rm -rf build && scons build/GCN3_X86/gem5.opt -j4 --ignore-style
+
+      # - uses: actions/download-artifact@v3
+      #   with:
+      #     name: ${{needs.build-gem5.outputs.build-name}}
+      #     path: build/GCN3_X86
+      # - run: chmod u+x build/GCN3_X86/gem5.opt
       - name: checkout gem5 resources
         working-directory: ${{ github.workspace }}
         run: |
@@ -155,7 +159,7 @@ jobs: # add cleaning step to end of each job, also which things can be added to 
   pannotia-tests:
     runs-on: [self-hosted, linux, x64, build]
     container: mkjost/testing-gpu-image:latest
-    needs: build-gem5
+    # needs: build-gem5
     timeout-minutes: 4320 # 3 days
     strategy:
       matrix:
@@ -199,11 +203,14 @@ jobs: # add cleaning step to end of each job, also which things can be added to 
           # Scheduled workflows run on the default branch by default. We
           # therefore need to explicitly checkout the develop branch.
           ref: develop
-      - uses: actions/download-artifact@v3
-        with:
-          name: ${{needs.build-gem5.outputs.build-name}}
-          path: build/GCN3_X86
-      - run: chmod u+x build/GCN3_X86/gem5.opt
+      - name: Build gem5.opt
+        working-directory: ${{ github.workspace }}
+        run: scons build/GCN3_X86/gem5.opt -j4 --ignore-style || rm -rf build && scons build/GCN3_X86/gem5.opt -j4 --ignore-style
+      # - uses: actions/download-artifact@v3
+      #   with:
+      #     name: ${{needs.build-gem5.outputs.build-name}}
+      #     path: build/GCN3_X86
+      # - run: chmod u+x build/GCN3_X86/gem5.opt
       - name: checkout gem5 resources
         working-directory: ${{ github.workspace }}
         run: |
@@ -215,11 +222,13 @@ jobs: # add cleaning step to end of each job, also which things can be added to 
         run: |
           export TERM=xterm-256color
           scons build/x86/out/m5
+
+
       # test pannotia
       - name: Build ${{ matrix.test-name }}
         working-directory: ${{ github.workspace }}/gem5-resources/src/gpu${{ matrix.working-directory }}
         run: |
-          ${{ matrix.export }}
+          # ${{ matrix.export }}
           export GEM5_PATH=${{ github.workspace }}
           make gem5-fusion
       - name: Run ${{ matrix.test-name }}
