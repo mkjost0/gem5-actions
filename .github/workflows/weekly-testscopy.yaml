@@ -3,6 +3,7 @@
 name: Weekly Tests
 
 on:
+  push:
   # Runs every Sunday from 7AM UTC
   schedule:
     - cron:  '00 7 * * 6'

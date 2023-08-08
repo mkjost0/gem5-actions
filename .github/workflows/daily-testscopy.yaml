@@ -3,6 +3,7 @@
 name: Daily Tests
 
 on:
+  push:
   # Runs every day from 7AM UTC
   schedule:
     - cron:  '0 7 * * *'
