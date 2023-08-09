@@ -72,7 +72,7 @@ jobs: # add cleaning step to end of each job, also which things can be added to 
       image: mkjost/testing-gpu-image:latest
       volumes:
         - ${{ github.workspace }}:${{ github.workspace }}
-        - ${{ github.workspace }}/cachefiles:/${{ github.workspace }}/.cache/miopen/2.9.0
+        - ${{ github.workspace }}/cachefiles:/~/.cache/miopen/2.9.0
     # needs: build-gem5
     timeout-minutes: 4320 # 3 days
     steps:
