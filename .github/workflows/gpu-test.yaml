@@ -81,6 +81,7 @@ jobs: # add cleaning step to end of each job, also which things can be added to 
           rm -rf ./* || true
           rm -rf ./.??* || true
           rm -rf ~/.cache || true
+          rm -rf ${{ github.workspace }}/gem5-resources || true
       - uses: actions/checkout@v3
         with:
           # Scheduled workflows run on the default branch by default. We
