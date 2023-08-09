@@ -76,6 +76,11 @@ jobs: # add cleaning step to end of each job, also which things can be added to 
     # needs: build-gem5
     timeout-minutes: 4320 # 3 days
     steps:
+      - name: Clean runner
+        run:
+          rm -rf ./* || true
+          rm -rf ./.??* || true
+          rm -rf ~/.cache || true
       - uses: actions/checkout@v3
         with:
           # Scheduled workflows run on the default branch by default. We
