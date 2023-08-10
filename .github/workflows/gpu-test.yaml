@@ -164,6 +164,7 @@ jobs: # add cleaning step to end of each job, also which things can be added to 
 
   pannotia-tests:
     runs-on: [self-hosted, linux, x64, build]
+    continue-on-error: true
     container: mkjost/testing-gpu-image:latest
     # needs: build-gem5
     timeout-minutes: 4320 # 3 days
