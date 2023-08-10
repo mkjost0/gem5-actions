@@ -272,7 +272,7 @@ jobs: # add cleaning step to end of each job, also which things can be added to 
       - name: Run DRAMSys Checks
         working-directory: ${{ github.workspace }}
         run: |
-          scons build/ALL/gem5.opt -j${threads}
+          scons build/ALL/gem5.opt -j4
           ./build/ALL/gem5.opt configs/example/gem5_library/dramsys/arm-hello-dramsys.py
           ./build/ALL/gem5.opt configs/example/gem5_library/dramsys/dramsys-traffic.py
           ./build/ALL/gem5.opt configs/example/dramsys.py
