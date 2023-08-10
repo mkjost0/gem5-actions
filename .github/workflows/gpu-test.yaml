@@ -264,8 +264,7 @@ jobs: # add cleaning step to end of each job, also which things can be added to 
       - name: Checkout DRAMSys
         working-directory: ${{ github.workspace }}/ext/dramsys
         run: |
-          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-          git clone --recursive git@github.com:tukl-msd/DRAMSys.git DRAMSys
+          git clone https://github.com/tukl-msd/DRAMSys
           cd DRAMSys
           git checkout -b gem5 09f6dcbb91351e6ee7cadfc7bc8b29d97625db8f
 
