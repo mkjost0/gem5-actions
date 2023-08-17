@@ -8,7 +8,7 @@ on:
 
 jobs:
   pannotia-tests:
-    runs-on: [self-hosted, linux, x64, build]
+    # runs-on: [self-hosted, linux, x64, build]
     continue-on-error: true
     runs-on: ubuntu-22.04
     # needs: build-gem5
