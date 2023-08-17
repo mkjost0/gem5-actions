@@ -7,7 +7,7 @@ on:
   #   types: [opened, edited, synchronize, ready_for_review]
 
 jobs:
-pannotia-tests:
+  pannotia-tests:
     runs-on: [self-hosted, linux, x64, build]
     continue-on-error: true
     container: mkjost/testing-gpu-image:latest
