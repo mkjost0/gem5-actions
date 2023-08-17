@@ -45,7 +45,7 @@ jobs:
       #     git checkout develop
       - name: Compile m5ops and x86
         # working-directory: ${{ github.workspace }}/util/m5
-        run: {matrix.working-directory}
+        run: ${{matrix.working-directory}}
   # build-gem5:
   #   runs-on: [self-hosted, linux, x64, build]
   #   container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
