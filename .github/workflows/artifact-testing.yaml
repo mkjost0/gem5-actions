@@ -17,7 +17,7 @@ jobs:
       matrix:
         test-name: [BC, "Color Max", "Color Max Min", FW, MIS, "PageRank Default", "PageRank (SPMV)", "SSSP (CSR)", "SSSP (ELL)"]
         include:
-          - working-directory: exit 0
+          - working-directory: sleep 60; exit 0
           - test-name: BC
             working-directory: exit 1
           - test-name: "Color Max"
