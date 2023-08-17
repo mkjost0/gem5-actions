@@ -9,15 +9,15 @@ on:
 jobs:
   pannotia-tests:
     # runs-on: [self-hosted, linux, x64, build]
-    fail-fast: false
     runs-on: ubuntu-22.04
     # needs: build-gem5
     timeout-minutes: 4320 # 3 days
     strategy:
+      fail-fast: false
       matrix:
         test-name: [BC, "Color Max", "Color Max Min", FW, MIS, "PageRank Default", "PageRank (SPMV)", "SSSP (CSR)", "SSSP (ELL)"]
         include:
-          - working-directory: sleep 60; exit 0
+          - working-directory: sleep 30; exit 0
           - test-name: BC
             working-directory: exit 1
           - test-name: "Color Max"
