@@ -150,13 +150,13 @@ jobs: # add cleaning step to end of each job, also which things can be added to 
           cd gem5-resources
           git checkout develop
           mkdir src/gpu/halo-finder/src/hip
-      # - name: Compile m5ops and x86
-      #   working-directory: ${{ github.workspace }}/util/m5
-      #   run: |
-      #     export TERM=xterm-256color
-      #     scons build/x86/out/m5
+      - name: Compile m5ops and x86
+        working-directory: ${{ github.workspace }}/util/m5
+        run: |
+          export TERM=xterm-256color
+          scons build/x86/out/m5
       # - name: Build HACC
-      #   working-directory: ${{ github.workspace }}/gem5-resources/src/gpu/halo-finder/src
+      #   working-directory: ${{ github.workspace }}/gem5-resources/src/gpu/halo-finder/src/hip
       #   run: make hip/ForceTreeTest
       - name: Download tests
         working-directory: ${{ github.workspace }}/src/gpu/halo-finder/src/hip
