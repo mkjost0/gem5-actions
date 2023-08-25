@@ -3,49 +3,59 @@ name: CI Tests
 on:
   # push:
   workflow_dispatch:
-  # pull_request:
-  #   types: [opened, edited, synchronize, ready_for_review]
+  pull_request:
+    types: [opened, edited, synchronize, ready_for_review]
+
+
 
 jobs:
-  pannotia-tests:
-    # runs-on: [self-hosted, linux, x64, build]
+  pre-commit:
+    # runs on github hosted runner
     runs-on: ubuntu-22.04
-    # needs: build-gem5
-    timeout-minutes: 4320 # 3 days
-    strategy:
-      fail-fast: false
-      matrix:
-        test-name: [BC, "Color Max", "Color Max Min", FW, MIS, "PageRank Default", "PageRank (SPMV)", "SSSP (CSR)", "SSSP (ELL)"]
-        include:
-          - working-directory: sleep 30; exit 0
-          - test-name: BC
-            working-directory: exit 1
-          - test-name: "Color Max"
-            working-directory: exit 1
-
+    if: github.event.pull_request.draft == false
     steps:
-      - uses: actions/checkout@v3
-        with:
-          # Scheduled workflows run on the default branch by default. We
-          # therefore need to explicitly checkout the develop branch.
-          ref: develop
-      # - name: Build gem5.opt
-      #   working-directory: ${{ github.workspace }}
-      #   run: scons build/GCN3_X86/gem5.opt -j4 --ignore-style --duplicate-sources || rm -rf build && scons build/GCN3_X86/gem5.opt -j4 --ignore-style --duplicate-sources
-      # - uses: actions/download-artifact@v3
-        # with:
-        #   name: ${{needs.build-gem5.outputs.build-name}}
-        #   path: build/GCN3_X86
-      # - run: chmod u+x build/GCN3_X86/gem5.opt
-      # - name: checkout gem5 resources
-      #   working-directory: ${{ github.workspace }}
-      #   run: |
-      #     git clone https://gem5.googlesource.com/public/gem5-resources
-      #     cd gem5-resources
-      #     git checkout develop
-      - name: Compile m5ops and x86
-        # working-directory: ${{ github.workspace }}/util/m5
-        run: ${{matrix.working-directory}}
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v3
+    - uses: pre-commit/action@v3.0.0
+  # pannotia-tests:
+  #   # runs-on: [self-hosted, linux, x64, build]
+  #   runs-on: ubuntu-22.04
+  #   # needs: build-gem5
+  #   timeout-minutes: 4320 # 3 days
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       test-name: [BC, "Color Max", "Color Max Min", FW, MIS, "PageRank Default", "PageRank (SPMV)", "SSSP (CSR)", "SSSP (ELL)"]
+  #       include:
+  #         - working-directory: sleep 30; exit 0
+  #         - test-name: BC
+  #           working-directory: exit 1
+  #         - test-name: "Color Max"
+  #           working-directory: exit 1
+
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         # Scheduled workflows run on the default branch by default. We
+  #         # therefore need to explicitly checkout the develop branch.
+  #         ref: develop
+  #     # - name: Build gem5.opt
+  #     #   working-directory: ${{ github.workspace }}
+  #     #   run: scons build/GCN3_X86/gem5.opt -j4 --ignore-style --duplicate-sources || rm -rf build && scons build/GCN3_X86/gem5.opt -j4 --ignore-style --duplicate-sources
+  #     # - uses: actions/download-artifact@v3
+  #       # with:
+  #       #   name: ${{needs.build-gem5.outputs.build-name}}
+  #       #   path: build/GCN3_X86
+  #     # - run: chmod u+x build/GCN3_X86/gem5.opt
+  #     # - name: checkout gem5 resources
+  #     #   working-directory: ${{ github.workspace }}
+  #     #   run: |
+  #     #     git clone https://gem5.googlesource.com/public/gem5-resources
+  #     #     cd gem5-resources
+  #     #     git checkout develop
+  #     - name: Compile m5ops and x86
+  #       # working-directory: ${{ github.workspace }}/util/m5
+  #       run: ${{matrix.working-directory}}
   # build-gem5:
   #   runs-on: [self-hosted, linux, x64, build]
   #   container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
