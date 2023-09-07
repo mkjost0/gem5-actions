@@ -11,7 +11,7 @@ on:
 jobs: # add cleaning step to end of each job, also which things can be added to gem5 resources
   build-gem5:
     runs-on: [self-hosted, linux, x64, build]
-    container: mkjost/testing-gpu-image:latest
+    container: mkjost/new-gpu-image:latest
     timeout-minutes: 4320 # 3 days
     outputs:
       build-name: ${{ steps.artifact-name.outputs.name }}
@@ -34,7 +34,7 @@ jobs: # add cleaning step to end of each job, also which things can be added to 
 
   LULESH-tests:
     runs-on: [self-hosted, linux, x64, build]
-    container: mkjost/testing-gpu-image:latest
+    container: mkjost/new-gpu-image:latest
     needs: build-gem5
     timeout-minutes: 4320 # 3 days
     steps:
@@ -128,43 +128,43 @@ jobs: # add cleaning step to end of each job, also which things can be added to 
   #         ../../../../build/GCN3_X86/gem5.opt ../../../../configs/example/apu_se.py -n3 --reg-alloc-policy=dynamic --benchmark-root="build/benchmarks/test_fwd_pool" -c dnnmark_test_fwd_pool --options="-config config_example/pool_config.dnnmark -mmap mmap.bin"
   #         ../../../../build/GCN3_X86/gem5.opt ../../../../configs/example/apu_se.py -n3 --reg-alloc-policy=dynamic --benchmark-root="build/benchmarks/test_bwd_bn" -c dnnmark_test_bwd_bn --options="-config config_example/bn_config.dnnmark -mmap mmap.bin"
 
-  # HACC-tests:
-  #   runs-on: [self-hosted, linux, x64, build]
-  #   container: mkjost/testing-gpu-image:latest
-  #   needs: build-gem5
-  #   timeout-minutes: 4320 # 3 day
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #       with:
-  #         # Scheduled workflows run on the default branch by default. We
-  #         # therefore need to explicitly checkout the develop branch.
-  #         ref: develop
-  #     - uses: actions/download-artifact@v3
-  #       with:
-  #         name: ${{needs.build-gem5.outputs.build-name}}
-  #         path: build/GCN3_X86
-  #     - run: chmod u+x build/GCN3_X86/gem5.opt
-  #     - name: make directory
-  #       working-directory: ${{ github.workspace }}
-  #       run: mkdir hip
-  #     #     git clone https://gem5.googlesource.com/public/gem5-resources
-  #     #     cd gem5-resources
-  #     #     git checkout develop
-  #     - name: Compile m5ops and x86
-  #       working-directory: ${{ github.workspace }}/util/m5
-  #       run: |
-  #         export TERM=xterm-256color
-  #         scons build/x86/out/m5
-  #     # - name: Build HACC
-  #     #   working-directory: ${{ github.workspace }}/gem5-resources/src/gpu/halo-finder/src/hip
-  #     #   run: make hip/ForceTreeTest
-  #     - name: Download tests
-  #       working-directory: ${{ github.workspace }}/hip
-  #       run: wget http://dist.gem5.org/dist/v22-1/test-progs/halo-finder/ForceTreeTest
-  #     - name: Run HACC tests
-  #       working-directory: ${{ github.workspace }}
-  #       run: |
-  #         build/GCN3_X86/gem5.opt configs/example/apu_se.py -n3 --reg-alloc-policy=dynamic --benchmark-root=hip -c ForceTreeTest --options="0.5 0.1 64 0.1 1 N 12 rcb"
+  HACC-tests:
+    runs-on: [self-hosted, linux, x64, build]
+    container: mkjost/new-gpu-image:latest
+    needs: build-gem5
+    timeout-minutes: 4320 # 3 day
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          # Scheduled workflows run on the default branch by default. We
+          # therefore need to explicitly checkout the develop branch.
+          ref: develop
+      - uses: actions/download-artifact@v3
+        with:
+          name: ${{needs.build-gem5.outputs.build-name}}
+          path: build/GCN3_X86
+      - run: chmod u+x build/GCN3_X86/gem5.opt
+      - name: make directory
+        working-directory: ${{ github.workspace }}
+        run: mkdir hip
+      #     git clone https://gem5.googlesource.com/public/gem5-resources
+      #     cd gem5-resources
+      #     git checkout develop
+      - name: Compile m5ops and x86
+        working-directory: ${{ github.workspace }}/util/m5
+        run: |
+          export TERM=xterm-256color
+          scons build/x86/out/m5
+      # - name: Build HACC
+      #   working-directory: ${{ github.workspace }}/gem5-resources/src/gpu/halo-finder/src/hip
+      #   run: make hip/ForceTreeTest
+      - name: Download tests
+        working-directory: ${{ github.workspace }}/hip
+        run: wget http://dist.gem5.org/dist/v22-1/test-progs/halo-finder/ForceTreeTest
+      - name: Run HACC tests
+        working-directory: ${{ github.workspace }}
+        run: |
+          build/GCN3_X86/gem5.opt configs/example/apu_se.py -n3 --reg-alloc-policy=dynamic --benchmark-root=hip -c ForceTreeTest --options="0.5 0.1 64 0.1 1 N 12 rcb"
 
   # pannotia-tests:
   #   runs-on: [self-hosted, linux, x64, build]
