@@ -21,8 +21,8 @@ jobs:
         # Scheduled workflows run on the default branch by default. We
         # therefore need to explicitly checkout the develop branch.
         ref: develop
-    - name: Compile build/GCN3_X86/gem5.opt
-      run: scons build/GCN3_X86/gem5.opt -j $(nproc)
+    # - name: Compile build/GCN3_X86/gem5.opt
+    #   run: scons build/GCN3_X86/gem5.opt -j $(nproc)
     - name: Get Square test-prog from gem5-resources
       uses: wei/wget@v1
       with:
