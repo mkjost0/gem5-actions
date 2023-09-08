@@ -9,10 +9,8 @@ on:
     - cron:  '0 7 * * *'
 
 jobs:
-# building all necessary versions of gem5
-  build-gem5:
-    runs-on: [self-hosted, linux, x64, build]
-    container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
+  name-artifacts:
+    runs-on: ubuntu-latest
     outputs:
       build-name: ${{ steps.artifact-name.outputs.name }}
     steps:
@@ -479,9 +477,13 @@ jobs:
         # Scheduled workflows run on the default branch by default. We
         # therefore need to explicitly checkout the develop branch.
         ref: develop
+    # download all artifacts for each test
+    # since long tests can't start until the build matrix completes,
+    # we download all artifacts from the build for each test
+    # in this matrix
     - uses: actions/download-artifact@v3
       with:
-        name: ${{needs.build-gem5.outputs.build-name}}
+        name: ${{needs.name-artifacts.outputs.build-name}}ALL
         path: build/ALL
     - run: chmod u+x build/ALL/gem5.opt
     - uses: actions/download-artifact@v3
@@ -526,12 +528,12 @@ jobs:
         ref: develop
     - uses: actions/download-artifact@v3
       with:
-        name: ${{needs.build-gem5.outputs.build-name}}
-        path: build/ALL
-    - run: chmod u+x build/ALL/gem5.opt
+        name: ${{needs.name-artifacts.outputs.build-name}}ALL_MSI
+        path: build/ALL_MSI
+    - run: chmod u+x build/ALL_MSI/gem5.opt
     - uses: actions/download-artifact@v3
       with:
-        name: ${{needs.build-gem5-ALL_MESI_Two_Level.outputs.build-name}}
+        name: ${{needs.name-artifacts.outputs.build-name}}ALL_MESI_Two_Level
         path: build/ALL_MESI_Two_Level
     - run: chmod u+x build/ALL_MESI_Two_Level/gem5.opt
     - name: long gem5_library_example_tests

@@ -6394,7 +6394,7 @@ namespace VegaISA
             }
         };
 
-        vop2Helper<VecOperandU32>(gpuDynInst, opImpl);
+        vop2Helper<ConstVecOperandU32, VecOperandU32>(gpuDynInst, opImpl);
     } // execute
     // --- Inst_VOP2__V_MUL_HI_U32_U24 class methods ---
 
@@ -35971,6 +35971,11 @@ namespace VegaISA
          */
         wf->computeUnit->vrf[wf->simdId]->
             scheduleWriteOperandsFromLoad(wf, gpuDynInst);
+        /**
+         * Similarly, this counter could build up over time, even across
+         * multiple wavefronts, and cause a deadlock.
+         */
+        wf->rdLmReqsInPipe--;
     } // execute
     // --- Inst_DS__DS_PERMUTE_B32 class methods ---
 
@@ -36054,6 +36059,11 @@ namespace VegaISA
          */
         wf->computeUnit->vrf[wf->simdId]->
             scheduleWriteOperandsFromLoad(wf, gpuDynInst);
+        /**
+         * Similarly, this counter could build up over time, even across
+         * multiple wavefronts, and cause a deadlock.
+         */
+        wf->rdLmReqsInPipe--;
     } // execute
     // --- Inst_DS__DS_BPERMUTE_B32 class methods ---
 
@@ -36137,6 +36147,11 @@ namespace VegaISA
          */
         wf->computeUnit->vrf[wf->simdId]->
             scheduleWriteOperandsFromLoad(wf, gpuDynInst);
+        /**
+         * Similarly, this counter could build up over time, even across
+         * multiple wavefronts, and cause a deadlock.
+         */
+        wf->rdLmReqsInPipe--;
     } // execute
 
     // --- Inst_DS__DS_ADD_U64 class methods ---
