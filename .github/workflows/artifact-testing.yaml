@@ -11,16 +11,16 @@ on:
 jobs:
   # Runs the gem5 Nighyly GPU tests.
   gpu-tests:
-    runs-on: [self-hosted, linux, x64, build]
+    runs-on: ubuntu-latest
     container: gcr.io/gem5-test/gcn-gpu:latest
     timeout-minutes: 720 # 12 hours
 
     steps:
-    - uses: actions/checkout@v3
-      with:
-        # Scheduled workflows run on the default branch by default. We
-        # therefore need to explicitly checkout the develop branch.
-        ref: develop
+    # - uses: actions/checkout@v3
+    #   with:
+    #     # Scheduled workflows run on the default branch by default. We
+    #     # therefore need to explicitly checkout the develop branch.
+    #     ref: develop
     # - name: Compile build/GCN3_X86/gem5.opt
     #   run: scons build/GCN3_X86/gem5.opt -j $(nproc)
     - name: Get Square test-prog from gem5-resources
