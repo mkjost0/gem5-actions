@@ -9,7 +9,7 @@ on:
 
 
 jobs:
-  # Runs the gem5 Nighyly GPU tests.
+  # Runs the gem5 Nighyly GPU tests
   commits-since-last-run:
     runs-on: ubuntu-latest
     steps:
