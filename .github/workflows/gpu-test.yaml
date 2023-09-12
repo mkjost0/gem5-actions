@@ -11,7 +11,7 @@ on:
 jobs: # add cleaning step to end of each job, also which things can be added to gem5 resources
   build-gem5:
     runs-on: [self-hosted, linux, x64, build]
-    container: mkjost/new-gpu-image:latest
+    container: gcr.io/gem5-test/gcn-gpu:latest
     timeout-minutes: 4320 # 3 days
     outputs:
       build-name: ${{ steps.artifact-name.outputs.name }}
@@ -34,7 +34,7 @@ jobs: # add cleaning step to end of each job, also which things can be added to 
 
   LULESH-tests:
     runs-on: [self-hosted, linux, x64, build]
-    container: mkjost/new-gpu-image:latest
+    container: gcr.io/gem5-test/gcn-gpu:latest
     needs: build-gem5
     timeout-minutes: 4320 # 3 days
     steps:
@@ -130,7 +130,7 @@ jobs: # add cleaning step to end of each job, also which things can be added to 
 
   HACC-tests:
     runs-on: [self-hosted, linux, x64, build]
-    container: mkjost/new-gpu-image:latest
+    container: gcr.io/gem5-test/gcn-gpu:latest
     needs: build-gem5
     timeout-minutes: 4320 # 3 day
     steps:
