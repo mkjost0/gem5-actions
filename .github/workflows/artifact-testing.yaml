@@ -23,7 +23,7 @@ jobs:
     #     name: last-scheduled-daily-run-commit
     #     path: last-scheduled-daily-run-commit
 
-    - name: 'Download artifact'
+      - name: 'Download artifact'
         uses: actions/github-script@v6
         with:
           script: |
