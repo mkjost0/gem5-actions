@@ -7,7 +7,7 @@ on:
   #   types: [opened, edited, synchronize, ready_for_review]
 
 jobs:
- commits-since-last-run:
+  commits-since-last-run:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
