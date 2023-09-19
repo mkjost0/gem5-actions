@@ -7,9 +7,9 @@ on:
   #   types: [opened, edited, synchronize, ready_for_review]
 
 env:
-  RUN_SCRIPT="configs/example/gem5_library/x86-ubuntu-run-to-tick.py --ticks 1000000"
-  BASELINE_STATS="stats-baseline.txt"
-  COMPARE_STATS="stats-to-compare.txt"
+  RUN_SCRIPT=configs/example/gem5_library/x86-ubuntu-run-to-tick.py --ticks 1000000
+  BASELINE_STATS=stats-baseline.txt
+  COMPARE_STATS=stats-to-compare.txt
 
 jobs:
   stats-output-baseline:
