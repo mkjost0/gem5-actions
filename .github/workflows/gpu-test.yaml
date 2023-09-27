@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs: # add cleaning step to end of each job, also which things can be added to gem5 resources
-  name-artifacts:
+  name-artifact:
     runs-on: ubuntu-latest
     outputs:
       build-name: ${{ steps.artifact-name.outputs.name }}
