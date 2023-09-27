@@ -24,13 +24,13 @@ jobs: # add cleaning step to end of each job, also which things can be added to 
         image: [ALL, GCN3_X86]
         # this allows us to pass additional command line parameters
         # the default is to add -j $(nproc), but some images
-        # require more specifications when built
+        # require more specifications when buil
         include:
           - command-line: -j $(nproc)
           - image: GCN3_X86
             command-line: -j4 --ignore-style
     runs-on: [self-hosted, linux, x64, build]
-    needs: name-artifacts
+    needs: name-artifact
     container: gcr.io/gem5-test/ubuntu-22.04_all-dependencies:latest
     outputs:
       build-name: ${{ steps.artifact-name.outputs.name }}
