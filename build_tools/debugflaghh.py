@@ -66,19 +66,16 @@ components = args.components.split(":") if args.components else []
 
 code = code_formatter()
 
-code(
-    """
+code("""
 #ifndef __DEBUG_${{args.name}}_HH__
 #define __DEBUG_${{args.name}}_HH__
 
 #include "base/compiler.hh" // For namespace deprecation
 #include "base/debug.hh"
-"""
-)
+""")
 for flag in components:
     code('#include "debug/${flag}.hh"')
-code(
-    """
+code("""
 namespace gem5
 {
 
@@ -87,16 +84,14 @@ namespace debug
 
 namespace unions
 {
-"""
-)
+""")
 
 # Use unions to prevent debug flags from being destructed. It's the
 # responsibility of the programmer to handle object destruction for members
 # of the union. We purposefully leave that destructor empty so that we can
 # use debug flags even in the destructors of other objects.
 if components:
-    code(
-        """
+    code("""
 inline union ${{args.name}}
 {
     ~${{args.name}}() {}
@@ -107,11 +102,9 @@ inline union ${{args.name}}
         }
     };
 } ${{args.name}};
-"""
-    )
+""")
 else:
-    code(
-        """
+    code("""
 inline union ${{args.name}}
 {
     ~${{args.name}}() {}
@@ -119,11 +112,9 @@ inline union ${{args.name}}
         "${{args.name}}", "${{args.desc}}", ${{"true" if fmt else "false"}}
     };
 } ${{args.name}};
-"""
-    )
+""")
 
-code(
-    """
+code("""
 } // namespace unions
 
 inline constexpr const auto& ${{args.name}} =
@@ -133,7 +124,6 @@ inline constexpr const auto& ${{args.name}} =
 } // namespace gem5
 
 #endif // __DEBUG_${{args.name}}_HH__
-"""
-)
+""")
 
 code.write(args.hh)

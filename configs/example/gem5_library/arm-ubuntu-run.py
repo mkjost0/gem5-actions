@@ -52,7 +52,6 @@ from gem5.components.memory import DualChannelDDR4_2400
 from gem5.components.processors.cpu_types import CPUTypes
 from gem5.components.processors.simple_processor import SimpleProcessor
 
-
 # This runs a check to ensure the gem5 binary is compiled for ARM and the
 # protocol is CHI.
 

@@ -28,6 +28,7 @@
 This runs simple tests to ensure the examples in `configs/example/gem5_library`
 still function. They simply check the simulation completed.
 """
+
 from testlib import *
 import re
 import os

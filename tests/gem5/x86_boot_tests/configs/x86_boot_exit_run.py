@@ -46,7 +46,6 @@ from gem5.resources.resource import obtain_resource
 import argparse
 import importlib
 
-
 parser = argparse.ArgumentParser(
     description="A script to run the gem5 boot test. This test boots the "
     "linux kernel."

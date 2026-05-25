@@ -244,10 +244,9 @@ def create_system(
     protocol = buildEnv["PROTOCOL"]
     exec(f"from . import {protocol}")
     try:
-        (cpu_sequencers, dir_cntrls, topology) = eval(
+        cpu_sequencers, dir_cntrls, topology = eval(
             "%s.create_system(options, full_system, system, dma_ports,\
-                                    bootmem, ruby, cpus)"
-            % protocol
+                                    bootmem, ruby, cpus)" % protocol
         )
     except:
         print(f"Error: could not create sytem for ruby protocol {protocol}")

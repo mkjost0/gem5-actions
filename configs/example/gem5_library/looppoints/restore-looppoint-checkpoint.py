@@ -40,6 +40,7 @@ Usage
     configs/example/gem5_library/looppoints/restore-looppoint-checkpoint.py
 ```
 """
+
 import argparse
 
 from gem5.simulate.exit_event import ExitEvent
@@ -116,6 +117,7 @@ board.set_workload(
         f"x86-matrix-multiply-omp-100-8-looppoint-region-{args.checkpoint_region}"
     )
 )
+
 
 # This generator will dump the stats and exit the simulation loop when the
 # simulation region reaches its end. In the case there is a warmup interval,

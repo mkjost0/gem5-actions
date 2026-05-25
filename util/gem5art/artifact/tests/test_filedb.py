@@ -26,7 +26,6 @@
 
 """Tests for ArtifactFileDB"""
 
-
 import json
 import os
 from pathlib import Path

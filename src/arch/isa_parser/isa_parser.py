@@ -112,19 +112,18 @@ class Template(object):
 
             operands = SubOperandList(self.parser, compositeCode, d.operands)
 
-            myDict[
-                "reg_idx_arr_decl"
-            ] = "RegId srcRegIdxArr[%d]; RegId destRegIdxArr[%d]" % (
-                d.operands.numSrcRegs + d.srcRegIdxPadding,
-                d.operands.numDestRegs + d.destRegIdxPadding,
+            myDict["reg_idx_arr_decl"] = (
+                "RegId srcRegIdxArr[%d]; RegId destRegIdxArr[%d]"
+                % (
+                    d.operands.numSrcRegs + d.srcRegIdxPadding,
+                    d.operands.numDestRegs + d.destRegIdxPadding,
+                )
             )
 
             # The reinterpret casts are largely because an array with a known
             # size cannot be passed as an argument which is an array with an
             # unknown size in C++.
-            myDict[
-                "set_reg_idx_arr"
-            ] = """
+            myDict["set_reg_idx_arr"] = """
     setRegIdxArrays(
         reinterpret_cast<RegIdArrayPtr>(
             &std::remove_pointer_t<decltype(this)>::srcRegIdxArr),
@@ -373,6 +372,7 @@ def substBitOps(code):
 # instruction characteristics from pseudocode.
 #
 #####################################################################
+
 
 # Force the argument to be a list.  Useful for flags, where a caller
 # can specify a singleton flag or a list of flags.  Also usful for
@@ -806,7 +806,7 @@ class ISAParser(Grammar):
         "DBLCOLON",
         "ASTERISK",
         # C preprocessor directives
-        "CPPDIRECTIVE"
+        "CPPDIRECTIVE",
         # The following are matched but never returned. commented out to
         # suppress PLY warning
         # newfile directive
@@ -1155,7 +1155,7 @@ del wrap
     # "def format <fmt>(<params>) {{...}};"
     def p_def_format(self, t):
         "def_format : DEF FORMAT ID LPAREN param_list RPAREN CODELIT SEMI"
-        (id, params, code) = (t[3], t[5], t[7])
+        id, params, code = (t[3], t[5], t[7])
         self.defFormat(id, params, code, t.lexer.lineno)
 
     # The formal parameter list for an instruction format is a
@@ -1237,8 +1237,7 @@ StaticInstPtr
 %(isa_name)s::%(decoder_name)s::decodeInst(%(isa_name)s::ExtMachInst machInst)
 {
     using namespace %(namespace)s;
-"""
-            % self,
+""" % self,
             "}",
         )
 
