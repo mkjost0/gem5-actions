@@ -54,7 +54,6 @@ from common.cores.arm import ex5_big, ex5_LITTLE
 import devices
 from devices import AtomicCluster, KvmCluster, FastmodelCluster
 
-
 default_disk = "aarch64-ubuntu-trusty-headless.img"
 
 default_mem_size = "2GB"

@@ -35,6 +35,7 @@ from .Ruby import create_topology, create_directories
 from .Ruby import send_evicts
 from common import FileSystemConfig
 
+
 #
 # Declare caches used by the protocol
 #
@@ -79,10 +80,8 @@ def create_system(
 ):
 
     if buildEnv["PROTOCOL"] != "MESI_Three_Level_HTM":
-        fatal(
-            "This script requires the MESI_Three_Level protocol to be\
-               built."
-        )
+        fatal("This script requires the MESI_Three_Level protocol to be\
+               built.")
 
     cpu_sequencers = []
 

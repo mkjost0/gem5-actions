@@ -81,8 +81,7 @@ for param in sim_object._params.values():
     else:
         param.ptype.cxx_ini_predecls(code)
 
-code(
-    """#include "${{sim_object._value_dict['cxx_header']}}"
+code("""#include "${{sim_object._value_dict['cxx_header']}}"
 #include "base/str.hh"
 #include "cxx_config/${sim_object_name}.hh"
 
@@ -91,8 +90,7 @@ namespace gem5
 
 ${param_class}::DirectoryEntry::DirectoryEntry()
 {
-"""
-)
+""")
 code.indent()
 for param in sim_object._params.values():
     is_vector = isinstance(param, m5.params.VectorParamDesc)
@@ -114,16 +112,14 @@ for port in sim_object._ports.values():
 
 code.dedent()
 
-code(
-    """}
+code("""}
 
 bool
 ${param_class}::setSimObject(const std::string &name, SimObject *simObject)
 {
     bool ret = true;
     if (false) {
-"""
-)
+""")
 
 code.indent()
 for param in sim_object._params.values():
@@ -142,8 +138,7 @@ for param in sim_object._params.values():
         code.dedent()
 code.dedent()
 
-code(
-    """
+code("""
     } else {
         ret = false;
     }
@@ -158,8 +153,7 @@ ${param_class}::setSimObjectVector(const std::string &name,
     bool ret = true;
 
     if (false) {
-"""
-)
+""")
 
 code.indent()
 for param in sim_object._params.values():
@@ -189,8 +183,7 @@ for param in sim_object._params.values():
         code.dedent()
 code.dedent()
 
-code(
-    """
+code("""
     } else {
         ret = false;
     }
@@ -211,8 +204,7 @@ ${param_class}::setParam(const std::string &name,
     bool ret = true;
 
     if (false) {
-"""
-)
+""")
 
 code.indent()
 for param in sim_object._params.values():
@@ -228,8 +220,7 @@ for param in sim_object._params.values():
         code.dedent()
 code.dedent()
 
-code(
-    """
+code("""
     } else {
         ret = false;
     }
@@ -244,8 +235,7 @@ ${param_class}::setParamVector(const std::string &name,
     bool ret = true;
 
     if (false) {
-"""
-)
+""")
 
 code.indent()
 for param in sim_object._params.values():
@@ -268,8 +258,7 @@ for param in sim_object._params.values():
         code.dedent()
 code.dedent()
 
-code(
-    """
+code("""
     } else {
         ret = false;
     }
@@ -284,8 +273,7 @@ ${param_class}::setPortConnectionCount(const std::string &name,
     bool ret = true;
 
     if (false) {
-"""
-)
+""")
 
 code.indent()
 for port in sim_object._ports.values():
@@ -293,8 +281,7 @@ for port in sim_object._ports.values():
     code("    this->port_${{port.name}}_connection_count = count;")
 code.dedent()
 
-code(
-    """
+code("""
     } else {
         ret = false;
     }
@@ -305,8 +292,7 @@ code(
 SimObject *
 ${param_class}::simObjectCreate()
 {
-"""
-)
+""")
 
 code.indent()
 if hasattr(sim_object, "abstract") and sim_object.abstract:
@@ -315,11 +301,9 @@ else:
     code("return this->create();")
 code.dedent()
 
-code(
-    """}
+code("""}
 
 } // namespace gem5
-"""
-)
+""")
 
 code.write(args.cxx_config_cc)

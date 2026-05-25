@@ -185,12 +185,10 @@ motherboard.set_kernel_disk_workload(
     disk_image=obtain_resource(
         "x86-ubuntu-18.04-img", resource_directory=args.resource_directory
     ),
-    readfile_contents=dedent(
-        """
+    readfile_contents=dedent("""
         m5 exit # signal end of boot
         m5 exit # exit in children and parent
-        """
-    ),
+        """),
     kernel_args=kernel_args,
 )
 

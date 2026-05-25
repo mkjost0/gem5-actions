@@ -53,7 +53,6 @@ from m5.util import fatal
 import argparse
 import importlib
 
-
 parser = argparse.ArgumentParser(
     description="A gem5 script for running simple binaries in SE mode."
 )

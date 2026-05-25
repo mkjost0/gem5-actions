@@ -10,7 +10,7 @@
 [    0.000000] random: get_random_bytes called from start_kernel+0xa8/0x3e8 with crng_init=0
 [    0.000000] percpu: Embedded 23 pages/cpu @(____ptrval____) s53976 r8192 d32040 u94208
 [    0.000000] pcpu-alloc: s53976 r8192 d32040 u94208 alloc=23*4096
-[    0.000000] pcpu-alloc: [0] 0 
+[    0.000000] pcpu-alloc: [0] 0
 [    0.000000] Detected PIPT I-cache on CPU0
 [    0.000000] CPU features: enabling workaround for ARM erratum 832075
 [    0.000000] CPU features: enabling workaround for ARM erratum 834220
@@ -174,7 +174,7 @@
 [    0.215123] usbhid: USB HID core driver
 [    0.215168] NET: Registered protocol family 17
 [    0.356543] ata1.00: ATA-7: M5 IDE Disk, , max UDMA/66
-[    0.356549] ata1.00: 504 sectors, multi 0: LBA 
+[    0.356549] ata1.00: 504 sectors, multi 0: LBA
 [    0.356630] scsi 0:0:0:0: Direct-Access     ATA      M5 IDE Disk      n/a  PQ: 0 ANSI: 5
 [    0.356820] sd 0:0:0:0: Attached scsi generic sg0 type 0
 [    0.356912] sd 0:0:0:0: [sda] 504 512-byte logical blocks: (258 kB/252 KiB)

@@ -37,7 +37,6 @@ scons build/ARM_MESI_Three_Level/gem5.opt -j `nproc`
 ```
 """
 
-
 from m5.objects import ArmDefaultRelease, VExpress_GEM5_Foundation
 
 from gem5.utils.requires import requires
