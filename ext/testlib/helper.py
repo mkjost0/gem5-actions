@@ -41,6 +41,7 @@
 """
 Helper classes for writing tests with this test library.
 """
+
 from collections import namedtuple
 from collections.abc import MutableSet
 
@@ -131,6 +132,7 @@ class TimedWaitPID(object):
 
 # Patch os.waitpid()
 TimedWaitPID.install()
+
 
 # TODO Tear out duplicate logic from the sandbox IOManager
 def log_call(logger, command, time, *popenargs, **kwargs):
@@ -495,7 +497,7 @@ def _filter_file_inplace(fname, dir, filters):
     Filter the given file writing filtered lines out to a temporary file, then
     copy that tempfile back into the original file.
     """
-    (_, tfname) = tempfile.mkstemp(dir=dir, text=True)
+    _, tfname = tempfile.mkstemp(dir=dir, text=True)
     with open(tfname, "w") as tempfile_:
         for line in _filter_file(fname, filters):
             tempfile_.write(line)
@@ -516,7 +518,7 @@ def diff_out_file(ref_file, out_file, logger, ignore_regexes=tuple()):
     _filter_file_inplace(ref_file, os.path.dirname(out_file), ignore_regexes)
 
     # try :
-    (_, tfname) = tempfile.mkstemp(dir=os.path.dirname(out_file), text=True)
+    _, tfname = tempfile.mkstemp(dir=os.path.dirname(out_file), text=True)
     with open(tfname, "r+") as tempfile_:
         try:
             log_call(

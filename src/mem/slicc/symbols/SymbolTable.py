@@ -160,8 +160,7 @@ class SymbolTable(object):
             name = "empty.html"
 
         code = self.codeFormatter()
-        code(
-            """
+        code("""
 <html>
 <head>
 <title>$path</title>
@@ -171,8 +170,7 @@ class SymbolTable(object):
     <frame name="Status" src="empty.html">
 </frameset>
 </html>
-"""
-        )
+""")
         code.write(path, "index.html")
 
         code = self.codeFormatter()

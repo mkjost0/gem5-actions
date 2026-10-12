@@ -221,8 +221,7 @@ class Type(Symbol):
 
     def printTypeHH(self, path):
         code = self.symtab.codeFormatter()
-        code(
-            """
+        code("""
 #ifndef __${{self.c_ident}}_HH__
 #define __${{self.c_ident}}_HH__
 
@@ -230,8 +229,7 @@ class Type(Symbol):
 
 #include "mem/ruby/slicc_interface/RubySlicc_Util.hh"
 
-"""
-        )
+""")
 
         for dm in self.data_members.values():
             if not dm.type.isPrimitive:
@@ -321,32 +319,27 @@ $klass ${{self.c_ident}}$parent
 
         # create a clone member
         if self.isMessage:
-            code(
-                """
+            code("""
 MsgPtr
 clone() const
 {
      return std::shared_ptr<Message>(new ${{self.c_ident}}(*this));
 }
-"""
-            )
+""")
         else:
-            code(
-                """
+            code("""
 ${{self.c_ident}}*
 clone() const
 {
      return new ${{self.c_ident}}(*this);
 }
-"""
-            )
+""")
 
         if not self.isGlobal:
             # const Get methods for each field
             code("// Const accessors methods for each field")
             for dm in self.data_members.values():
-                code(
-                    """
+                code("""
 /** \\brief Const accessor method for ${{dm.ident}} field.
  *  \\return ${{dm.ident}} field
  */
@@ -355,14 +348,12 @@ get${{dm.ident}}() const
 {
     return m_${{dm.ident}};
 }
-"""
-                )
+""")
 
             # Non-const Get methods for each field
             code("// Non const Accessors methods for each field")
             for dm in self.data_members.values():
-                code(
-                    """
+                code("""
 /** \\brief Non-const accessor method for ${{dm.ident}} field.
  *  \\return ${{dm.ident}} field
  */
@@ -371,22 +362,19 @@ get${{dm.ident}}()
 {
     return m_${{dm.ident}};
 }
-"""
-                )
+""")
 
             # Set methods for each field
             code("// Mutator methods for each field")
             for dm in self.data_members.values():
-                code(
-                    """
+                code("""
 /** \\brief Mutator method for ${{dm.ident}} field */
 void
 set${{dm.ident}}(const ${{dm.real_c_type}}& local_${{dm.ident}})
 {
     m_${{dm.ident}} = local_${{dm.ident}};
 }
-"""
-                )
+""")
 
         code("void print(std::ostream& out) const;")
         code.dedent()
@@ -423,8 +411,7 @@ set${{dm.ident}}(const ${{dm.real_c_type}}& local_${{dm.ident}})
         code.dedent()
         code("};")
 
-        code(
-            """
+        code("""
 inline ::std::ostream&
 operator<<(::std::ostream& out, const ${{self.c_ident}}& obj)
 {
@@ -437,16 +424,14 @@ operator<<(::std::ostream& out, const ${{self.c_ident}}& obj)
 } // namespace gem5
 
 #endif // __${{self.c_ident}}_HH__
-"""
-        )
+""")
 
         code.write(path, f"{self.c_ident}.hh")
 
     def printTypeCC(self, path):
         code = self.symtab.codeFormatter()
 
-        code(
-            """
+        code("""
 #include <iostream>
 #include <memory>
 
@@ -464,54 +449,45 @@ void
 ${{self.c_ident}}::print(std::ostream& out) const
 {
     out << "[${{self.c_ident}}: ";
-"""
-        )
+""")
 
         # For each field
         code.indent()
         for dm in self.data_members.values():
             if dm.type.c_ident == "Addr":
-                code(
-                    """
-out << "${{dm.ident}} = " << printAddress(m_${{dm.ident}}) << " ";"""
-                )
+                code("""
+out << "${{dm.ident}} = " << printAddress(m_${{dm.ident}}) << " ";""")
             else:
                 code('out << "${{dm.ident}} = " << m_${{dm.ident}} << " ";' "")
 
         code.dedent()
 
         # Trailer
-        code(
-            """
+        code("""
     out << "]";
-}"""
-        )
+}""")
 
         # print the code for the methods in the type
         for item in self.methods:
             code(self.methods[item].generateCode())
 
-        code(
-            """
+        code("""
 } // namespace ruby
 } // namespace gem5
-"""
-        )
+""")
 
         code.write(path, f"{self.c_ident}.cc")
 
     def printEnumHH(self, path):
         code = self.symtab.codeFormatter()
-        code(
-            """
+        code("""
 #ifndef __${{self.c_ident}}_HH__
 #define __${{self.c_ident}}_HH__
 
 #include <iostream>
 #include <string>
 
-"""
-        )
+""")
         if self.isStateDecl:
             code('#include "mem/ruby/protocol/AccessPermission.hh"')
 
@@ -521,22 +497,19 @@ out << "${{dm.ident}} = " << printAddress(m_${{dm.ident}}) << " ";"""
             code('#include "mem/ruby/common/Address.hh"')
             code('#include "mem/ruby/common/TypeDefines.hh"')
 
-        code(
-            """
+        code("""
 namespace gem5
 {
 
 namespace ruby
 {
 
-"""
-        )
+""")
 
         if self.isMachineType:
             code("struct MachineID;")
 
-        code(
-            """
+        code("""
 
 // Class definition
 /** \\enum ${{self.c_ident}}
@@ -544,8 +517,7 @@ namespace ruby
  */
 enum ${{self.c_ident}} {
     ${{self.c_ident}}_FIRST,
-"""
-        )
+""")
 
         code.indent()
         # For each field
@@ -557,8 +529,7 @@ enum ${{self.c_ident}} {
                 init = ""
             code("${{self.c_ident}}_${{enum.ident}}$init, /**< $desc */")
         code.dedent()
-        code(
-            """
+        code("""
     ${{self.c_ident}}_NUM
 };
 
@@ -570,52 +541,42 @@ ${{self.c_ident}} string_to_${{self.c_ident}}(const ::std::string& str);
 
 // Code to increment an enumeration type
 ${{self.c_ident}} &operator++(${{self.c_ident}} &e);
-"""
-        )
+""")
 
         # MachineType hack used to set the base component id for each Machine
         if self.isMachineType:
-            code(
-                """
+            code("""
 int ${{self.c_ident}}_base_level(const ${{self.c_ident}}& obj);
 MachineType ${{self.c_ident}}_from_base_level(int);
 int ${{self.c_ident}}_base_number(const ${{self.c_ident}}& obj);
 int ${{self.c_ident}}_base_count(const ${{self.c_ident}}& obj);
-"""
-            )
+""")
 
             for enum in self.enums.values():
-                code(
-                    """
+                code("""
 
 MachineID get${{enum.ident}}MachineID(NodeID RubyNode);
-"""
-                )
+""")
 
         if self.isStateDecl:
-            code(
-                """
+            code("""
 
 // Code to convert the current state to an access permission
 AccessPermission ${{self.c_ident}}_to_permission(const ${{self.c_ident}}& obj);
 
-"""
-            )
+""")
 
-        code(
-            """
+        code("""
 
 ::std::ostream&
 operator<<(::std::ostream& out, const ${{self.c_ident}}& obj);
 
 } // namespace ruby
 } // namespace gem5
-"""
-        )
+""")
 
         if self.isMachineType:
-            code(
-                """
+            code("""
 
 // define a hash function for the MachineType class
 namespace std {
@@ -630,22 +591,18 @@ struct hash<gem5::ruby::MachineType>
 };
 }
 
-"""
-            )
+""")
 
         # Trailer
-        code(
-            """
+        code("""
 #endif // __${{self.c_ident}}_HH__
-"""
-        )
+""")
 
         code.write(path, f"{self.c_ident}.hh")
 
     def printEnumCC(self, path):
         code = self.symtab.codeFormatter()
-        code(
-            """
+        code("""
 #include <cassert>
 #include <iostream>
 #include <string>
@@ -653,12 +610,10 @@ struct hash<gem5::ruby::MachineType>
 #include "base/logging.hh"
 #include "mem/ruby/protocol/${{self.c_ident}}.hh"
 
-"""
-        )
+""")
 
         if self.isStateDecl:
-            code(
-                """
+            code("""
 namespace gem5
 {
 
@@ -669,16 +624,14 @@ namespace ruby
 AccessPermission ${{self.c_ident}}_to_permission(const ${{self.c_ident}}& obj)
 {
     switch(obj) {
-"""
-            )
+""")
             # For each case
             code.indent()
             for statePerm in self.statePermPairs:
                 code("  case ${{self.c_ident}}_${{statePerm[0]}}:")
                 code("    return AccessPermission_${{statePerm[1]}};")
             code.dedent()
-            code(
-                """
+            code("""
       default:
         panic("Unknown state access permission converstion for ${{self.c_ident}}");
     }
@@ -689,8 +642,7 @@ AccessPermission ${{self.c_ident}}_to_permission(const ${{self.c_ident}}& obj)
 } // namespace ruby
 } // namespace gem5
 
-"""
-            )
+""")
 
         if self.isMachineType:
             for enum in self.enums.values():
@@ -701,8 +653,7 @@ AccessPermission ${{self.c_ident}}_to_permission(const ${{self.c_ident}}& obj)
                     )
             code('#include "mem/ruby/common/MachineID.hh"')
 
-        code(
-            """
+        code("""
 namespace gem5
 {
 
@@ -723,8 +674,7 @@ std::string
 ${{self.c_ident}}_to_string(const ${{self.c_ident}}& obj)
 {
     switch(obj) {
-"""
-        )
+""")
 
         # For each field
         code.indent()
@@ -734,8 +684,7 @@ ${{self.c_ident}}_to_string(const ${{self.c_ident}}& obj)
         code.dedent()
 
         # Trailer
-        code(
-            """
+        code("""
       default:
         panic("Invalid range for type ${{self.c_ident}}");
     }
@@ -747,8 +696,7 @@ ${{self.c_ident}}_to_string(const ${{self.c_ident}}& obj)
 ${{self.c_ident}}
 string_to_${{self.c_ident}}(const std::string& str)
 {
-"""
-        )
+""")
 
         # For each field
         start = ""
@@ -759,8 +707,7 @@ string_to_${{self.c_ident}}(const std::string& str)
             start = "} else "
         code.dedent()
 
-        code(
-            """
+        code("""
     } else {
         panic("Invalid string conversion for %s, type ${{self.c_ident}}", str);
     }
@@ -773,14 +720,12 @@ operator++(${{self.c_ident}}& e)
     assert(e < ${{self.c_ident}}_NUM);
     return e = ${{self.c_ident}}(e+1);
 }
-"""
-        )
+""")
 
         # MachineType hack used to set the base level and number of
         # components for each Machine
         if self.isMachineType:
-            code(
-                """
+            code("""
 /** \\brief returns the base vector index for each machine type to be
   * used by NetDest
   *
@@ -791,8 +736,7 @@ int
 ${{self.c_ident}}_base_level(const ${{self.c_ident}}& obj)
 {
     switch(obj) {
-"""
-            )
+""")
 
             # For each field
             code.indent()
@@ -802,8 +746,7 @@ ${{self.c_ident}}_base_level(const ${{self.c_ident}}& obj)
             code.dedent()
 
             # total num
-            code(
-                """
+            code("""
       case ${{self.c_ident}}_NUM:
         return ${{len(self.enums)}};
 
@@ -822,8 +765,7 @@ MachineType
 ${{self.c_ident}}_from_base_level(int type)
 {
     switch(type) {
-"""
-            )
+""")
 
             # For each field
             code.indent()
@@ -833,8 +775,7 @@ ${{self.c_ident}}_from_base_level(int type)
             code.dedent()
 
             # Trailer
-            code(
-                """
+            code("""
       default:
         panic("Invalid range for type ${{self.c_ident}}");
     }
@@ -850,8 +791,7 @@ ${{self.c_ident}}_base_number(const ${{self.c_ident}}& obj)
 {
     int base = 0;
     switch(obj) {
-"""
-            )
+""")
 
             # For each field
             code.indent()
@@ -869,8 +809,7 @@ ${{self.c_ident}}_base_number(const ${{self.c_ident}}& obj)
             code("    break;")
             code.dedent()
 
-            code(
-                """
+            code("""
       default:
         panic("Invalid range for type ${{self.c_ident}}");
     }
@@ -885,8 +824,7 @@ int
 ${{self.c_ident}}_base_count(const ${{self.c_ident}}& obj)
 {
     switch(obj) {
-"""
-            )
+""")
 
             # For each field
             for enum in self.enums.values():
@@ -899,8 +837,7 @@ ${{self.c_ident}}_base_count(const ${{self.c_ident}}& obj)
                     code("return 0;")
 
             # total num
-            code(
-                """
+            code("""
       case ${{self.c_ident}}_NUM:
       default:
         panic("Invalid range for type ${{self.c_ident}}");
@@ -908,12 +845,10 @@ ${{self.c_ident}}_base_count(const ${{self.c_ident}}& obj)
     // Appease the compiler since this function has a return value
     return -1;
 }
-"""
-            )
+""")
 
             for enum in self.enums.values():
-                code(
-                    """
+                code("""
 
 MachineID
 get${{enum.ident}}MachineID(NodeID RubyNode)
@@ -921,15 +856,12 @@ get${{enum.ident}}MachineID(NodeID RubyNode)
       MachineID mach = {MachineType_${{enum.ident}}, RubyNode};
       return mach;
 }
-"""
-                )
+""")
 
-        code(
-            """
+        code("""
 } // namespace ruby
 } // namespace gem5
-"""
-        )
+""")
 
         # Write the file
         code.write(path, f"{self.c_ident}.cc")

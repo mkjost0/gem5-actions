@@ -51,7 +51,6 @@ from ruby import Ruby
 
 import devices
 
-
 default_kernel = "vmlinux.arm64"
 default_disk = "linaro-minimal-aarch64.img"
 default_root_device = "/dev/vda1"

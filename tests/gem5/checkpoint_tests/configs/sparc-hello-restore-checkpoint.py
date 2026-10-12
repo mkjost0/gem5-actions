@@ -43,7 +43,6 @@ from gem5.simulate.simulator import Simulator
 from gem5.components.memory import SingleChannelDDR3_1600
 from gem5.components.processors.cpu_types import CPUTypes
 
-
 requires(isa_required=ISA.SPARC)
 
 cache_hierarchy = NoCache()

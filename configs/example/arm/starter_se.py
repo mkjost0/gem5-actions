@@ -53,7 +53,6 @@ from common.cores.arm import HPI
 
 import devices
 
-
 # Pre-defined CPU configurations. Each tuple must be ordered as : (cpu_class,
 # l1_icache_class, l1_dcache_class, walk_cache_class, l2_Cache_class). Any of
 # the cache class may be 'None' if the particular cache is not present.

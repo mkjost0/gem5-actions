@@ -44,6 +44,7 @@ scons build/X86/gem5.opt
     --size <simulation_size>
 ```
 """
+
 import argparse
 import time
 
@@ -191,6 +192,7 @@ board.set_kernel_disk_workload(
     disk_image=obtain_resource("x86-parsec"),
     readfile_contents=command,
 )
+
 
 # functions to handle different exit events during the simuation
 def handle_workbegin():

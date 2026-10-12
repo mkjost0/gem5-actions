@@ -952,7 +952,7 @@ def create_system(
         mainCluster.add(dir_cntrl)
 
     # Create CPU core pairs
-    (cp_sequencers, cp_cntrl_nodes) = construct_corepairs(
+    cp_sequencers, cp_cntrl_nodes = construct_corepairs(
         options, system, ruby_system, ruby_system.network
     )
     cpu_sequencers.extend(cp_sequencers)
@@ -1023,7 +1023,7 @@ def create_system(
             )
 
     # Create TCPs
-    (tcp_sequencers, tcp_cntrl_nodes) = construct_tcps(
+    tcp_sequencers, tcp_cntrl_nodes = construct_tcps(
         options, system, ruby_system, ruby_system.network
     )
     cpu_sequencers.extend(tcp_sequencers)
@@ -1031,7 +1031,7 @@ def create_system(
         gpuCluster.add(tcp_cntrl)
 
     # Create SQCs
-    (sqc_sequencers, sqc_cntrl_nodes) = construct_sqcs(
+    sqc_sequencers, sqc_cntrl_nodes = construct_sqcs(
         options, system, ruby_system, ruby_system.network
     )
     cpu_sequencers.extend(sqc_sequencers)
@@ -1039,7 +1039,7 @@ def create_system(
         gpuCluster.add(sqc_cntrl)
 
     # Create Scalars
-    (scalar_sequencers, scalar_cntrl_nodes) = construct_scalars(
+    scalar_sequencers, scalar_cntrl_nodes = construct_scalars(
         options, system, ruby_system, ruby_system.network
     )
     cpu_sequencers.extend(scalar_sequencers)
@@ -1047,7 +1047,7 @@ def create_system(
         gpuCluster.add(scalar_cntrl)
 
     # Create command processors
-    (cmdproc_sequencers, cmdproc_cntrl_nodes) = construct_cmdprocs(
+    cmdproc_sequencers, cmdproc_cntrl_nodes = construct_cmdprocs(
         options, system, ruby_system, ruby_system.network
     )
     cpu_sequencers.extend(cmdproc_sequencers)

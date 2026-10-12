@@ -40,7 +40,6 @@ from common import Options
 from common import GPUTLBOptions
 from ruby import Ruby
 
-
 demo_runscript_without_checkpoint = """\
 export LD_LIBRARY_PATH=/opt/rocm/lib:$LD_LIBRARY_PATH
 export HSA_ENABLE_INTERRUPT=0

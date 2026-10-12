@@ -453,6 +453,7 @@ VectorParam = ParamFactory(VectorParamDesc)
 #
 #####################################################################
 
+
 # String-valued parameter.  Just mixin the ParamValue class with the
 # built-in str class.
 class String(ParamValue, str):
@@ -1309,7 +1310,7 @@ class IpNetmask(IpAddress):
                 self.ip = args[0].ip
                 self.netmask = args[0].netmask
             else:
-                (self.ip, self.netmask) = convert.toIpNetmask(args[0])
+                self.ip, self.netmask = convert.toIpNetmask(args[0])
 
         elif len(args) == 2:
             self.ip = args[0]
@@ -1385,7 +1386,7 @@ class IpWithPort(IpAddress):
                 self.ip = args[0].ip
                 self.port = args[0].port
             else:
-                (self.ip, self.port) = convert.toIpWithPort(args[0])
+                self.ip, self.port = convert.toIpWithPort(args[0])
 
         elif len(args) == 2:
             self.ip = args[0]
@@ -1524,6 +1525,8 @@ class Time(ParamValue):
 # derive the new type from the appropriate base class on the fly.
 
 allEnums = {}
+
+
 # Metaclass for Enum types
 class MetaEnum(MetaParamValue):
     def __new__(mcls, name, bases, dict):
@@ -1963,6 +1966,7 @@ class MemoryBandwidth(float, ParamValue):
 # "Constants"... handy aliases for various values.
 #
 
+
 # Special class for NULL pointers.  Note the special check in
 # make_param_value() above that lets these be assigned where a
 # SimObject is required.
@@ -2029,6 +2033,7 @@ AllMemory = AddrRange(0, MaxAddr)
 # Ports are used to interconnect objects in the memory system.
 #
 #####################################################################
+
 
 # Port reference: encapsulates a reference to a particular port on a
 # particular SimObject.
@@ -2370,6 +2375,7 @@ MasterPort = RequestPort
 SlavePort = ResponsePort
 VectorMasterPort = VectorRequestPort
 VectorSlavePort = VectorResponsePort
+
 
 # 'Fake' ParamDesc for Port references to assign to the _pdesc slot of
 # proxy objects (via set_param_desc()) so that proxy error messages

@@ -155,13 +155,11 @@ class CxxClass(object):
             code("} // namespace $ns")
 
 
-code(
-    """\
+code("""\
 #ifndef __PARAMS__${sim_object}__
 #define __PARAMS__${sim_object}__
 
-"""
-)
+""")
 
 
 # The base SimObject has a couple of params that get
@@ -210,14 +208,12 @@ if not hasattr(sim_object, "abstract") or not sim_object.abstract:
 
 code.indent()
 if sim_object == SimObject:
-    code(
-        """
+    code("""
 SimObjectParams() {}
 virtual ~SimObjectParams() {}
 
 std::string name;
-    """
-    )
+    """)
 
 for param in params:
     param.cxx_decl(code)
