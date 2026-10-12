@@ -123,18 +123,14 @@ args = parser.parse_args()
 # We warn the user here.
 
 if args.benchmark == "mg" and args.size == "C":
-    warn(
-        "mg.C uses 3.3 GB of memory. Currently we are simulating 3 GB\
-    of main memory in the system."
-    )
+    warn("mg.C uses 3.3 GB of memory. Currently we are simulating 3 GB\
+    of main memory in the system.")
 
 # The simulation will fail in the case of `ft` with class C. We warn the user
 # here.
 elif args.benchmark == "ft" and args.size == "C":
-    warn(
-        "There is not enough memory for ft.C. Currently we are\
-    simulating 3 GB of main memory in the system."
-    )
+    warn("There is not enough memory for ft.C. Currently we are\
+    simulating 3 GB of main memory in the system.")
 
 # Checking for the maximum number of instructions, if provided by the user.
 
@@ -211,6 +207,7 @@ board.set_kernel_disk_workload(
     readfile_contents=command,
 )
 
+
 # The first exit_event ends with a `workbegin` cause. This means that the
 # system started successfully and the execution on the program started.
 def handle_workbegin():
@@ -235,6 +232,7 @@ def handle_workbegin():
 
 # The next exit_event is to simulate the ROI. It should be exited with a cause
 # marked by `workend`.
+
 
 # We exepect that ROI ends with `workend` or `simulate() limit reached`.
 def handle_workend():

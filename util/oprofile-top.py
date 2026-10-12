@@ -50,7 +50,7 @@ def category(app, sym):
 
 
 try:
-    (opts, files) = getopt.getopt(sys.argv[1:], "i")
+    opts, files = getopt.getopt(sys.argv[1:], "i")
 except getopt.GetoptError:
     print("usage", sys.argv[0], "[-i] <files>")
     sys.exit(2)
@@ -71,7 +71,7 @@ for line in f.readlines():
     linenum += 1
     if linenum < 4:
         continue
-    (count, percent, app, sym) = line.split()
+    count, percent, app, sym = line.split()
     # total += int(count)
     cat = category(app, sym)
     if cat != "idle" or showidle:

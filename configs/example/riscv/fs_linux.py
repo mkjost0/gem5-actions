@@ -152,7 +152,7 @@ parser.add_argument(
 args = parser.parse_args()
 
 # CPU and Memory
-(CPUClass, mem_mode, FutureClass) = Simulation.setCPUClass(args)
+CPUClass, mem_mode, FutureClass = Simulation.setCPUClass(args)
 MemClass = Simulation.setMemClass(args)
 
 np = args.num_cpus

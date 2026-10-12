@@ -43,7 +43,6 @@ addToPath("../")
 from common import MemConfig
 from common import HMC
 
-
 pd = "Simple 'hello world' example using HMC as main memory"
 parser = argparse.ArgumentParser(description=pd)
 HMC.add_options(parser)

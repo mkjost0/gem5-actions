@@ -45,6 +45,7 @@ from .core_complex import CoreComplex
 from .octopi_network import OctopiNetwork
 from .ruby_network_components import RubyRouter, RubyExtLink, RubyIntLink
 
+
 # CoreComplex sub-systems own the L1, L2, L3 controllers
 # OctopiCache owns the directory controllers
 # RubySystem owns the DMA Controllers

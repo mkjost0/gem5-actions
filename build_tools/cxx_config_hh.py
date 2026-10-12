@@ -63,8 +63,7 @@ code = code_formatter()
 entry_class = "CxxConfigDirectoryEntry_%s" % sim_object_name
 param_class = "%sCxxConfigParams" % sim_object_name
 
-code(
-    """#include "params/${sim_object_name}.hh"
+code("""#include "params/${sim_object_name}.hh"
 
 #include "sim/cxx_config.hh"
 
@@ -111,7 +110,6 @@ class ${param_class} : public CxxConfigParams, public ${sim_object_name}Params
 };
 
 } // namespace gem5
-"""
-)
+""")
 
 code.write(args.cxx_config_hh)

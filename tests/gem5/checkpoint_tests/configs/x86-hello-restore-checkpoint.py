@@ -45,7 +45,6 @@ from gem5.simulate.simulator import Simulator
 from gem5.components.memory import SingleChannelDDR3_1600
 from gem5.components.processors.cpu_types import CPUTypes
 
-
 requires(isa_required=ISA.X86)
 
 cache_hierarchy = PrivateL1CacheHierarchy(l1d_size="16kB", l1i_size="16kB")

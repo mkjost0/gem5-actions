@@ -153,13 +153,14 @@ def run_test(root):
 m5.disableAllListeners()
 
 # single "path" arg encodes everything we need to know about test
-(category, mode, name, isa, opsys, config) = sys.argv[1].split("/")[-6:]
+category, mode, name, isa, opsys, config = sys.argv[1].split("/")[-6:]
 
 # find path to directory containing this file
 tests_root = os.path.dirname(__file__)
 test_progs = os.environ.get("M5_TEST_PROGS", "/dist/m5/regression/test-progs")
 if not os.path.isdir(test_progs):
     test_progs = joinpath(tests_root, "test-progs")
+
 
 # generate path to binary file
 def binpath(app, file=None):
@@ -233,6 +234,7 @@ exec(
         "exec",
     )
 )
+
 
 # Initialize all CPUs in a system
 def initCPUs(sys):
